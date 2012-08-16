@@ -17,10 +17,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package net.archivee;
+package biz.bidi.archivee;
 
 /**
  * @author Andrey Bidinotto
+ * @email andreymoser@bidi.biz
  * @since August 14, 2012
  */
 public class HelloArchivee {
