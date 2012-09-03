@@ -20,7 +20,13 @@
 package biz.bidi.archivee.simulation;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -45,6 +51,7 @@ public class Log4jAppSimulation implements Runnable {
 	private String destLogsDirectory;
 	/**
 	 * The seconds range used in order to delimit the logs
+	 * \\TODO 
 	 */
 	private int secondsRange;
 	/**
@@ -86,7 +93,6 @@ public class Log4jAppSimulation implements Runnable {
 		if(files == null || files.size() == 0) {
 			throw new Exception("Error: no files found for " + logRegex + " regex expression under " + sourceLogsDirectory + ". Please verify.");
 		}
-		
 		
 		Log4jAppSimulation[] log4jApp = new Log4jAppSimulation[files.size()];
 		
@@ -152,9 +158,91 @@ public class Log4jAppSimulation implements Runnable {
 	 */
 	@Override
 	public void run() {
-		//TODO continue here
-		System.out.println("Hey " + this.logFile.getName());
-		
+		try {
+			File dir = new File(logFile.getParent());
+			if (dir.isDirectory()) {
+				/**
+				 * Find the rotated log files and sort in descending order (*.log.99 to *.log)
+				 */
+				System.out.println("Thread dir " + dir.getName());
+				File[] files = dir.listFiles(new FilenameFilter() {
+					@Override
+					public boolean accept(File dir, String name) {
+						return name.contains(logFile.getName());
+					}
+				});
+				
+				ArrayList<File> filesArrayList = new ArrayList<File>(); 
+				Collections.addAll(filesArrayList, files);
+				Collections.sort(filesArrayList, new Comparator<File>() {
+					@Override
+					public int compare(File o1, File o2) {
+						int cmp = 0;
+						try {
+							cmp = (getLogNumber(o1.getName()) < getLogNumber(o2.getName()))?1:-1;
+						} catch (Exception e) {
+							System.out.println("File 1: " + o1.getAbsolutePath() + " File 2: " + o2.getAbsolutePath());
+							e.printStackTrace();
+						}
+						return cmp;
+					}
+					private int getLogNumber(String name) {
+						String fileStr = name.replaceAll(logFile.getName(), "");
+						if(fileStr.startsWith(".")) {
+							fileStr = fileStr.replaceAll("\\.", "");
+						}
+						return (fileStr.length()==0)?0:Integer.parseInt(fileStr);
+					}
+				});
+				
+				/**
+				 * Generate the log files in the output folder
+				 */
+			    File destDir = new File(destLogsDirectory);
+			    		
+				if(destDir.isFile()) {
+					throw new Exception("Invalid destination log folder! It's a file: " + destLogsDirectory);
+				}
+				
+				if(!destDir.exists()) {
+					destDir.mkdirs();
+				}
+				
+				String relativePath = dir.getAbsolutePath();
+				relativePath = relativePath.length()>sourceLogsDirectory.length()?"/"+relativePath.replaceAll(sourceLogsDirectory, ""):"";
+				
+				File threadDir = new File(destDir.getAbsolutePath() + relativePath);
+				if(!threadDir.exists()) {
+					threadDir.mkdirs();
+				}
+				
+				for (File file : filesArrayList) {
+					System.out.println("Thread: writing from file " + file.getAbsolutePath());
+					
+					FileReader fileReader = new FileReader(file);
+					int read = 0;
+					File destFile = new File(threadDir.getAbsolutePath() + "/" + logFile.getName());
+					
+					if(destFile.exists()) {
+						destFile.delete();
+					}
+					
+					FileWriter fileWriter = new FileWriter(destFile);
+					char[] buffer = new char[1024];
+					while((read = fileReader.read(buffer)) > 0) {
+						Thread.sleep(200);
+						fileWriter.write(buffer, 0, read);
+						fileWriter.flush();
+					}
+					fileReader.close();
+					fileWriter.close();
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
