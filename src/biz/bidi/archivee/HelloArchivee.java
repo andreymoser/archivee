@@ -1,5 +1,5 @@
 /*
- * See the NOTICE file distributed with this work for additional
+  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -17,34 +17,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.factories;
-
-import biz.bidi.archivee.commons.ArchiveeException;
-import biz.bidi.archivee.commons.interfaces.IArchiveeFactory;
-import biz.bidi.archivee.commons.interfaces.IArchiveeGenericFactoryManager;
+package biz.bidi.archivee;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 6, 2012
+ * @since August 14, 2012
  */
-public abstract class ArchiveeGenericFactoryManager implements IArchiveeGenericFactoryManager {
+public class HelloArchivee {
 
-	protected static IArchiveeGenericFactoryManager instance;
-	
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see biz.bidi.archivee.commons.interfaces.IArchiveeGenericFactoryManager#getManagerInstance()
+	 * @param args
 	 */
-	@Override
-	public IArchiveeGenericFactoryManager getManagerInstance() {
-		return instance;
+	public static void main(String[] args) {
+		System.out.println("Hello GitHub and Archivee! :D");
 	}
-	
-	protected void validateFactory(IArchiveeFactory factory, Class classObject) throws ArchiveeException {
-		if(factory == null) {
-			throw new ArchiveeException("Invalid factory: null",factory,classObject);
-		}
-	}
+
 }

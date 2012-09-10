@@ -30,26 +30,6 @@ public class ArchiveeConstants {
 	/**
 	 * Default properties path
 	 */
-	public static final String PROPERTIES_PATH = "./resources/archivee.properties";
-	/**
-	 * File separator
-	 */
-	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
-	/**
-	 * OS Windows flag
-	 */
-	public static boolean IS_WINDOWS_OS = System.getProperty("os.name").startsWith("Windows");
-	/**
-	 * Line separator
-	 */
-	public static String LINE_SEPARATOR = System.getProperty("line.separator");
-	/**
-	 * Default buffer size
-	 */
-	public static int DEFAULT_BUFFER_SIZE = 4096;
-	/**
-	 * The default thread sleep used in main threads loops 
-	 */
-	public static int DEFAULT_MAIN_THREAD_SLEEP_LOOP = 5000;
+	public static final String propertiesPath = "./resources/archivee.properties";
 
 }
