@@ -17,39 +17,48 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons;
+package biz.bidi.archivee.components.listeners.file.logreader;
+
+import biz.bidi.archivee.commons.ArchiveeException;
 
 /**
- * Commons contants between Archivee components
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 2, 2012
+ * @since Sep 4, 2012
  */
-public class ArchiveeConstants {
-
+public interface IFileLogReader {
+	
 	/**
-	 * Default properties path
+	 * Run the process
 	 */
-	public static final String PROPERTIES_PATH = "./resources/archivee.properties";
+	public void run() throws ArchiveeException;
+	
 	/**
-	 * File separator
+	 * Reads and send the read lines
 	 */
-	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+	public void readSendLogs() throws ArchiveeException;
+	
 	/**
-	 * OS Windows flag
+	 * Opens the log file
 	 */
-	public static boolean IS_WINDOWS_OS = System.getProperty("os.name").startsWith("Windows");
+	public void openLogFile() throws ArchiveeException;
+	
 	/**
-	 * Line separator
+	 * Verify if file has been moved
 	 */
-	public static String LINE_SEPARATOR = System.getProperty("line.separator");
+	public void verifyFileMoved() throws ArchiveeException;
+	
 	/**
-	 * Default buffer size
+	 * Closes the log file
+	 * @throws ArchiveeException
 	 */
-	public static int DEFAULT_BUFFER_SIZE = 4096;
+	public void closeLogFile() throws ArchiveeException;
+	
 	/**
-	 * The default thread sleep used in main threads loops 
+	 * Send the read line to DAO
+	 * @param line
+	 * @throws ArchiveeException
 	 */
-	public static int DEFAULT_MAIN_THREAD_SLEEP_LOOP = 5000;
-
+	public void sendLine(String line) throws ArchiveeException;
+	
 }

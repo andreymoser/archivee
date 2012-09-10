@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Properties;
 
 /**
@@ -35,9 +37,9 @@ public class ArchiveeProperties {
 
 	private static Properties properties = new Properties();
 	/**
-	 * Default properties path {@link ArchiveeConstants#propertiesPath}
+	 * Default properties path {@link ArchiveeConstants#PROPERTIES_PATH}
 	 */
-	private static final String path = ArchiveeConstants.propertiesPath;
+	private static final String path = ArchiveeConstants.PROPERTIES_PATH;
 	
 	static {
 		load(path);
@@ -54,6 +56,69 @@ public class ArchiveeProperties {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Automatically loads all the properties invoking Java beans methods
+	 * @param object
+	 * @param prefixKey
+	 * @throws ArchiveeException
+	 */
+	public static void loadProperties(Object object, String prefixKey) throws ArchiveeException {
+		Method[] methods = object.getClass().getMethods();
+		for(Method method : methods) {
+			if(!method.getName().startsWith("set") || method.getParameterTypes().length != 1)
+			{
+				continue;
+			}
+			String type = method.getParameterTypes()[0].getSimpleName();
+			String name = method.getName().substring(3);
+			
+			if(name.length() <= 0) {
+				continue;
+			}
+			String headStr = name.substring(0,1).toLowerCase();
+			
+			if(name.length() == 1) {
+				name = headStr;
+			} else {
+				name = headStr + name.substring(1);
+				
+			}
+			
+			Object param = null; 
+			
+			if(type.equals("String")) {
+				param = ArchiveeProperties.get(prefixKey + name);
+			}
+			if(type.equals("int") || type.equals("Integer")) {
+				param = Integer.parseInt(ArchiveeProperties.get(prefixKey + name));
+			}
+			if(type.equals("double") || type.equals("Double")) {
+				param = Double.parseDouble(ArchiveeProperties.get(prefixKey + name));
+			}
+			if(type.equals("long") || type.equals("Long")) {
+				param = Long.parseLong(ArchiveeProperties.get(prefixKey + name));
+			}
+			if(type.equals("float") || type.equals("Float")) {
+				param = Float.parseFloat(ArchiveeProperties.get(prefixKey + name));
+			}
+			if(type.equals("short") || type.equals("Short")) {
+				param = Short.parseShort(ArchiveeProperties.get(prefixKey + name));
+			}
+			
+			if(param != null) {
+				try {
+					method.invoke(object, param);
+				} catch (IllegalArgumentException e) {
+					throw new ArchiveeException(e,"Error while trying to load properties for " + object.getClass().getName() + "IllegalArgumentException",object,prefixKey);
+				} catch (IllegalAccessException e) {
+					throw new ArchiveeException(e,"Error while trying to load properties for " + object.getClass().getName() + "IllegalAccessException",object,prefixKey);
+				} catch (InvocationTargetException e) {
+					throw new ArchiveeException(e,"Error while trying to load properties for " + object.getClass().getName() + "InvocationTargetException",object,prefixKey);
+				}
+			}
 		}
 	}
 

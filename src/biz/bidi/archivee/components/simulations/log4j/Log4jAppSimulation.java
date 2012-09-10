@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.simulation;
+package biz.bidi.archivee.components.simulations.log4j;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,8 +29,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import biz.bidi.archivee.commons.ArchiveeConstants;
+import biz.bidi.archivee.commons.utils.ArchiveeFileUtils;
 
 /**
  * External App using Log4j simulation, it reads for an file expression (*.log) 
@@ -89,7 +90,7 @@ public class Log4jAppSimulation implements Runnable {
 	 * Starts the simulation
 	 */
 	public void start() throws Exception {
-		ArrayList<File> files = findFiles(null);
+		ArrayList<File> files = ArchiveeFileUtils.findFiles(logRegex, sourceLogsDirectory);
 		if(files == null || files.size() == 0) {
 			throw new Exception("Error: no files found for " + logRegex + " regex expression under " + sourceLogsDirectory + ". Please verify.");
 		}
@@ -110,44 +111,6 @@ public class Log4jAppSimulation implements Runnable {
 			Thread.sleep(5000);
 		}
 		System.out.println("Info: threads terminated!");
-	}
-
-	/**
-	 * @return
-	 */
-	private ArrayList<File> findFiles(ArrayList<File> files) throws Exception {
-		
-		if(files == null) {
-			files = new ArrayList<File>();
-			File file = new File(this.sourceLogsDirectory);
-			files.add(file);
-		}
-		
-		File lastFile = files.get(files.size() - 1);
-		
-		if(lastFile.isDirectory()) {
-			files.remove(files.get(files.size() - 1));
-			
-			File[] filesDirectory = lastFile.listFiles();
-			for(File file : filesDirectory) {
-				files.add(file);
-				
-				files = findFiles(files);
-			}
-			return files;
-		}
-
-		Pattern logFilePattern = Pattern.compile(getLogRegex());
-		
-		Matcher matcher = logFilePattern.matcher(lastFile.getName());
-
-		if(!matcher.matches()) {
-			files.remove(files.get(files.size() - 1));
-		} else {
-			System.out.println("Info: found log " + lastFile.getAbsoluteFile());
-		}
-		
-		return files;
 	}
 
 	/**
@@ -228,7 +191,7 @@ public class Log4jAppSimulation implements Runnable {
 					}
 					
 					FileWriter fileWriter = new FileWriter(destFile);
-					char[] buffer = new char[1024];
+					char[] buffer = new char[ArchiveeConstants.DEFAULT_BUFFER_SIZE];
 					while((read = fileReader.read(buffer)) > 0) {
 						Thread.sleep(200);
 						fileWriter.write(buffer, 0, read);
