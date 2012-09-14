@@ -19,11 +19,12 @@
  */
 package biz.bidi.archivee.components.listeners.logsender.jms;
 
-import biz.bidi.archivee.commons.ArchiveeException;
-import biz.bidi.archivee.commons.ArchiveeProperties;
-import biz.bidi.archivee.commons.dao.jms.ArchiveeJMSConnectionData;
-import biz.bidi.archivee.commons.dao.jms.ArchiveeJMSTopicDAO;
-import biz.bidi.archivee.commons.dao.properties.IArchiveePropertiesLoader;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.jms.ArchiveeJMSConnectionData;
+import biz.bidi.archivee.commons.jms.ArchiveeJMSQueue;
+import biz.bidi.archivee.commons.jms.ArchiveeJMSTopic;
+import biz.bidi.archivee.commons.properties.ArchiveeProperties;
+import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
 import biz.bidi.archivee.components.listeners.logsender.ILogSender;
 
 /**
@@ -31,7 +32,7 @@ import biz.bidi.archivee.components.listeners.logsender.ILogSender;
  * @email andreymoser@bidi.biz
  * @since Sep 7, 2012
  */
-public class JMSLogSender extends ArchiveeJMSTopicDAO implements ILogSender, IArchiveePropertiesLoader {
+public class JMSLogSender extends ArchiveeJMSQueue implements ILogSender, IArchiveePropertiesLoader {
 
 	/**
 	 * The connection name
@@ -50,13 +51,14 @@ public class JMSLogSender extends ArchiveeJMSTopicDAO implements ILogSender, IAr
 	 */
 	@Override
 	public void sendLogLine(String line) throws ArchiveeException {
+		System.out.print(line);
 		send(line);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.dao.properties.IArchiveePropertiesLoader#loadProperties(java.lang.String)
+	 * @see biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader#loadProperties(java.lang.String)
 	 */
 	@Override
 	public void loadProperties(String prefixKey) {

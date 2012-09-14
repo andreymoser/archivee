@@ -19,7 +19,7 @@
  */
 package biz.bidi.archivee.components.listeners.file.logreader;
 
-import biz.bidi.archivee.commons.ArchiveeException;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 
 /**
  * @author Andrey Bidinotto

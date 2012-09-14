@@ -19,10 +19,11 @@
  */
 package biz.bidi.archivee.components.listeners.commons;
 
-import biz.bidi.archivee.commons.ArchiveeException;
-import biz.bidi.archivee.commons.interfaces.IArchiveeFactory;
-import biz.bidi.archivee.commons.interfaces.IArchiveeGenericFactoryManager;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager;
 import biz.bidi.archivee.components.listeners.file.FileListener;
+import biz.bidi.archivee.components.listeners.file.FileListenerThread;
 import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
 import biz.bidi.archivee.components.listeners.logsender.ILogSender;
 
@@ -53,10 +54,10 @@ public class ListenersUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static IFileLogReader getFileLogReader(FileListener fileListener) throws ArchiveeException {
+	public static IFileLogReader getFileLogReader(FileListenerThread fileListenerThread) throws ArchiveeException {
 		IFileLogReader fileLogReader = null;
-		IArchiveeFactory<IFileLogReader, FileListener> factory = getFactory(IFileLogReader.class);
-		fileLogReader = factory.createInstance(fileListener);
+		IArchiveeFactory<IFileLogReader, FileListenerThread> factory = getFactory(IFileLogReader.class);
+		fileLogReader = factory.createInstance(fileListenerThread);
 		return fileLogReader;
 	}
 }

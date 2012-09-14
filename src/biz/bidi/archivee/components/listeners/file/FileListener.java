@@ -24,9 +24,10 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import biz.bidi.archivee.commons.ArchiveeException;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.properties.ArchiveeProperties;
+import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
 import biz.bidi.archivee.commons.utils.ArchiveeFileUtils;
-import biz.bidi.archivee.components.simulations.log4j.Log4jAppSimulation;
 
 /**
  * Main archivee file listener component
@@ -34,7 +35,7 @@ import biz.bidi.archivee.components.simulations.log4j.Log4jAppSimulation;
  * @email andreymoser@bidi.biz
  * @since Sep 4, 2012
  */
-public class FileListener {
+public class FileListener implements IArchiveePropertiesLoader {
 
 	/**
 	 * The logs directory
@@ -69,7 +70,7 @@ public class FileListener {
 			}
 			System.out.println("Info: threads terminated!");
 		} catch (Exception e) {
-			ArchiveeException.error(e, "Error in main file listener thread",this,files,fileListeners);
+			ArchiveeException.log(e, "Error in main file listener thread",this,files,fileListeners);
 		}
 	}
 	
@@ -99,6 +100,16 @@ public class FileListener {
 	 */
 	public void setRegexLogFilename(String regexLogFilename) {
 		this.regexLogFilename = regexLogFilename;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader#loadProperties(java.lang.String)
+	 */
+	@Override
+	public void loadProperties(String prefixKey) throws ArchiveeException {
+		ArchiveeProperties.loadProperties(this, prefixKey);
 	}
 
 }

@@ -28,7 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import biz.bidi.archivee.commons.ArchiveeConstants;
-import biz.bidi.archivee.commons.ArchiveeException;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.components.listeners.file.FileListenerThread;
 
 /**

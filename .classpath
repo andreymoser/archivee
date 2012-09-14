@@ -5,6 +5,8 @@
 	<classpathentry exported="true" kind="lib" path="lib/javaee-api-6.0.jar"/>
 	<classpathentry kind="lib" path="lib/jna.jar"/>
 	<classpathentry kind="lib" path="lib/platform.jar"/>
+	<classpathentry kind="lib" path="lib/mongo-2.3.jar"/>
+	<classpathentry kind="lib" path="lib/morphia-0.99.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>

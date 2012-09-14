@@ -19,9 +19,7 @@
  */
 package biz.bidi.archivee.commons.factories;
 
-import biz.bidi.archivee.commons.ArchiveeException;
-import biz.bidi.archivee.commons.interfaces.IArchiveeFactory;
-import biz.bidi.archivee.commons.interfaces.IArchiveeGenericFactoryManager;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 
 /**
  * @author Andrey Bidinotto
@@ -35,7 +33,7 @@ public abstract class ArchiveeGenericFactoryManager implements IArchiveeGenericF
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.interfaces.IArchiveeGenericFactoryManager#getManagerInstance()
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager#getManagerInstance()
 	 */
 	@Override
 	public IArchiveeGenericFactoryManager getManagerInstance() {

@@ -17,83 +17,60 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.file;
+package biz.bidi.archivee.test.sandbox.jms;
 
 import java.io.File;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.components.listeners.commons.ListenersUtils;
-import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
+import biz.bidi.archivee.commons.properties.ArchiveeProperties;
+import biz.bidi.archivee.components.logparser.LogParser;
+import biz.bidi.archivee.test.commons.FileReaderUtilsTest;
 
 /**
- * The file listener thread
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 4, 2012
+ * @since Sep 11, 2012
  */
-public class FileListenerThread implements Runnable {
-
-	/**
-	 * The main thread file listener
-	 */
-	private FileListener fileListener;
-	/**
-	 * The log file to be listened
-	 */
-	private File logFile;	
+public class LogParserLab {
 	
-	/**
-	 * @param fileListener
-	 */
-	public FileListenerThread(FileListener fileListener, File logFile) {
-		super();
-		this.fileListener = fileListener;
-		this.logFile = logFile;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.lang.Runnable#run()
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
+	private String logFile;
+	
 	public void run() {
-		IFileLogReader logReader = null;
 		try {
-			logReader = ListenersUtils.getFileLogReader(this);
-			logReader.run();
+			ArchiveeProperties.loadProperties(this);
+			
+			System.out.println("Analysing log file: " + logFile);
+			
+			FileReaderUtilsTest fileReader = new FileReaderUtilsTest(new File(logFile));
+			
+			LogParser logParser = new LogParser();
+			String line = "";
+			while(fileReader.hasNext()) {
+				line = fileReader.readLine();
+				logParser.parseLogLine(line);
+				System.out.println(line);
+			}
 		} catch (ArchiveeException e) {
-			e.error("Error while processing log file thread", logReader, fileListener);
+			ArchiveeException.log(e, "Generic error", this);
 		}
 	}
-
-	/**
-	 * @return the fileListener
-	 */
-	public FileListener getFileListener() {
-		return fileListener;
-	}
-
-	/**
-	 * @param fileListener the fileListener to set
-	 */
-	public void setFileListener(FileListener fileListener) {
-		this.fileListener = fileListener;
+	
+	public static void main(String[] args) {
+		new LogParserLab().run();  
 	}
 
 	/**
 	 * @return the logFile
 	 */
-	public File getLogFile() {
+	public String getLogFile() {
 		return logFile;
 	}
 
 	/**
 	 * @param logFile the logFile to set
 	 */
-	public void setLogFile(File logFile) {
+	public void setLogFile(String logFile) {
 		this.logFile = logFile;
 	}
-
+	
 }

@@ -20,7 +20,7 @@
 package biz.bidi.archivee.components.listeners.file.logreader;
 
 import biz.bidi.archivee.commons.ArchiveeConstants;
-import biz.bidi.archivee.commons.interfaces.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.components.listeners.file.FileListenerThread;
 
 /**

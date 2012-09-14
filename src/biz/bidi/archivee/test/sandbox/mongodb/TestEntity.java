@@ -17,42 +17,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons;
+package biz.bidi.archivee.test.sandbox.mongodb;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.bson.types.ObjectId;
+
+import biz.bidi.archivee.commons.model.IEntity;
+
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
 
 /**
- * Commons contants between Archivee components
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 2, 2012
+ * @since Sep 12, 2012
  */
-public class ArchiveeConstants {
-
-	/**
-	 * Default properties path
-	 */
-	public static final String PROPERTIES_PATH = "./resources/archivee.properties";
-	/**
-	 * File separator
-	 */
-	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
-	/**
-	 * OS Windows flag
-	 */
-	public static boolean IS_WINDOWS_OS = System.getProperty("os.name").startsWith("Windows");
-	/**
-	 * Line separator
-	 */
-	public static String LINE_SEPARATOR = System.getProperty("line.separator");
-	/**
-	 * Default buffer size
-	 */
-	public static int DEFAULT_BUFFER_SIZE = 4096;
-	/**
-	 * The default thread sleep used in main threads loops 
-	 */
-	public static int DEFAULT_MAIN_THREAD_SLEEP_LOOP = 5000;
-	/**
-	 * The max byte array size 
-	 */
-	public static int MAX_BYTE_ARRAY_SIZE = 600000;
+@Entity("test")
+public class TestEntity implements IEntity {
+	
+	  @Id ObjectId id;
+	  public String name;
+	  
+	  public int value;
+	  
+	  public String[] moreValues;
+	  
+	  public ArrayList<String> list;
+	  
+	  public HashMap<String,Integer> mapValues;
+	  
+	  byte[] bytes;
 }

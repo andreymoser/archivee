@@ -17,42 +17,80 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons;
+package biz.bidi.archivee.test.commons;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 /**
- * Commons contants between Archivee components
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 2, 2012
+ * @since Sep 12, 2012
  */
-public class ArchiveeConstants {
+public class FileReaderUtilsTest {
 
 	/**
-	 * Default properties path
+	 * The file
 	 */
-	public static final String PROPERTIES_PATH = "./resources/archivee.properties";
+	private File file;
 	/**
-	 * File separator
+	 * The scanner file
 	 */
-	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+	private Scanner scanner;
+
 	/**
-	 * OS Windows flag
+	 * @param file
 	 */
-	public static boolean IS_WINDOWS_OS = System.getProperty("os.name").startsWith("Windows");
+	public FileReaderUtilsTest(File file) {
+		super();
+		this.file = file;
+		try {
+			this.scanner = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
-	 * Line separator
+	 * Has next
 	 */
-	public static String LINE_SEPARATOR = System.getProperty("line.separator");
+	public boolean hasNext() {
+		boolean hasNext = scanner.hasNext(); 
+		if(!hasNext) {
+			scanner.close();
+		}
+		return hasNext;
+	}
+
 	/**
-	 * Default buffer size
+	 * Reads the next line
+	 * @return
 	 */
-	public static int DEFAULT_BUFFER_SIZE = 4096;
+	public String readLine() {
+		String line = "";
+		try {
+			line = scanner.nextLine();
+		}
+		catch (NoSuchElementException e) {
+			line = "";
+		}
+		return line;
+	}
+	
 	/**
-	 * The default thread sleep used in main threads loops 
+	 * @return the file
 	 */
-	public static int DEFAULT_MAIN_THREAD_SLEEP_LOOP = 5000;
+	public File getFile() {
+		return file;
+	}
+
 	/**
-	 * The max byte array size 
+	 * @param file the file to set
 	 */
-	public static int MAX_BYTE_ARRAY_SIZE = 600000;
+	public void setFile(File file) {
+		this.file = file;
+	}
+
 }

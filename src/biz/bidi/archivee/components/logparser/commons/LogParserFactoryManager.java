@@ -17,15 +17,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.commons;
+package biz.bidi.archivee.components.logparser.commons;
 
+import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.components.listeners.file.logreader.LogReaderFactory;
-import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
-import biz.bidi.archivee.components.listeners.logsender.ILogSender;
-import biz.bidi.archivee.components.listeners.logsender.LogSenderFactory;
+import biz.bidi.archivee.components.logparser.ILogParser;
+import biz.bidi.archivee.components.logparser.LogParserFactory;
+import biz.bidi.archivee.components.logparser.dao.PatternDAOFactory;
+import biz.bidi.archivee.components.logparser.model.Pattern;
 
 /**
  * @author Andrey Bidinotto
@@ -33,16 +34,16 @@ import biz.bidi.archivee.components.listeners.logsender.LogSenderFactory;
  * @since Sep 6, 2012
  */
 @SuppressWarnings("rawtypes")
-public class ListenerFactoryManager extends ArchiveeGenericFactoryManager {
+public class LogParserFactoryManager extends ArchiveeGenericFactoryManager {
 
-	protected static IArchiveeFactory fileLogReaderFactory;
-	protected static IArchiveeFactory logSenderFactory;
+	protected static IArchiveeFactory logParserFactory;
+	protected static IArchiveeFactory patternDAOFactory;
 	
 	static {
-		instance = new ListenerFactoryManager();
+		instance = new LogParserFactoryManager();
 		
-		fileLogReaderFactory = new LogReaderFactory(); 
-		logSenderFactory = new LogSenderFactory(); 
+		logParserFactory = new LogParserFactory(); 
+		patternDAOFactory = new PatternDAOFactory(); 
 	}
 
 	/**
@@ -58,22 +59,23 @@ public class ListenerFactoryManager extends ArchiveeGenericFactoryManager {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager#getFactoryInstance(java.lang.Class, java.lang.Class)
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager#getFactoryInstance(java.lang.Class, java.lang.Object)
 	 */
 	@Override
-	public IArchiveeFactory getFactoryInstance(Class interfaceObject, Class classObject) throws ArchiveeException {
+	public IArchiveeFactory getFactoryInstance(Class interfaceClass, Class classObject) throws ArchiveeException {
 		IArchiveeFactory factory = null;
 		
-		if(classObject == IFileLogReader.class) {
-			factory = fileLogReaderFactory; 
+		if(interfaceClass == ILogParser.class) {
+			factory = logParserFactory; 
 		}
-		if(classObject == ILogSender.class) {
-			factory = logSenderFactory; 
+		if(interfaceClass == IArchiveeGenericDAO.class && classObject != null) {
+			if(classObject == Pattern.class) {
+				factory = patternDAOFactory;
+			}
 		}
 		
-		validateFactory(factory, classObject);
+		validateFactory(factory, interfaceClass);
 		
 		return factory;
 	}
-	
 }

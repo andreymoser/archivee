@@ -21,7 +21,7 @@ package biz.bidi.archivee.components.simulations.log4j.main;
 
 import java.util.Scanner;
 
-import biz.bidi.archivee.commons.ArchiveeProperties;
+import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.components.simulations.log4j.Log4jAppSimulation;
 
 /**
