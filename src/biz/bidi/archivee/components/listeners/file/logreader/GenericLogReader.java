@@ -75,7 +75,7 @@ public abstract class GenericLogReader implements IFileLogReader {
 	@Override
 	public void run() throws ArchiveeException {
 		try {
-			this.logSender = ListenersUtils.getLoSenderInstance();
+			this.logSender = ListenersUtils.getLogSenderInstance();
 			
 			while(true)
 			{

@@ -23,10 +23,14 @@ import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.model.LogQueue;
+import biz.bidi.archivee.commons.model.Pattern;
+import biz.bidi.archivee.components.listeners.logsender.ILogSender;
+import biz.bidi.archivee.components.listeners.logsender.LogSenderFactory;
 import biz.bidi.archivee.components.logparser.ILogParser;
 import biz.bidi.archivee.components.logparser.LogParserFactory;
+import biz.bidi.archivee.components.logparser.dao.LogQueueDAOFactory;
 import biz.bidi.archivee.components.logparser.dao.PatternDAOFactory;
-import biz.bidi.archivee.components.logparser.model.Pattern;
 
 /**
  * @author Andrey Bidinotto
@@ -38,12 +42,16 @@ public class LogParserFactoryManager extends ArchiveeGenericFactoryManager {
 
 	protected static IArchiveeFactory logParserFactory;
 	protected static IArchiveeFactory patternDAOFactory;
+	protected static IArchiveeFactory logQueueDAOFactory;
+	protected static IArchiveeFactory logSenderFactory;
 	
 	static {
 		instance = new LogParserFactoryManager();
 		
 		logParserFactory = new LogParserFactory(); 
 		patternDAOFactory = new PatternDAOFactory(); 
+		logQueueDAOFactory = new LogQueueDAOFactory(); 
+		logSenderFactory = new LogSenderFactory(); 
 	}
 
 	/**
@@ -72,6 +80,12 @@ public class LogParserFactoryManager extends ArchiveeGenericFactoryManager {
 			if(classObject == Pattern.class) {
 				factory = patternDAOFactory;
 			}
+			if(classObject == LogQueue.class) {
+				factory = logQueueDAOFactory;
+			}
+		}
+		if(interfaceClass == ILogSender.class) {
+			factory = logSenderFactory; 
 		}
 		
 		validateFactory(factory, interfaceClass);

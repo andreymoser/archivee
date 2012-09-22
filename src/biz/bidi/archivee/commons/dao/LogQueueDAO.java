@@ -17,12 +17,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.logparser.dao;
+package biz.bidi.archivee.commons.dao;
 
 import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.LogQueue;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
-import biz.bidi.archivee.components.logparser.model.Pattern;
 
 import com.google.code.morphia.query.Query;
 
@@ -31,22 +31,19 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 13, 2012
  */
-public class PatternDAO extends ArchiveeMongodbDAO<Pattern> {
+public class LogQueueDAO extends ArchiveeMongodbDAO<LogQueue> {
 
-	
-	
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.String, java.lang.Object[])
+	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public Query find(Pattern entity, String customSearchId) throws ArchiveeException {
-		if(customSearchId.equals("all.sorted.by.count.desc")) {
-			return ds.find(entity.getClass()).order("-count");
-		}
-		if(customSearchId.equals("all.starts.with.root")) {
-			return ds.find(entity.getClass()).filter("id.parentId","").field("id.id").startsWith(ArchiveePatternUtils.createRegex(entity.getId().getId()));
+	public Query<LogQueue> find(LogQueue entity, String customSearchId)
+			throws ArchiveeException {
+		
+		if(customSearchId.equals("all.starts.with.regex")) {
+			return find(entity).field("line").startsWith(entity.getLine());
 		}
 		
 		return null;
@@ -58,24 +55,11 @@ public class PatternDAO extends ArchiveeMongodbDAO<Pattern> {
 	 * @see biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO#save(biz.bidi.archivee.commons.model.IEntity)
 	 */
 	@Override
-	public void save(Pattern entity) throws ArchiveeException {
-		if(entity.getId().getParentId() == null) {
-			entity.getId().setParentId("");
-		}
-		
-		if(entity.getLevel() <= 0) {
-			entity.setLevel(0);
-		}
-		
-		if(entity.getId().getParentId().equals("")) {
-			entity.setLevel(0);
-		}
-		
-		if(entity.getCount() <= 0) {
-			entity.setCount(0);
-		}
+	public void save(LogQueue entity) throws ArchiveeException {
+		entity.setSimpleRegex(ArchiveePatternUtils.convertToSimpleRegex(entity.getLine()));
 		
 		super.save(entity);
 	}
+
 
 }

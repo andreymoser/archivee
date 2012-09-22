@@ -19,15 +19,16 @@
  */
 package biz.bidi.archivee.components.logparser.commons;
 
-import com.google.code.morphia.query.Query;
-
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager;
+import biz.bidi.archivee.commons.model.LogQueue;
+import biz.bidi.archivee.commons.model.Pattern;
+import biz.bidi.archivee.components.listeners.logsender.ILogSender;
 import biz.bidi.archivee.components.logparser.ILogParser;
-import biz.bidi.archivee.components.logparser.dao.PatternDAOFactory;
-import biz.bidi.archivee.components.logparser.model.Pattern;
+
+import com.google.code.morphia.query.Query;
 
 /**
  * @author Andrey Bidinotto
@@ -66,5 +67,25 @@ public class LogParserUtils {
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,Pattern.class);
 		daoInstance = factory.createInstance(null);
 		return daoInstance;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static IArchiveeGenericDAO<LogQueue, Query<LogQueue>> getLoqQueue() throws ArchiveeException {
+		IArchiveeGenericDAO daoInstance = null;
+		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,LogQueue.class);
+		daoInstance = factory.createInstance(null);
+		return daoInstance;
+	}
+
+	/**
+	 * @return
+	 * @throws ArchiveeException 
+	 */
+	@SuppressWarnings("unchecked")
+	public static ILogSender getLogSender() throws ArchiveeException {
+		ILogSender logSender = null;
+		IArchiveeFactory<ILogSender, Object> factory = getFactory(ILogSender.class);
+		logSender = factory.createInstance(null);
+		return logSender;
 	}
 }

@@ -20,10 +20,10 @@
 package biz.bidi.archivee.components.logparser.dao;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
-import biz.bidi.archivee.commons.dao.PatternDAO;
+import biz.bidi.archivee.commons.dao.LogQueueDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.model.Pattern;
+import biz.bidi.archivee.commons.model.LogQueue;
 
 import com.google.code.morphia.query.Query;
 
@@ -32,8 +32,8 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 13, 2012
  */
-public class PatternDAOFactory 
-	implements IArchiveeFactory<IArchiveeGenericDAO<Pattern, Query<Pattern>>, Object> {
+public class LogQueueDAOFactory 
+	implements IArchiveeFactory<IArchiveeGenericDAO<LogQueue, Query<LogQueue>>, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -41,9 +41,9 @@ public class PatternDAOFactory
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public IArchiveeGenericDAO<Pattern, Query<Pattern>> createInstance(
+	public IArchiveeGenericDAO<LogQueue, Query<LogQueue>> createInstance(
 			Object object) throws ArchiveeException {
-		return new PatternDAO();
+		return new LogQueueDAO();
 	}
 	
 }

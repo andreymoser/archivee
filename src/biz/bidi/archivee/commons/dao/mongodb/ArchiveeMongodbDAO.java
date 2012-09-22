@@ -22,10 +22,10 @@ package biz.bidi.archivee.commons.dao.mongodb;
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.IEntity;
+import biz.bidi.archivee.commons.model.LogQueue;
+import biz.bidi.archivee.commons.model.Pattern;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
-import biz.bidi.archivee.components.logparser.model.Pattern;
-import biz.bidi.archivee.components.logparser.model.PatternId;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
@@ -63,7 +63,8 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 			 * Entities should added here
 			 */
 			Morphia morphia = new Morphia();
-			morphia.map(Pattern.class).map(PatternId.class);
+			morphia.map(Pattern.class);
+			morphia.map(LogQueue.class);
 			
 			ds = morphia.createDatastore(mongo, database); 
 			ds.ensureIndexes();
@@ -95,7 +96,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#delete(java.lang.Object, Q[])
 	 */
 	@Override
-	public void delete(E entity, Query query) throws ArchiveeException {
+	public void delete(E entity, Query<E> query) throws ArchiveeException {
 		try {
 			if(entity != null) {
 				ds.delete(entity);

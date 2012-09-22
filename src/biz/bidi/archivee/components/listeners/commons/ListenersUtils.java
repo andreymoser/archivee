@@ -46,7 +46,7 @@ public class ListenersUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static ILogSender getLoSenderInstance() throws ArchiveeException {
+	public static ILogSender getLogSenderInstance() throws ArchiveeException {
 		ILogSender logSender = null;
 		IArchiveeFactory<ILogSender, Object> factory = getFactory(ILogSender.class);
 		logSender = factory.createInstance(null);

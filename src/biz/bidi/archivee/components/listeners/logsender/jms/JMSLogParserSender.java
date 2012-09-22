@@ -22,7 +22,6 @@ package biz.bidi.archivee.components.listeners.logsender.jms;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.jms.ArchiveeJMSConnectionData;
 import biz.bidi.archivee.commons.jms.ArchiveeJMSQueue;
-import biz.bidi.archivee.commons.jms.ArchiveeJMSTopic;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
 import biz.bidi.archivee.components.listeners.logsender.ILogSender;
@@ -32,14 +31,14 @@ import biz.bidi.archivee.components.listeners.logsender.ILogSender;
  * @email andreymoser@bidi.biz
  * @since Sep 7, 2012
  */
-public class JMSLogSender extends ArchiveeJMSQueue implements ILogSender, IArchiveePropertiesLoader {
+public class JMSLogParserSender extends ArchiveeJMSQueue implements ILogSender, IArchiveePropertiesLoader {
 
 	/**
 	 * The connection name
 	 */
 	private String connectionName;
 	
-	public JMSLogSender() {
+	public JMSLogParserSender() {
 		connectionData = new ArchiveeJMSConnectionData();
 		loadProperties(this.getClass().getSimpleName() + ".");
 	}

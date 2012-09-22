@@ -21,7 +21,7 @@ package biz.bidi.archivee.components.listeners.logsender;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.components.listeners.logsender.jms.JMSLogSender;
+import biz.bidi.archivee.components.listeners.logsender.jms.JMSLogParserSender;
 
 /**
  * @author Andrey Bidinotto
@@ -37,7 +37,7 @@ public class LogSenderFactory implements IArchiveeFactory<ILogSender,Object> {
 	 */
 	@Override
 	public ILogSender createInstance(Object object) throws ArchiveeException {
-		return new JMSLogSender();
+		return new JMSLogParserSender();
 	}
 
 }

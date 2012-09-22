@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import biz.bidi.archivee.components.listeners.logsender.jms.JMSLogSender;
+import biz.bidi.archivee.components.listeners.logsender.jms.JMSLogParserSender;
 
 /**
  * @author Andrey Bidinotto
@@ -33,19 +33,19 @@ import biz.bidi.archivee.components.listeners.logsender.jms.JMSLogSender;
  */
 public class JMSLogSenderTest {
 
-	private static JMSLogSender logSender;
+	private static JMSLogParserSender logSender;
 	
 	/**
-	 * Test method for {@link biz.bidi.archivee.components.listeners.logsender.jms.JMSLogSender#JMSLogSender()}.
+	 * Test method for {@link biz.bidi.archivee.components.listeners.logsender.jms.JMSLogParserSender#JMSLogSender()}.
 	 */
 	@Test
 	public final void testJMSLogSender() {
-		logSender = new JMSLogSender();
+		logSender = new JMSLogParserSender();
 		assertNotNull(logSender);
 	}
 
 	/**
-	 * Test method for {@link biz.bidi.archivee.components.listeners.logsender.jms.JMSLogSender#sendLogLine(java.lang.String)}.
+	 * Test method for {@link biz.bidi.archivee.components.listeners.logsender.jms.JMSLogParserSender#sendLogLine(java.lang.String)}.
 	 */
 	@Test
 	public final void testSendLogLine() {
@@ -54,7 +54,7 @@ public class JMSLogSenderTest {
 	}
 
 	/**
-	 * Test method for {@link biz.bidi.archivee.components.listeners.logsender.jms.JMSLogSender#loadProperties(java.lang.String)}.
+	 * Test method for {@link biz.bidi.archivee.components.listeners.logsender.jms.JMSLogParserSender#loadProperties(java.lang.String)}.
 	 */
 	@Test
 	public final void testLoadProperties() {
