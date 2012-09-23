@@ -17,13 +17,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.logparser.dao;
+package biz.bidi.archivee.commons.dao.mongodb.dao;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
-import biz.bidi.archivee.commons.dao.LogQueueDAO;
+import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.model.LogQueue;
+import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.commons.model.mongodb.PatternType;
 
 import com.google.code.morphia.query.Query;
 
@@ -32,18 +32,20 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 13, 2012
  */
-public class LogQueueDAOFactory 
-	implements IArchiveeFactory<IArchiveeGenericDAO<LogQueue, Query<LogQueue>>, Object> {
+public class PatternDAO extends ArchiveeMongodbDAO<Pattern> {
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
+	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.String, java.lang.Object[])
 	 */
 	@Override
-	public IArchiveeGenericDAO<LogQueue, Query<LogQueue>> createInstance(
-			Object object) throws ArchiveeException {
-		return new LogQueueDAO();
+	public Query<Pattern> find(Pattern entity, String customSearchId) throws ArchiveeException {
+		if(customSearchId.equals("all.root")) {
+			return find(entity).field("patternType").equal(PatternType.root());
+		}
+		
+		return null;
 	}
-	
+
 }

@@ -17,43 +17,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model;
+package biz.bidi.archivee.test.sandbox.mongodb;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 16, 2012
+ * @since Sep 14, 2012
  */
-public enum PatternType {
-
-	R("Root"),
-	D("Date"),
-	L("Level"),
-	P("Pattern");
-	
-	public final String type;
+public class SandTest {
 
 	/**
-	 * @param type
+	 * @param args
 	 */
-	private PatternType(String type) {
-		this.type = type;
-	}
-	
-	public static PatternType root() {
-		return PatternType.R;
-	}
-	
-	public static PatternType date() {
-		return PatternType.D;
-	}
-	
-	public static PatternType level() {
-		return PatternType.L;
-	}
-	
-	public static PatternType pattern() {
-		return PatternType.P;
-	}
+	public static void main(String[] args) {
+		String value = "aadsfa\nasfa";
 		
+		for(String str : value.split("\n")) {
+			System.out.println(str.length()); 
+		}
+
+	}
+
 }

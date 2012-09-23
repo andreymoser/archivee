@@ -20,6 +20,9 @@
 package biz.bidi.archivee.commons.exceptions;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Date;
 
 
 /**
@@ -71,39 +74,56 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 	}
 	
 	private void error(Object... objects) {
-		if(this.objects == null || this.objects.length == 0) {
-			this.objects = objects;
 			
 			if(this.objects == null || this.objects.length == 0) {
-				return;
-			}
-		}
-		
-		String objectMessage = "";
-		for(Object object : this.objects) {
-			if(object == null) {
-				continue;
-			}
-			
-			objectMessage+="{ObjectName="+object.getClass().getName() + ";";
-			Field[] fields = object.getClass().getFields();
-			for(Field field : fields) {
-				if(field.isAccessible()) {
-					try {
-						String stringQuotes = field.getType().getName() == "String"?"\"":"";
-						
-						objectMessage += field.getName() + "=" + stringQuotes + field.get(object) + stringQuotes + ";";
-								
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					}
+				this.objects = objects;
+				
+				if(this.objects == null || this.objects.length == 0) {
+					return;
 				}
 			}
-			objectMessage+="}\t";
-		}
-		System.out.println(objectMessage);
+			
+			String objectMessage = "";
+			for(Object object : this.objects) {
+				if(object == null) {
+					continue;
+				}
+				
+				objectMessage+="{ObjectName="+object.getClass().getName() + ";";
+				for(Method method : object.getClass().getMethods()) {
+					if(!(method.getName().startsWith("get") && method.getName().length() > 3 || 
+					   method.getName().startsWith("is"))) {
+						continue;
+					}
+					Class c = method.getReturnType();
+					
+					try {
+						if(c.equals(String.class)) {
+							objectMessage+=method.getName().substring(3) + "=\"" + method.invoke(object, null) + "\";";
+						} else if(c.equals(Integer.class)) {
+							objectMessage+=method.getName().substring(3) + "(int)=" + method.invoke(object, null) + ";";						
+						} else if(c.equals(Double.class)) {
+							objectMessage+=method.getName().substring(3) + "(double)=" + method.invoke(object, null) + ";";						
+						} else if(c.equals(Long.class)) {
+							objectMessage+=method.getName().substring(3) + "(long)=" + method.invoke(object, null) + ";";						
+						} else if(c.equals(Float.class)) {
+							objectMessage+=method.getName().substring(3) + "(float)=" + method.invoke(object, null) + ";";						
+						} else if(c.equals(Boolean.class)) {
+							objectMessage+=method.getName() + "(boolean)=" + method.invoke(object, null) + ";";						
+						} else {
+							objectMessage+=method.getName().substring(3) + "(" + c.getSimpleName() + ")=" + method.invoke(object, null) + ";";						
+						}
+					} catch (IllegalArgumentException e) {
+						//ignore
+					} catch (IllegalAccessException e) {
+						//ignore
+					} catch (InvocationTargetException e) {
+						//ignore
+					}
+				}
+				objectMessage+="}\t";
+			}
+			System.out.println(objectMessage);
 	}
 
 	/**

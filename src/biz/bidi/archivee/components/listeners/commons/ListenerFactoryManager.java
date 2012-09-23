@@ -22,10 +22,12 @@ package biz.bidi.archivee.components.listeners.commons;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.interfaces.ILogParser;
 import biz.bidi.archivee.components.listeners.file.logreader.LogReaderFactory;
 import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
 import biz.bidi.archivee.components.listeners.logsender.ILogSender;
 import biz.bidi.archivee.components.listeners.logsender.LogSenderFactory;
+import biz.bidi.archivee.components.listeners.parser.LogParserFactory;
 
 /**
  * @author Andrey Bidinotto
@@ -37,12 +39,14 @@ public class ListenerFactoryManager extends ArchiveeGenericFactoryManager {
 
 	protected static IArchiveeFactory fileLogReaderFactory;
 	protected static IArchiveeFactory logSenderFactory;
+	protected static IArchiveeFactory logParserFactory;
 	
 	static {
 		instance = new ListenerFactoryManager();
 		
 		fileLogReaderFactory = new LogReaderFactory(); 
 		logSenderFactory = new LogSenderFactory(); 
+		logParserFactory = new LogParserFactory(); 
 	}
 
 	/**
@@ -69,6 +73,9 @@ public class ListenerFactoryManager extends ArchiveeGenericFactoryManager {
 		}
 		if(classObject == ILogSender.class) {
 			factory = logSenderFactory; 
+		}
+		if(classObject == ILogParser.class) {
+			factory = logParserFactory; 
 		}
 		
 		validateFactory(factory, classObject);

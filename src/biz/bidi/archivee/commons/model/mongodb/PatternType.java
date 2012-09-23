@@ -17,23 +17,43 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.logsender;
-
-import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.xml.ParserMessage;
+package biz.bidi.archivee.commons.model.mongodb;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 7, 2012
+ * @since Sep 16, 2012
  */
-public interface ILogSender {
+public enum PatternType {
+
+	R("Root"),
+	D("Date"),
+	L("Level"),
+	P("Pattern");
+	
+	public final String type;
 
 	/**
-	 * Sends the log message via jms to log parser
-	 * @param line
-	 * @throws ArchiveeException
+	 * @param type
 	 */
-	public void sendLogMessage(ParserMessage message) throws ArchiveeException;
+	private PatternType(String type) {
+		this.type = type;
+	}
 	
+	public static PatternType root() {
+		return PatternType.R;
+	}
+	
+	public static PatternType date() {
+		return PatternType.D;
+	}
+	
+	public static PatternType level() {
+		return PatternType.L;
+	}
+	
+	public static PatternType pattern() {
+		return PatternType.P;
+	}
+		
 }

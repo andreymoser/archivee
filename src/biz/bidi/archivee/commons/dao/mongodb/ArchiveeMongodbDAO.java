@@ -21,9 +21,9 @@ package biz.bidi.archivee.commons.dao.mongodb;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.IEntity;
-import biz.bidi.archivee.commons.model.LogQueue;
-import biz.bidi.archivee.commons.model.Pattern;
+import biz.bidi.archivee.commons.model.mongodb.IEntity;
+import biz.bidi.archivee.commons.model.mongodb.LogQueue;
+import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
 

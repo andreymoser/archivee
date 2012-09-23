@@ -44,7 +44,7 @@ public class FileListener implements IArchiveePropertiesLoader {
 	/**
 	 * The regex for the log filenames to be listened
 	 */
-	private String regexLogFilename;	
+	private String regexLogFilename;
 	
 	/**
 	 * Starts process
@@ -111,5 +111,5 @@ public class FileListener implements IArchiveePropertiesLoader {
 	public void loadProperties(String prefixKey) throws ArchiveeException {
 		ArchiveeProperties.loadProperties(this, prefixKey);
 	}
-
+	
 }

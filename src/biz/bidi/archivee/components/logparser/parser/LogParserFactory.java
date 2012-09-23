@@ -17,49 +17,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.dao;
+package biz.bidi.archivee.components.logparser.parser;
 
-import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.LogQueue;
-import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
-
-import com.google.code.morphia.query.Query;
+import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.interfaces.ILogParser;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 13, 2012
+ * @since Sep 11, 2012
  */
-public class LogQueueDAO extends ArchiveeMongodbDAO<LogQueue> {
+public class LogParserFactory implements IArchiveeFactory<ILogParser, Object> {
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public Query<LogQueue> find(LogQueue entity, String customSearchId)
-			throws ArchiveeException {
-		
-		if(customSearchId.equals("all.starts.with.regex")) {
-			return find(entity).field("line").startsWith(entity.getLine());
-		}
-		
-		return null;
+	public ILogParser createInstance(Object object) throws ArchiveeException {
+		return new MessageLogParser();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO#save(biz.bidi.archivee.commons.model.IEntity)
-	 */
-	@Override
-	public void save(LogQueue entity) throws ArchiveeException {
-		entity.setSimpleRegex(ArchiveePatternUtils.convertToSimpleRegex(entity.getLine()));
-		
-		super.save(entity);
-	}
-
 
 }

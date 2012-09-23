@@ -23,10 +23,10 @@ import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager;
-import biz.bidi.archivee.commons.model.LogQueue;
-import biz.bidi.archivee.commons.model.Pattern;
+import biz.bidi.archivee.commons.interfaces.ILogParser;
+import biz.bidi.archivee.commons.model.mongodb.LogQueue;
+import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.components.listeners.logsender.ILogSender;
-import biz.bidi.archivee.components.logparser.ILogParser;
 
 import com.google.code.morphia.query.Query;
 

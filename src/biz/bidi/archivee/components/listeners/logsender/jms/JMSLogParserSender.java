@@ -22,8 +22,10 @@ package biz.bidi.archivee.components.listeners.logsender.jms;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.jms.ArchiveeJMSConnectionData;
 import biz.bidi.archivee.commons.jms.ArchiveeJMSQueue;
+import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
+import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 import biz.bidi.archivee.components.listeners.logsender.ILogSender;
 
 /**
@@ -46,12 +48,11 @@ public class JMSLogParserSender extends ArchiveeJMSQueue implements ILogSender, 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.listeners.logsender.ILogSender#sendLogLine(java.lang.String)
+	 * @see biz.bidi.archivee.components.listeners.logsender.ILogSender#sendLogMessage(java.lang.String)
 	 */
 	@Override
-	public void sendLogLine(String line) throws ArchiveeException {
-		System.out.print(line);
-		send(line);
+	public void sendLogMessage(ParserMessage message) throws ArchiveeException {
+		send(ArchiveeXmlParser.convertoToXml(message));
 	}
 
 	/**

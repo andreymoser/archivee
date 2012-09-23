@@ -17,62 +17,52 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.test.sandbox.jms;
+package biz.bidi.archivee.test.sandbox.date;
 
 import java.io.File;
 
-import com.google.code.morphia.query.Query;
-
-import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.LogQueue;
-import biz.bidi.archivee.commons.model.Pattern;
+import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
-import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
-import biz.bidi.archivee.components.logparser.LogParser;
-import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
+import biz.bidi.archivee.components.listeners.parser.DateLevelLogParser;
 import biz.bidi.archivee.test.commons.FileReaderUtilsTest;
 
 /**
- * Class test for LogParser component
+ * Test for Date and level parsing
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 11, 2012
  */
-public class LogParserLab {
+public class DateLevelLogParserLab {
 	
-	private IArchiveeGenericDAO<Pattern, Query<Pattern>> patternDAO;
-	private IArchiveeGenericDAO<LogQueue, Query<LogQueue>> logQueueDAO;
-	private String logFile;
+	/**
+	 * The file to read
+	 */
+	private String file;
 	
 	public void run() {
 		try {
 			ArchiveeProperties.loadProperties(this);
 			
-			System.out.println("Analysing log file: " + logFile);
+			System.out.println("Analysing file: " + file);
 			
-			patternDAO = LogParserUtils.getPatternDAO();
-			logQueueDAO = LogParserUtils.getLoqQueue();
+			FileReaderUtilsTest fileReader = new FileReaderUtilsTest(new File(file));
 			
-			for (Pattern pattern : patternDAO.find(new Pattern())) {
-				patternDAO.delete(pattern, null);
-			}
-			for (LogQueue logQueue : logQueueDAO.find(new LogQueue())) {
-				logQueueDAO.delete(logQueue, null);
-			}	
+			DateLevelLogParser parser = new DateLevelLogParser();
 			
-			FileReaderUtilsTest fileReader = new FileReaderUtilsTest(new File(logFile));
-			
-			LogParser logParser = new LogParser();
 			String line = "";
 			while(fileReader.hasNext()) {
 				line = fileReader.readLine();
-				logParser.parseLogLine(line);
-				System.out.println(line);
-				System.out.println(ArchiveePatternUtils.convertToSimpleRegex(line));
+				
+				ParserMessage message = new ParserMessage();
+				message.setMessage(line);
+				
+				parser.parseLog(message);
+				
+				System.out.println("date: " +  message.getDate());
+				System.out.println("level: " +  message.getLevel());
+				System.out.println("message: " +  message.getMessage());
 			}
-			
-			logParser.showPatterns();
 			
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Generic error", this);
@@ -80,21 +70,21 @@ public class LogParserLab {
 	}
 	
 	public static void main(String[] args) {
-		new LogParserLab().run();  
+		new DateLevelLogParserLab().run();  
 	}
 
 	/**
-	 * @return the logFile
+	 * @return the file
 	 */
-	public String getLogFile() {
-		return logFile;
+	public String getFile() {
+		return file;
 	}
 
 	/**
-	 * @param logFile the logFile to set
+	 * @param file the file to set
 	 */
-	public void setLogFile(String logFile) {
-		this.logFile = logFile;
+	public void setFile(String file) {
+		this.file = file;
 	}
-	
+
 }

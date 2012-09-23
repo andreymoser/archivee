@@ -17,18 +17,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.logparser.commons;
+package biz.bidi.archivee.commons.factories;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
+import biz.bidi.archivee.commons.dao.mongodb.factories.LogQueueDAOFactory;
+import biz.bidi.archivee.commons.dao.mongodb.factories.PatternDAOFactory;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
-import biz.bidi.archivee.commons.factories.DaoFactoryManager;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager;
-import biz.bidi.archivee.commons.interfaces.ILogParser;
-import biz.bidi.archivee.components.listeners.logsender.ILogSender;
-import biz.bidi.archivee.components.listeners.logsender.LogSenderFactory;
-import biz.bidi.archivee.components.logparser.parser.LogParserFactory;
+import biz.bidi.archivee.commons.model.mongodb.LogQueue;
+import biz.bidi.archivee.commons.model.mongodb.Pattern;
 
 /**
  * @author Andrey Bidinotto
@@ -36,19 +32,16 @@ import biz.bidi.archivee.components.logparser.parser.LogParserFactory;
  * @since Sep 6, 2012
  */
 @SuppressWarnings("rawtypes")
-public class LogParserFactoryManager extends ArchiveeGenericFactoryManager {
+public class DaoFactoryManager extends ArchiveeGenericFactoryManager {
 
-	protected static IArchiveeFactory logParserFactory;
-	protected static IArchiveeFactory logSenderFactory;
-	protected static IArchiveeGenericFactoryManager daoFactoryManager;
+	protected static IArchiveeFactory patternDAOFactory;
+	protected static IArchiveeFactory logQueueDAOFactory;
 	
 	static {
-		instance = new LogParserFactoryManager();
+		instance = new DaoFactoryManager();
 		
-		daoFactoryManager = new DaoFactoryManager();
-		
-		logParserFactory = new LogParserFactory(); 
-		logSenderFactory = new LogSenderFactory(); 
+		patternDAOFactory = new PatternDAOFactory(); 
+		logQueueDAOFactory = new LogQueueDAOFactory(); 
 	}
 
 	/**
@@ -70,14 +63,13 @@ public class LogParserFactoryManager extends ArchiveeGenericFactoryManager {
 	public IArchiveeFactory getFactoryInstance(Class interfaceClass, Class classObject) throws ArchiveeException {
 		IArchiveeFactory factory = null;
 		
-		if(interfaceClass == ILogParser.class) {
-			factory = logParserFactory; 
-		}
-		if(interfaceClass == IArchiveeGenericDAO.class) {
-			factory = daoFactoryManager.getFactoryInstance(interfaceClass, classObject);
-		}
-		if(interfaceClass == ILogSender.class) {
-			factory = logSenderFactory; 
+		if(interfaceClass == IArchiveeGenericDAO.class && classObject != null) {
+			if(classObject == Pattern.class) {
+				factory = patternDAOFactory;
+			}
+			if(classObject == LogQueue.class) {
+				factory = logQueueDAOFactory;
+			}
 		}
 		
 		validateFactory(factory, interfaceClass);

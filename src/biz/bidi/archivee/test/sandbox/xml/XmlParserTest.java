@@ -17,23 +17,50 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.logsender;
+package biz.bidi.archivee.test.sandbox.xml;
+
+import java.util.Date;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
+import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
+import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 7, 2012
+ * @since Sep 23, 2012
  */
-public interface ILogSender {
+public class XmlParserTest {
 
 	/**
-	 * Sends the log message via jms to log parser
-	 * @param line
-	 * @throws ArchiveeException
+	 * @param args
 	 */
-	public void sendLogMessage(ParserMessage message) throws ArchiveeException;
-	
+	public static void main(String[] args) {
+		
+		ParserMessage message = new ParserMessage();
+		
+		message.setDate(ArchiveeDateUtils.convertDateToString(new Date()));
+		message.setLevel("INFO");
+		message.setMessage("message content");
+
+		String xml = "";
+		try {
+			xml = ArchiveeXmlParser.convertoToXml(message);
+			System.out.println(xml);
+		} catch (ArchiveeException e) {
+			ArchiveeException.log(e, "Error while converting to xml", message);
+		}
+		
+		try {
+			ParserMessage message2 = (ParserMessage) ArchiveeXmlParser.convertoToObject(xml);
+			
+			System.out.println("date : " + message2.getDate());
+			System.out.println("level : " + message2.getLevel());
+			System.out.println("message : " + message2.getMessage());
+		} catch (ArchiveeException e) {
+			ArchiveeException.log(e, "Error while converting to xml", message);
+		}
+	}
+
 }

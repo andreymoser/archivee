@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 import org.bson.types.ObjectId;
 
-import biz.bidi.archivee.commons.model.IEntity;
+import biz.bidi.archivee.commons.model.mongodb.IEntity;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;

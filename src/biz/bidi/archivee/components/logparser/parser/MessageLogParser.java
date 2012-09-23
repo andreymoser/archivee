@@ -17,15 +17,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.logparser;
+package biz.bidi.archivee.components.logparser.parser;
 
 import java.util.ArrayList;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.LogQueue;
-import biz.bidi.archivee.commons.model.Pattern;
-import biz.bidi.archivee.commons.model.PatternType;
+import biz.bidi.archivee.commons.interfaces.ILogParser;
+import biz.bidi.archivee.commons.model.mongodb.LogQueue;
+import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.commons.model.mongodb.PatternType;
+import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
 import biz.bidi.archivee.components.listeners.logsender.ILogSender;
 import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
@@ -37,7 +39,7 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 11, 2012
  */
-public class LogParser implements ILogParser {
+public class MessageLogParser implements ILogParser {
 
 	private IArchiveeGenericDAO<Pattern, Query<Pattern>> patternDAO;
 	private IArchiveeGenericDAO<LogQueue, Query<LogQueue>> logQueueDAO;
@@ -49,7 +51,7 @@ public class LogParser implements ILogParser {
 	/**
 	 * 
 	 */
-	public LogParser() {
+	public MessageLogParser() {
 		try {
 			logParserSender = LogParserUtils.getLogSender();
 			patternDAO = LogParserUtils.getPatternDAO();
@@ -63,23 +65,25 @@ public class LogParser implements ILogParser {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.logparser.ILogParser#parseLogLine(java.lang.String)
+	 * @see biz.bidi.archivee.commons.interfaces.ILogParser#parseLogLine(java.lang.String)
 	 */
 	@Override
-	public void parseLogLine(String logLine) throws ArchiveeException {
-		LogQueue logQueue = new LogQueue();
-		logQueue.setLine(logLine);
+	public void parseLog(ParserMessage message) throws ArchiveeException {
+		String logMessage = message.getMessage();
 		
-		Pattern pattern = findPattern(logLine);
+		LogQueue logQueue = new LogQueue();
+		logQueue.setLine(logMessage);
+		
+		Pattern pattern = findPattern(logMessage);
 		if(pattern == null) { //pattern not found
-			processForNewPatterns(logLine); //find new patterns and stores if successful
+			processForNewPatterns(logMessage); //find new patterns and stores if successful
 			
-			pattern = findPattern(logLine);
+			pattern = findPattern(logMessage);
 			
 			if(pattern == null) { //pattern not found
 				logQueueDAO.save(logQueue); // stores into log queue
 			} else {
-				sendLogLineToIndex(logLine, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
+				sendLogLineToIndex(logMessage, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
 			}
 		} else { //pattern found
 			LogQueue nextLogQueue = getNextLogQueue();
@@ -90,7 +94,7 @@ public class LogParser implements ILogParser {
 //				logParserSender.sendLogLine(logLine);
 			}
 			
-			sendLogLineToIndex(logLine, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
+			sendLogLineToIndex(logMessage, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
 		}
 	}
 	

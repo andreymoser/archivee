@@ -19,10 +19,11 @@
  */
 package biz.bidi.archivee.commons.utils;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.Pattern;
+import biz.bidi.archivee.commons.model.mongodb.Pattern;
 
 /**
  * Generic class which contains generic pattern rules/processes
@@ -43,6 +44,43 @@ public class ArchiveePatternUtils {
 		Matcher matcher = pattern.matcher(str);
 		
 		return matcher.find();
+	}
+	
+	/**
+	 * Returns true if the given regex is valid for the given string (str)
+	 * @param str - the string to verify
+	 * @param regex - the regex expression
+	 * @return true if is valid or false otherwise
+	 */
+	public static Integer[] getDigitValues(String str, int min, int max) throws ArchiveeException {
+		String[] strArray = getRegexValues(str, "\\d{" + min + "," + max + "}");
+		
+		Integer[] values = new Integer[strArray.length];
+		
+		for(String value : strArray) {
+			Integer.parseInt(value);
+		}
+		
+		return values;
+	}
+	
+	/**
+	 * Returns true if the given regex is valid for the given string (str)
+	 * @param str - the string to verify
+	 * @param regex - the regex expression
+	 * @return true if is valid or false otherwise
+	 */
+	public static String[] getRegexValues(String str, String regex) throws ArchiveeException {
+		java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(str);
+		
+		ArrayList<String> values = new ArrayList<String>();
+		
+		while(matcher.find()) {
+			values.add(matcher.group());
+		}
+		
+		return values.toArray(new String[values.size()]);
 	}
 	
 	/**

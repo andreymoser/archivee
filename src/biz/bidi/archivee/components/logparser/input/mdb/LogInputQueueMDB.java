@@ -27,7 +27,9 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.components.logparser.ILogParser;
+import biz.bidi.archivee.commons.interfaces.ILogParser;
+import biz.bidi.archivee.commons.model.xml.ParserMessage;
+import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
 
 @MessageDriven( activationConfig = {
@@ -58,15 +60,15 @@ public class LogInputQueueMDB implements MessageListener {
 	public void onMessage(Message message) {
 		if(message instanceof TextMessage) {
 			TextMessage textMessage = (TextMessage) message;
-			String logLine = "";
+			String xml = "";
 			try {
-				logLine = textMessage.getText();
+				xml = textMessage.getText();
 				logParser = LogParserUtils.getLogParser();
-				logParser.parseLogLine(logLine);
+				logParser.parseLog((ParserMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
 				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);
 			} catch (ArchiveeException e) {
-				ArchiveeException.log(this,"Unable to parse log line",logLine,logParser);
+				ArchiveeException.log(this,"Unable to parse log line",xml,logParser);
 			}
 		} else {
 			ArchiveeException.log(this,"Invalid mdb message, expected TextMessage",message);

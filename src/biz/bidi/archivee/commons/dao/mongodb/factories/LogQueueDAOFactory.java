@@ -17,17 +17,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.logparser;
+package biz.bidi.archivee.commons.dao.mongodb.factories;
 
+import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
+import biz.bidi.archivee.commons.dao.mongodb.dao.LogQueueDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.model.mongodb.LogQueue;
+
+import com.google.code.morphia.query.Query;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 11, 2012
+ * @since Sep 13, 2012
  */
-public class LogParserFactory implements IArchiveeFactory<ILogParser, Object> {
+public class LogQueueDAOFactory 
+	implements IArchiveeFactory<IArchiveeGenericDAO<LogQueue, Query<LogQueue>>, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -35,8 +41,9 @@ public class LogParserFactory implements IArchiveeFactory<ILogParser, Object> {
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public ILogParser createInstance(Object object) throws ArchiveeException {
-		return new LogParser();
+	public IArchiveeGenericDAO<LogQueue, Query<LogQueue>> createInstance(
+			Object object) throws ArchiveeException {
+		return new LogQueueDAO();
 	}
-
+	
 }

@@ -17,34 +17,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.dao;
+package biz.bidi.archivee.components.listeners.parser;
 
-import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.Pattern;
-import biz.bidi.archivee.commons.model.PatternType;
-
-import com.google.code.morphia.query.Query;
+import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.interfaces.ILogParser;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 13, 2012
+ * @since Sep 11, 2012
  */
-public class PatternDAO extends ArchiveeMongodbDAO<Pattern> {
+public class LogParserFactory implements IArchiveeFactory<ILogParser, Object> {
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.String, java.lang.Object[])
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public Query<Pattern> find(Pattern entity, String customSearchId) throws ArchiveeException {
-		if(customSearchId.equals("all.root")) {
-			return find(entity).field("patternType").equal(PatternType.root());
-		}
-		
-		return null;
+	public ILogParser createInstance(Object object) throws ArchiveeException {
+		return new DateLevelLogParser();
 	}
 
 }

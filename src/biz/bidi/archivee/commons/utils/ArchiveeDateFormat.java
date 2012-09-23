@@ -17,23 +17,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.logsender;
-
-import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.xml.ParserMessage;
+package biz.bidi.archivee.commons.utils;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 7, 2012
+ * @since Sep 22, 2012
  */
-public interface ILogSender {
+public enum ArchiveeDateFormat {
+	
+	YearMonthDay("YearMonthDay"),
+	YearDayMonth("YearDayMonth"),
+	MonthDayYear("DayMonthYear"),
+	DayMonthYear("DayMonthYear"),
+	DayYearMonth("YearMonthDay"),
+	MonthYearDay("YearDayMonth"),
+	YearMonth("YearMonth"),
+	MonthYear("MonthYear");
 
+	public final String value;
+	
 	/**
-	 * Sends the log message via jms to log parser
-	 * @param line
-	 * @throws ArchiveeException
+	 * @param type
 	 */
-	public void sendLogMessage(ParserMessage message) throws ArchiveeException;
+	private ArchiveeDateFormat(String value) {
+		this.value = value;
+	}
+	
+	public boolean equals(String str) {
+		return value.equals(str);
+	}
 	
 }

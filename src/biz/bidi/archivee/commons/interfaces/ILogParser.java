@@ -17,18 +17,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model;
+package biz.bidi.archivee.commons.interfaces;
 
-import java.io.Serializable;
-
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.xml.ParserMessage;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 12, 2012
+ * @since Sep 11, 2012
  */
-public interface IEntity {
+public interface ILogParser {
 
-	//TODO
+	/**
+	 * Parses the log line
+	 * @param logLine
+	 */
+	public void parseLog(ParserMessage message) throws ArchiveeException;
 	
 }

@@ -22,7 +22,7 @@ package biz.bidi.archivee.components.listeners.commons;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager;
-import biz.bidi.archivee.components.listeners.file.FileListener;
+import biz.bidi.archivee.commons.interfaces.ILogParser;
 import biz.bidi.archivee.components.listeners.file.FileListenerThread;
 import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
 import biz.bidi.archivee.components.listeners.logsender.ILogSender;
@@ -59,5 +59,13 @@ public class ListenersUtils {
 		IArchiveeFactory<IFileLogReader, FileListenerThread> factory = getFactory(IFileLogReader.class);
 		fileLogReader = factory.createInstance(fileListenerThread);
 		return fileLogReader;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static ILogParser getDateLevelLogParser() throws ArchiveeException {
+		ILogParser logSender = null;
+		IArchiveeFactory<ILogParser, Object> factory = getFactory(ILogParser.class);
+		logSender = factory.createInstance(null);
+		return logSender;
 	}
 }

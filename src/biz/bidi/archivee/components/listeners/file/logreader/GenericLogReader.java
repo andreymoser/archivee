@@ -22,6 +22,8 @@ package biz.bidi.archivee.components.listeners.file.logreader;
 import java.io.File;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.ILogParser;
+import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.components.listeners.commons.ListenersUtils;
 import biz.bidi.archivee.components.listeners.file.FileListener;
 import biz.bidi.archivee.components.listeners.file.FileListenerThread;
@@ -135,7 +137,13 @@ public abstract class GenericLogReader implements IFileLogReader {
 	 */
 	@Override
 	public void sendLine(String line) throws ArchiveeException {
-		this.logSender.sendLogLine(logLine);
+		ParserMessage message = new ParserMessage();
+		message.setMessage(line);
+		
+		ILogParser parser = ListenersUtils.getDateLevelLogParser(); 
+		parser.parseLog(message);
+		
+		this.logSender.sendLogMessage(message);
 	}
 	
 	/**
