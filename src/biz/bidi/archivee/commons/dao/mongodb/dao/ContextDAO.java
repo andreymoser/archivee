@@ -17,33 +17,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.dao.mongodb.factories;
+package biz.bidi.archivee.commons.dao.mongodb.dao;
 
-import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
-import biz.bidi.archivee.commons.dao.mongodb.dao.PatternDAO;
+import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.commons.model.mongodb.Context;
 
 import com.google.code.morphia.query.Query;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 13, 2012
+ * @since Sep 28, 2012
  */
-public class PatternDAOFactory 
-	implements IArchiveeFactory<IArchiveeGenericDAO<Pattern, Query<Pattern>>, Object> {
+public class ContextDAO extends ArchiveeMongodbDAO<Context> {
 
+	static {
+		instance = new ContextDAO();
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
+	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public IArchiveeGenericDAO<Pattern, Query<Pattern>> createInstance(
-			Object object) throws ArchiveeException {
-		return PatternDAO.getInstance();
+	public Query<Context> find(Context entity, String customSearchId)
+			throws ArchiveeException {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
+
+
 }

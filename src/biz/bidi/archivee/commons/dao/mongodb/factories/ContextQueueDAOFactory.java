@@ -20,20 +20,19 @@
 package biz.bidi.archivee.commons.dao.mongodb.factories;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
-import biz.bidi.archivee.commons.dao.mongodb.dao.PatternDAO;
+import biz.bidi.archivee.commons.dao.mongodb.dao.ContextQueueDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
 
 import com.google.code.morphia.query.Query;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 13, 2012
+ * @since Sep 28, 2012
  */
-public class PatternDAOFactory 
-	implements IArchiveeFactory<IArchiveeGenericDAO<Pattern, Query<Pattern>>, Object> {
+public class ContextQueueDAOFactory implements IArchiveeFactory<IArchiveeGenericDAO<ContextQueue, Query<ContextQueue>>, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -41,9 +40,9 @@ public class PatternDAOFactory
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public IArchiveeGenericDAO<Pattern, Query<Pattern>> createInstance(
+	public IArchiveeGenericDAO<ContextQueue, Query<ContextQueue>> createInstance(
 			Object object) throws ArchiveeException {
-		return PatternDAO.getInstance();
+		return ContextQueueDAO.getInstance();
 	}
-	
+
 }

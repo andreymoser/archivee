@@ -32,6 +32,10 @@ import com.google.code.morphia.query.Query;
  */
 public class PatternDAO extends ArchiveeMongodbDAO<Pattern> {
 
+	static {
+		instance = new PatternDAO();
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -39,7 +43,7 @@ public class PatternDAO extends ArchiveeMongodbDAO<Pattern> {
 	 */
 	@Override
 	public Query<Pattern> find(Pattern entity, String customSearchId) throws ArchiveeException {
-		
+		//TODO custom find
 		return null;
 	}
 

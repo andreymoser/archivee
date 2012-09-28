@@ -43,7 +43,7 @@ public class LogQueueDAOFactory
 	@Override
 	public IArchiveeGenericDAO<LogQueue, Query<LogQueue>> createInstance(
 			Object object) throws ArchiveeException {
-		return new LogQueueDAO();
+		return LogQueueDAO.getInstance();
 	}
 	
 }

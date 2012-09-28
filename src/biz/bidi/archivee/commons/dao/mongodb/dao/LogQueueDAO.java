@@ -33,6 +33,10 @@ import com.google.code.morphia.query.Query;
  */
 public class LogQueueDAO extends ArchiveeMongodbDAO<LogQueue> {
 
+	static {
+		instance = new LogQueueDAO();
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * 

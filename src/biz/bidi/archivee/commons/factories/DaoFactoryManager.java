@@ -20,11 +20,25 @@
 package biz.bidi.archivee.commons.factories;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
+import biz.bidi.archivee.commons.dao.mongodb.factories.ContextDAOFactory;
+import biz.bidi.archivee.commons.dao.mongodb.factories.ContextIndexDAOFactory;
+import biz.bidi.archivee.commons.dao.mongodb.factories.ContextQueueDAOFactory;
+import biz.bidi.archivee.commons.dao.mongodb.factories.DictionaryDAOFactory;
+import biz.bidi.archivee.commons.dao.mongodb.factories.DictionaryQueueDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.LogQueueDAOFactory;
+import biz.bidi.archivee.commons.dao.mongodb.factories.MasterIndexDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.PatternDAOFactory;
+import biz.bidi.archivee.commons.dao.mongodb.factories.TemplateDAOFactory;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.mongodb.Context;
+import biz.bidi.archivee.commons.model.mongodb.ContextIndex;
+import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
+import biz.bidi.archivee.commons.model.mongodb.Dictionary;
+import biz.bidi.archivee.commons.model.mongodb.DictionaryQueue;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
+import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.commons.model.mongodb.Template;
 
 /**
  * @author Andrey Bidinotto
@@ -36,12 +50,28 @@ public class DaoFactoryManager extends ArchiveeGenericFactoryManager {
 
 	protected static IArchiveeFactory patternDAOFactory;
 	protected static IArchiveeFactory logQueueDAOFactory;
+	protected static IArchiveeFactory appDAOFactory;
+	protected static IArchiveeFactory contextDAOFactory;
+	protected static IArchiveeFactory contextQueueDAOFactory;
+	protected static IArchiveeFactory contextIndexDAOFactory;
+	protected static IArchiveeFactory dictionaryDAOFactory;
+	protected static IArchiveeFactory dictionaryQueueDAOFactory;
+	protected static IArchiveeFactory masterIndexDAOFactory;
+	protected static IArchiveeFactory templateDAOFactory;
 	
 	static {
 		instance = new DaoFactoryManager();
 		
 		patternDAOFactory = new PatternDAOFactory(); 
 		logQueueDAOFactory = new LogQueueDAOFactory(); 
+		appDAOFactory = new LogQueueDAOFactory(); 
+		contextDAOFactory = new ContextDAOFactory(); 
+		contextQueueDAOFactory = new ContextQueueDAOFactory(); 
+		contextIndexDAOFactory = new ContextIndexDAOFactory(); 
+		dictionaryDAOFactory = new DictionaryDAOFactory(); 
+		dictionaryQueueDAOFactory = new DictionaryQueueDAOFactory(); 
+		masterIndexDAOFactory = new MasterIndexDAOFactory(); 
+		templateDAOFactory = new TemplateDAOFactory(); 
 	}
 
 	/**
@@ -69,6 +99,27 @@ public class DaoFactoryManager extends ArchiveeGenericFactoryManager {
 			}
 			if(classObject == LogQueue.class) {
 				factory = logQueueDAOFactory;
+			}
+			if(classObject == Context.class) {
+				factory = contextDAOFactory;
+			}
+			if(classObject == ContextIndex.class) {
+				factory = contextIndexDAOFactory;
+			}
+			if(classObject == ContextQueue.class) {
+				factory = contextQueueDAOFactory;
+			}
+			if(classObject == Dictionary.class) {
+				factory = dictionaryDAOFactory;
+			}
+			if(classObject == DictionaryQueue.class) {
+				factory = dictionaryQueueDAOFactory;
+			}
+			if(classObject == MasterIndex.class) {
+				factory = masterIndexDAOFactory;
+			}
+			if(classObject == Template.class) {
+				factory = templateDAOFactory;
 			}
 		}
 		

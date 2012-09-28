@@ -20,6 +20,7 @@
 package biz.bidi.archivee.commons.dao.mongodb;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
+import biz.bidi.archivee.commons.dao.mongodb.dao.ContextDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.IEntity;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
@@ -40,6 +41,11 @@ import com.mongodb.Mongo;
 public abstract class ArchiveeMongodbDAO<E extends IEntity> 
 	implements IArchiveeGenericDAO<E, Query<E>>, IArchiveePropertiesLoader {
 	
+	/**
+	 * Singleton instance
+	 */
+	protected static ArchiveeMongodbDAO instance;
+
 	/*
 	 * The mongo db host
 	 */
@@ -209,6 +215,13 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 	 */
 	public void setDatabase(String database) {
 		this.database = database;
+	}
+
+	/**
+	 * @return the instance
+	 */
+	public static ArchiveeMongodbDAO getInstance() {
+		return instance;
 	}
 
 }
