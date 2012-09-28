@@ -19,11 +19,9 @@
  */
 package biz.bidi.archivee.commons.dao.mongodb.dao;
 
-import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
-import biz.bidi.archivee.commons.model.mongodb.PatternType;
 
 import com.google.code.morphia.query.Query;
 
@@ -41,9 +39,6 @@ public class PatternDAO extends ArchiveeMongodbDAO<Pattern> {
 	 */
 	@Override
 	public Query<Pattern> find(Pattern entity, String customSearchId) throws ArchiveeException {
-		if(customSearchId.equals("all.root")) {
-			return find(entity).field("patternType").equal(PatternType.root());
-		}
 		
 		return null;
 	}

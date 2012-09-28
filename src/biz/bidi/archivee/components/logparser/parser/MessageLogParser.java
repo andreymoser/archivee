@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
+import biz.bidi.archivee.commons.model.mongodb.IPattern;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
-import biz.bidi.archivee.commons.model.mongodb.PatternType;
+import biz.bidi.archivee.commons.model.mongodb.PatternChild;
+import biz.bidi.archivee.commons.model.mongodb.PatternKey;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
 import biz.bidi.archivee.components.listeners.logsender.ILogSender;
@@ -69,21 +71,19 @@ public class MessageLogParser implements ILogParser {
 	 */
 	@Override
 	public void parseLog(ParserMessage message) throws ArchiveeException {
-		String logMessage = message.getMessage();
-		
 		LogQueue logQueue = new LogQueue();
-		logQueue.setLine(logMessage);
+		logQueue.setLine(message.getMessage());
 		
-		Pattern pattern = findPattern(logMessage);
+		Pattern pattern = findPattern(message);
 		if(pattern == null) { //pattern not found
-			processForNewPatterns(logMessage); //find new patterns and stores if successful
+			processForNewPatterns(message); //find new patterns and stores if successful
 			
-			pattern = findPattern(logMessage);
+			pattern = findPattern(message);
 			
 			if(pattern == null) { //pattern not found
 				logQueueDAO.save(logQueue); // stores into log queue
 			} else {
-				sendLogLineToIndex(logMessage, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
+				sendLogLineToIndex(message, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
 			}
 		} else { //pattern found
 			LogQueue nextLogQueue = getNextLogQueue();
@@ -94,7 +94,7 @@ public class MessageLogParser implements ILogParser {
 //				logParserSender.sendLogLine(logLine);
 			}
 			
-			sendLogLineToIndex(logMessage, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
+			sendLogLineToIndex(message, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
 		}
 	}
 	
@@ -111,12 +111,12 @@ public class MessageLogParser implements ILogParser {
 	 * @throws ArchiveeException 
 	 * 
 	 */
-	private void processForNewPatterns(String logLine) throws ArchiveeException {
+	private void processForNewPatterns(ParserMessage message) throws ArchiveeException {
 		
-		Pattern rootPattern = findRootPattern(logLine);
+		Pattern rootPattern = findRootPattern(message.getMessage());
 		
 		if(rootPattern == null) { // root pattern not found 
-			rootPattern = findCommonRootPattern(logLine);
+			rootPattern = findCommonRootPattern(message);
 			
 			if(rootPattern == null) {
 				return;
@@ -126,7 +126,7 @@ public class MessageLogParser implements ILogParser {
 		} else { // root pattern found
 			
 			//if found new patterns
-			if(processForNewPatterns(logLine,0,rootPattern)) {
+			if(processForNewPatterns(message,rootPattern)) {
 				patternDAO.save(rootPattern);
 			}
 		}
@@ -140,8 +140,8 @@ public class MessageLogParser implements ILogParser {
 	 * @return
 	 * @throws ArchiveeException 
 	 */
-	private boolean processForNewPatterns(String logLine, int offset,Pattern pattern) throws ArchiveeException {
-		return processForNewPatterns(ArchiveePatternUtils.convertToSimpleRegex(logLine), logLine, offset, pattern, pattern.getValue());
+	private boolean processForNewPatterns(ParserMessage message, Pattern pattern) throws ArchiveeException {
+		return processForNewPatterns(ArchiveePatternUtils.convertToSimpleRegex(message.getMessage()), message, pattern, pattern.getValue());
 	}
 		
 	/**
@@ -149,59 +149,49 @@ public class MessageLogParser implements ILogParser {
 	 * @param rootPattern
 	 * @throws ArchiveeException 
 	 */
-	private boolean processForNewPatterns(String simpleRegexLogLine,String logLine,int offset, Pattern pattern, String fullPattern) throws ArchiveeException {
-		if(pattern == null || pattern.isDate() || pattern.isLevel()) {
+	private boolean processForNewPatterns(String simpleRegexLogLine,ParserMessage message, Pattern pattern, String fullPattern) throws ArchiveeException {
+		if(pattern == null) {
 			return false;
 		}
 		
-		if(pattern.isRoot()) {
-			if(offset > 0) {
-				return false;
-			}
-			
-			if(!simpleRegexLogLine.startsWith(pattern.getValue())) {
-				return false;
-			}
-			
-			fullPattern = pattern.getValue();
+		if(!simpleRegexLogLine.startsWith(pattern.getValue())) {
+			return false;
 		}
+			
+		fullPattern = pattern.getValue();
 		
 		Pattern newPattern = null;
-		Pattern leafPattern = ArchiveePatternUtils.getLeafPattern(pattern, simpleRegexLogLine); 
+		PatternChild leafPattern = ArchiveePatternUtils.getLeafPattern(pattern, simpleRegexLogLine); 
 		
 		boolean updateRootPattern = false;
+		int offset = 0;
 		
-		//TODO verify final pattern matching
-		int times = 0;
-		while(true) {
-			if(leafPattern != null) {
-				offset = leafPattern.getOffset() + leafPattern.getValue().length();
-				
-				newPattern = findCommonRootPattern(simpleRegexLogLine, logLine, offset, leafPattern, false);
-				if(newPattern != null && newPattern.getValue().length() > 0) {
-					System.out.println("Added : " + newPattern.getValue());
-					leafPattern.getPatterns().add(newPattern);
-					
-					leafPattern = newPattern;
-					updateRootPattern = true;
-				}
-			} else {
-				offset = pattern.getValue().length();
-				
-				newPattern = findCommonRootPattern(simpleRegexLogLine, logLine, offset, pattern, false);
-				if(newPattern != null && newPattern.getValue().length() > 0) {
-					System.out.println("Added : " + newPattern.getValue());
-					pattern.getPatterns().add(newPattern);
-					
-					leafPattern = newPattern;
-					updateRootPattern = true;
-				}
-			}
+		if(leafPattern != null) {
+			offset = leafPattern.getOffset() + leafPattern.getValue().length();
 			
-			if(newPattern == null || times > 50) {
-				break;
+			newPattern = findCommonRootPattern(simpleRegexLogLine, message, offset, leafPattern, false);
+			if(newPattern != null && newPattern.getValue().length() > 0) {
+				System.out.println("Added : " + newPattern.getValue() + " - leafPattern: " + leafPattern.getValue());
+				
+				PatternChild newPatternChild = convertToPatternChild(newPattern); 
+				leafPattern.getPatterns().add(newPatternChild);
+				
+				leafPattern = newPatternChild;
+				updateRootPattern = true;
 			}
-			times++;
+		} else {
+			offset = pattern.getValue().length();
+			
+			newPattern = findCommonRootPattern(simpleRegexLogLine, message, offset, pattern, false);
+			if(newPattern != null && newPattern.getValue().length() > 0) {
+				System.out.println("Added : " + newPattern.getValue());
+				
+				PatternChild newPatternChild = convertToPatternChild(newPattern); 
+				pattern.getPatterns().add(newPatternChild);
+				
+				leafPattern = newPatternChild;
+				updateRootPattern = true;
+			}
 		}
 		
 		return updateRootPattern;
@@ -210,13 +200,27 @@ public class MessageLogParser implements ILogParser {
 	
 
 	/**
+	 * @param newPattern
+	 * @return
+	 */
+	private PatternChild convertToPatternChild(Pattern newPattern) {
+		PatternChild patternChild = new PatternChild();
+		
+		patternChild.setOffset(newPattern.getOffset());
+		patternChild.setValue(newPattern.getValue());
+		patternChild.setPatterns(newPattern.getPatterns());
+		
+		return patternChild;
+	}
+
+	/**
 	 * @param logLine
 	 * @return
 	 * @throws ArchiveeException 
 	 */
-	private Pattern findCommonRootPattern(String logLine) throws ArchiveeException {
-		String simpleRegexLogLine = ArchiveePatternUtils.convertToSimpleRegex(logLine);
-		return findCommonRootPattern(simpleRegexLogLine, logLine, 0, null, true);
+	private Pattern findCommonRootPattern(ParserMessage message) throws ArchiveeException {
+		String simpleRegexLogLine = ArchiveePatternUtils.convertToSimpleRegex(message.getMessage());
+		return findCommonRootPattern(simpleRegexLogLine, message, 0, null, true);
 	}
 	
 	/**
@@ -224,7 +228,9 @@ public class MessageLogParser implements ILogParser {
 	 * @return
 	 * @throws ArchiveeException 
 	 */
-	private Pattern findCommonRootPattern(String simpleRegexLogLine,String logLine, int offset, Pattern pattern, boolean isRoot) throws ArchiveeException {
+	private Pattern findCommonRootPattern(String simpleRegexLogLine,ParserMessage message, int offset, IPattern pattern, boolean isRoot) throws ArchiveeException {
+		String logLine = message.getMessage();
+		
 		Pattern newPattern = null;
 		
 		ArrayList<LogQueue> logQueueList = (ArrayList<LogQueue>) logQueueDAO.find(new LogQueue()).asList();
@@ -256,7 +262,7 @@ public class MessageLogParser implements ILogParser {
 					continue;
 				} else {
 					if(!isRoot) {
-						Pattern existentPattern = pattern.findPattern(simpleRegexLogLine.substring(offset, offset + l));						
+						PatternChild existentPattern = pattern.findPattern(simpleRegexLogLine.substring(offset, offset + l));						
 						if(existentPattern != null) { //if exists pattern
 							found--;
 							break;
@@ -274,9 +280,11 @@ public class MessageLogParser implements ILogParser {
 			
 			if(isRoot) {
 				if(!hasInAll) {
-					newPattern = new Pattern();
-					newPattern.setPatternType(PatternType.root());
-					newPattern.setValue(simpleRegexLogLine.substring(offset, offset + l));
+					PatternKey key = new PatternKey();
+					key.setValue(simpleRegexLogLine.substring(offset, offset + l));
+					key.setAppId(findAppId(message.getName()));
+					
+					newPattern = getNextPattern(key);
 					newPattern.setOffset(offset);
 					break;
 				}
@@ -287,7 +295,6 @@ public class MessageLogParser implements ILogParser {
 					
 					if((found > (logQueueList.size()/4) && size > 6) || (found > 0 && sizeTail <= 6)) {
 						newPattern = new Pattern();
-						newPattern.setPatternType(PatternType.pattern());
 						newPattern.setValue(simpleRegexLogLine.substring(offset, offset + l));
 						newPattern.setOffset(offset);
 						break;
@@ -308,18 +315,55 @@ public class MessageLogParser implements ILogParser {
 	}
 
 	/**
-	 * @param logLine
 	 * @return
 	 * @throws ArchiveeException 
 	 */
-	private Pattern findPattern(String logLine) throws ArchiveeException {
-		Pattern patternFound = findRootPattern(logLine);
+	private Pattern getNextPattern(PatternKey key) {
+		Pattern pattern = new Pattern();
+		
+		int count = 0;
+		
+		while(count < 10) {
+			try {
+				if(count == 0) {
+					pattern.setId((int) patternDAO.getSize(pattern) + 1);
+				}
+				patternDAO.save(pattern);
+				pattern.setAppId(1);
+				pattern.setValue(key.getValue());
+			} catch(ArchiveeException e) {
+				count++;
+				pattern.setId(pattern.getId() + 1);
+				continue;
+			}
+			break;
+		}
+		
+		return pattern;
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	private int findAppId(String name) {
+		// TODO Auto-generated method stub
+		return 1;
+	}
+
+	/**
+	 * @param message
+	 * @return
+	 * @throws ArchiveeException 
+	 */
+	private Pattern findPattern(ParserMessage message) throws ArchiveeException {
+		Pattern patternFound = findRootPattern(message.getMessage());
 		
 		if(patternFound == null) {
 			return patternFound;
 		}
 		
-		if(!ArchiveePatternUtils.validatePatternForLogLine(logLine,patternFound)) {
+		if(!ArchiveePatternUtils.validatePatternForLogLine(message.getMessage(),patternFound)) {
 			patternFound = null;
 		}
 		
@@ -334,7 +378,7 @@ public class MessageLogParser implements ILogParser {
 	private Pattern findRootPattern(String logLine) throws ArchiveeException {
 		Pattern patternFound = null;
 		
-		for(Pattern pattern : patternDAO.find(new Pattern(),"all.root")) {
+		for(Pattern pattern : patternDAO.find(new Pattern())) {
 			if(ArchiveePatternUtils.matchRegex(logLine, ArchiveePatternUtils.convertSimpleRegexToRegex(pattern.getValue()))) {
 				patternFound = pattern;
 				break;
@@ -344,8 +388,8 @@ public class MessageLogParser implements ILogParser {
 		return patternFound;
 	}
 
-	public void sendLogLineToIndex(String logLine, Pattern pattern) {
-		System.out.println("Sent: " + logLine);
+	public void sendLogLineToIndex(ParserMessage message, Pattern pattern) {
+		System.out.println("Sent: " + message.getMessage());
 	}
 	
 	/**

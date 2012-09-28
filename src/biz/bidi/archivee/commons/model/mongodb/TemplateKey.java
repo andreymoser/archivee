@@ -20,14 +20,43 @@
 package biz.bidi.archivee.commons.model.mongodb;
 
 
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 12, 2012
+ * @since Sep 27, 2012
  */
-public interface IEntity {
+public class TemplateKey {
 
-	//TODO
+	private long patternId;
+	
+	private PatternPath patternPath;
+
+	/**
+	 * @return the patternId
+	 */
+	public long getPatternId() {
+		return patternId;
+	}
+
+	/**
+	 * @param patternId the patternId to set
+	 */
+	public void setPatternId(long patternId) {
+		this.patternId = patternId;
+	}
+
+	/**
+	 * @return the patternPath
+	 */
+	public PatternPath getPatternPath() {
+		return patternPath;
+	}
+
+	/**
+	 * @param patternPath the patternPath to set
+	 */
+	public void setPatternPath(PatternPath patternPath) {
+		this.patternPath = patternPath;
+	}
 	
 }

@@ -20,14 +20,43 @@
 package biz.bidi.archivee.commons.model.mongodb;
 
 
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 12, 2012
+ * @since Sep 27, 2012
  */
-public interface IEntity {
-
-	//TODO
+public class ContextKey {
 	
+	private int appId;
+	
+	private long sequence;
+
+	/**
+	 * @return the appId
+	 */
+	public int getAppId() {
+		return appId;
+	}
+
+	/**
+	 * @param appId the appId to set
+	 */
+	public void setAppId(int appId) {
+		this.appId = appId;
+	}
+
+	/**
+	 * @return the sequence
+	 */
+	public long getSequence() {
+		return sequence;
+	}
+
+	/**
+	 * @param sequence the sequence to set
+	 */
+	public void setSequence(long sequence) {
+		this.sequence = sequence;
+	}
+
 }

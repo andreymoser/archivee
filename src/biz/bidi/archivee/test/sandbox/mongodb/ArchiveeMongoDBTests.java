@@ -17,49 +17,50 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.dao.mongodb.dao;
+package biz.bidi.archivee.test.sandbox.mongodb;
 
-import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
+import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.mongodb.LogQueue;
-import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
+import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
 
 import com.google.code.morphia.query.Query;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 13, 2012
+ * @since Sep 26, 2012
  */
-public class LogQueueDAO extends ArchiveeMongodbDAO<LogQueue> {
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
-	 */
-	@Override
-	public Query<LogQueue> find(LogQueue entity, String customSearchId)
-			throws ArchiveeException {
-		
-		if(customSearchId.equals("all.starts.with.regex")) {
-			return find(entity).field("line").startsWith(entity.getLine());
+public class ArchiveeMongoDBTests {
+	
+	private IArchiveeGenericDAO<Pattern, Query<Pattern>> patternDAO;
+	
+	public void run() {
+		try {
+			
+			patternDAO = LogParserUtils.getPatternDAO();
+			
+			Pattern pattern = new Pattern();
+			pattern.setId(1);
+			patternDAO.save(pattern);
+			
+			pattern.setValue("teste");
+			patternDAO.save(pattern);
+			
+			pattern.setValue("teste 2");
+			patternDAO.save(pattern);
+			
+			for(Pattern p : patternDAO.find(new Pattern())) {
+//				patternDAO.delete(p, null);
+			}
+			
+			
+		} catch (ArchiveeException e) {
+			ArchiveeException.log(e, "Generic error", this);
 		}
-		
-		return null;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO#save(biz.bidi.archivee.commons.model.IEntity)
-	 */
-	@Override
-	public void save(LogQueue entity) throws ArchiveeException {
-		entity.setSimpleRegex(ArchiveePatternUtils.convertToSimpleRegex(entity.getLine()));
-		
-		super.save(entity);
+	
+	public static void main(String[] args) {
+		new ArchiveeMongoDBTests().run();  
 	}
-
-
 }

@@ -19,15 +19,66 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 12, 2012
+ * @since Sep 25, 2012
  */
-public interface IEntity {
+@Entity(value="template", noClassnameStored=true)
+public class Template implements IEntity {
 
-	//TODO
+	@Id
+	private long id;
+
+	@Indexed(unique=true)
+	private TemplateKey key;
 	
+	private int count;
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the key
+	 */
+	public TemplateKey getKey() {
+		return key;
+	}
+
+	/**
+	 * @param key the key to set
+	 */
+	public void setKey(TemplateKey key) {
+		this.key = key;
+	}
+
+	/**
+	 * @return the count
+	 */
+	public int getCount() {
+		return count;
+	}
+
+	/**
+	 * @param count the count to set
+	 */
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 }

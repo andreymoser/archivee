@@ -19,15 +19,23 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 12, 2012
+ * @since Sep 27, 2012
  */
-public interface IEntity {
+@Entity(value="app", noClassnameStored=true)
+public class App implements IEntity {
 
-	//TODO
+	@Id
+	private int id;
 	
+	@Indexed(unique=true)
+	private String name;
+
+
 }

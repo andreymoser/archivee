@@ -19,15 +19,43 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 12, 2012
+ * @since Sep 26, 2012
  */
-public interface IEntity {
-
-	//TODO
+public class PatternKey {
 	
+	private int appId;
+	
+	private String value;
+
+	/**
+	 * @return the appId
+	 */
+	public int getAppId() {
+		return appId;
+	}
+
+	/**
+	 * @param appId the appId to set
+	 */
+	public void setAppId(int appId) {
+		this.appId = appId;
+	}
+
+	/**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
 }

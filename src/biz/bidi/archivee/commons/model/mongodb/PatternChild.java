@@ -21,32 +21,22 @@ package biz.bidi.archivee.commons.model.mongodb;
 
 import java.util.ArrayList;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 13, 2012
  */
-@Entity(value="pattern", noClassnameStored=true)
-public class Pattern implements IEntity, IPattern {
+public class PatternChild implements IPattern {
 
-	@Id
-	private long id;
-	
-	@Indexed(unique=true)
-	private PatternKey key;
-	
 	private int offset;
+	
+	private String value;
 	
 	private ArrayList<PatternChild> patterns;
 	
-	public Pattern() {
+	public PatternChild() {
 		super();
 		
-		this.key = new PatternKey();
 		this.patterns = new ArrayList<PatternChild>(); 
 	}
 
@@ -54,30 +44,16 @@ public class Pattern implements IEntity, IPattern {
 	 * @return the id
 	 */
 	public String getValue() {
-		return this.key.getValue();
+		return this.value;
 	}
 
 	/**
 	 * @param value the id to set
 	 */
 	public void setValue(String value) {
-		this.key.setValue(value);
+		this.value = value;
 	}
 	
-	/**
-	 * @return the appId
-	 */
-	public int getAppId() {
-		return this.key.getAppId();
-	}
-	
-	/**
-	 * @param value the appId to set
-	 */
-	public void setAppId(int appId) {
-		this.key.setAppId(appId);
-	}
-
 	/**
 	 * @return the patterns
 	 */
@@ -111,18 +87,7 @@ public class Pattern implements IEntity, IPattern {
 	 */
 	public StringBuffer getTreeStringData() {
 		StringBuffer stringBuffer = new StringBuffer();
-		String fullPattern = this.getValue();
-		
-		int size = this.getPatterns()!=null?this.getPatterns().size():-1;
-		stringBuffer.append("\"" + this.getValue() + "\"" + " [offset: " + this.getOffset() + " elements: " + size + "] " + ((this.getPatterns().size()==0)?(" \""+fullPattern+"\""):""));
-		
-		if(this.getPatterns() != null) {
-			for(PatternChild p : this.getPatterns()) {
-				stringBuffer.append("\n");
-				getPatternTreeDataString(p,stringBuffer,"+\t", fullPattern + p.getValue());
-			}
-		}
-		
+		getPatternTreeDataString(this,stringBuffer,"",this.getValue());
 		return stringBuffer;
 	}
 
@@ -155,20 +120,5 @@ public class Pattern implements IEntity, IPattern {
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
-
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
-
 
 }

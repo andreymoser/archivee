@@ -19,15 +19,43 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 12, 2012
+ * @since Sep 27, 2012
  */
-public interface IEntity {
+public class Bits {
 
-	//TODO
+	private int value;
+	
+	private int length;
+
+	/**
+	 * @return the value
+	 */
+	public int getValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	/**
+	 * @return the length
+	 */
+	public int getLength() {
+		return length;
+	}
+
+	/**
+	 * @param length the length to set
+	 */
+	public void setLength(int length) {
+		this.length = length;
+	}
 	
 }

@@ -22,38 +22,55 @@ package biz.bidi.archivee.commons.model.mongodb;
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 16, 2012
+ * @since Sep 27, 2012
  */
-public enum PatternType {
+public class DictionaryKey {
 
-	R("Root"),
-	D("Date"),
-	L("Level"),
-	P("Pattern");
+	private long patternId;
 	
-	public final String type;
+	private int patternPath;
+	
+	private int elementIndex;
 
 	/**
-	 * @param type
+	 * @return the patternId
 	 */
-	private PatternType(String type) {
-		this.type = type;
+	public long getPatternId() {
+		return patternId;
 	}
-	
-	public static PatternType root() {
-		return PatternType.R;
+
+	/**
+	 * @param patternId the patternId to set
+	 */
+	public void setPatternId(long patternId) {
+		this.patternId = patternId;
 	}
-	
-	public static PatternType date() {
-		return PatternType.D;
+
+	/**
+	 * @return the patternPath
+	 */
+	public int getPatternPath() {
+		return patternPath;
 	}
-	
-	public static PatternType level() {
-		return PatternType.L;
+
+	/**
+	 * @param patternPath the patternPath to set
+	 */
+	public void setPatternPath(int patternPath) {
+		this.patternPath = patternPath;
 	}
-	
-	public static PatternType pattern() {
-		return PatternType.P;
+
+	/**
+	 * @return the elementIndex
+	 */
+	public int getElementIndex() {
+		return elementIndex;
 	}
-		
+
+	/**
+	 * @param elementIndex the elementIndex to set
+	 */
+	public void setElementIndex(int elementIndex) {
+		this.elementIndex = elementIndex;
+	}
 }

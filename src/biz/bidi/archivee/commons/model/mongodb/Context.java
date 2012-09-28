@@ -19,15 +19,59 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
+import java.util.Date;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
+
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 12, 2012
+ * @since Sep 27, 2012
  */
-public interface IEntity {
+@Entity(value="context", noClassnameStored=true)
+public class Context implements IEntity {
 
-	//TODO
+	@Id
+	private long id;
 	
+	@Indexed(unique=true)
+	private ContextKey key;
+	
+	@Indexed
+	private Date startDate;
+	
+	/**
+	 * The compacted data
+	 */
+	private Byte[] data;
+
+	/**
+	 * 
+	 */
+	private Context() {
+		super();
+		
+		data = new Byte[ArchiveeConstants.CONTEXT_MAX_DATA_SIZE];
+	}
+
+	/**
+	 * @return the data
+	 */
+	public Byte[] getData() {
+		return data;
+	}
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(Byte[] data) {
+		this.data = data;
+	}
+
+	
+
 }

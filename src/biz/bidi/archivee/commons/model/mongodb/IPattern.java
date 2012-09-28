@@ -17,35 +17,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.utils;
+package biz.bidi.archivee.commons.model.mongodb;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 22, 2012
+ * @since Sep 26, 2012
  */
-public enum ArchiveeDateFormat {
-	
-	YearMonthDay("YearMonthDay"),
-	YearDayMonth("YearDayMonth"),
-	MonthDayYear("DayMonthYear"),
-	DayMonthYear("DayMonthYear"),
-	DayYearMonth("YearMonthDay"),
-	MonthYearDay("YearDayMonth"),
-	YearMonth("YearMonth"),
-	MonthYear("MonthYear");
+public interface IPattern {
 
-	public final String value;
-	
-	/**
-	 * @param type
-	 */
-	private ArchiveeDateFormat(String value) {
-		this.value = value;
-	}
-	
-	public boolean equals(String str) {
-		return value.equals(str);
-	}
+	public PatternChild findPattern(String id);
 	
 }

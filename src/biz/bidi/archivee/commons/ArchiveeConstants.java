@@ -55,4 +55,9 @@ public class ArchiveeConstants {
 	 * The max byte array size 
 	 */
 	public static int MAX_BYTE_ARRAY_SIZE = 600000;
+	/**
+	 * The context data max size 
+	 */
+	public static final int CONTEXT_MAX_DATA_SIZE = MAX_BYTE_ARRAY_SIZE/4;
+
 }

@@ -19,15 +19,43 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 12, 2012
+ * @since Sep 27, 2012
  */
-public interface IEntity {
+public class DictionaryEntry {
 
-	//TODO
+	private Bits bits;
+	
+	private long count;
+
+	/**
+	 * @return the bits
+	 */
+	public Bits getBits() {
+		return bits;
+	}
+
+	/**
+	 * @param bits the bits to set
+	 */
+	public void setBits(Bits bits) {
+		this.bits = bits;
+	}
+
+	/**
+	 * @return the count
+	 */
+	public long getCount() {
+		return count;
+	}
+
+	/**
+	 * @param count the count to set
+	 */
+	public void setCount(long count) {
+		this.count = count;
+	}
 	
 }

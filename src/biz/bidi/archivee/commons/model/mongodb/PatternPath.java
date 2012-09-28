@@ -19,15 +19,40 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
+import java.util.ArrayList;
 
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 12, 2012
+ * @since Sep 27, 2012
  */
-public interface IEntity {
+public class PatternPath {
 
-	//TODO
+	private ArrayList<Integer> values;
+	
+	/**
+	 * 
+	 */
+	private PatternPath() {
+		super();
+		
+		values = new ArrayList<Integer>();
+	}
+
+	/**
+	 * @return the values
+	 */
+	public ArrayList<Integer> getValues() {
+		return values;
+	}
+
+	/**
+	 * @param values the values to set
+	 */
+	public void setValues(ArrayList<Integer> values) {
+		this.values = values;
+	}
+	
 	
 }

@@ -24,6 +24,7 @@ import java.util.regex.Matcher;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.commons.model.mongodb.PatternChild;
 
 /**
  * Generic class which contains generic pattern rules/processes
@@ -201,17 +202,30 @@ public class ArchiveePatternUtils {
 		return str;
 	}
 	
-	
-	public static Pattern getLeafPattern(Pattern pattern, String simpleRegex) throws ArchiveeException {
-		Pattern leafPattern = null;
+	public static PatternChild getLeafPattern(Pattern pattern, String simpleRegex) throws ArchiveeException {
+		PatternChild leafPattern = null;
 		
-		for(Pattern p : pattern.getPatterns()) {
+		for(PatternChild p : pattern.getPatterns()) {
 			if(simpleRegex.startsWith(p.getValue(),p.getOffset())) {
-				leafPattern = getLeafPattern(p, simpleRegex);
+				leafPattern = getLeafPatternChild(p, simpleRegex);
 				if(leafPattern == null) {
-					if(!p.isRoot()) {
-						leafPattern = p;
-					}
+					leafPattern = p;
+				}
+				break;
+			}
+		}
+		
+		return leafPattern;
+	}
+		
+	private static PatternChild getLeafPatternChild(PatternChild pattern, String simpleRegex) throws ArchiveeException {
+		PatternChild leafPattern = null;
+		
+		for(PatternChild p : pattern.getPatterns()) {
+			if(simpleRegex.startsWith(p.getValue(),p.getOffset())) {
+				leafPattern = getLeafPatternChild(p, simpleRegex);
+				if(leafPattern == null) {
+					leafPattern = p;
 				}
 				break;
 			}
@@ -226,7 +240,35 @@ public class ArchiveePatternUtils {
 	 * @return
 	 */
 	public static boolean validatePatternForLogLine(String logLine, Pattern rootPattern) throws ArchiveeException {
-		return validatePatternForLogLine(convertToSimpleRegex(logLine), logLine, rootPattern, rootPattern, rootPattern.getValue());
+		String simpleRegexLogLine = convertToSimpleRegex(logLine);
+		
+		if(simpleRegexLogLine.equals(rootPattern.getValue())) {
+			return true;
+		}
+		
+		boolean foundPattern = false;
+		
+		if(rootPattern.getPatterns() != null) {
+			for(PatternChild p : rootPattern.getPatterns()) {
+				if(p.getOffset() >= simpleRegexLogLine.length()) {
+					continue;
+				}
+				
+				if(simpleRegexLogLine.equals(rootPattern.getValue() + p.getValue())) {
+					return true;
+				}
+				
+				if(!simpleRegexLogLine.startsWith(p.getValue(),p.getOffset())) {
+					continue;
+				}
+				
+				if(validatePatternForLogLine(simpleRegexLogLine, logLine, p, rootPattern, rootPattern.getValue() + p.getValue())) {
+					foundPattern = true;
+				}
+			}
+		}
+		
+		return foundPattern;
 	}
 	
 	/**
@@ -234,42 +276,40 @@ public class ArchiveePatternUtils {
 	 * @param pattern
 	 * @return
 	 */
-	private static boolean validatePatternForLogLine(String simpleRegexLogLine, String logLine,Pattern pattern, Pattern rootPattern, String fullPattern) throws ArchiveeException {
+	private static boolean validatePatternForLogLine(String simpleRegexLogLine, String logLine,PatternChild pattern, Pattern rootPattern, String fullPattern) throws ArchiveeException {
 		
-		if(pattern == null || pattern.isDate() || pattern.isLevel()) {
-			return false;
-		}
+//		if(pattern == null) {
+//			return false;
+//		}
 		
-		if(pattern.isRoot()) {
-			if(!simpleRegexLogLine.startsWith(pattern.getValue())) {
-				return false;
-			}
-			fullPattern = pattern.getValue();
+//		if(pattern.isRoot()) {
+//			if(!simpleRegexLogLine.startsWith(pattern.getValue())) {
+//				return false;
+//			}
+//			fullPattern = pattern.getValue();
+//		}
+		if(fullPattern == null || fullPattern.length() == 0) {
+			fullPattern = rootPattern.getValue();
 		}
 		
 		boolean foundPattern = false;
 		
 		if(pattern.getPatterns() != null) {
-			for(Pattern p : pattern.getPatterns()) {
-				if(p.isRoot()) {
-					return false;
+			for(PatternChild p : pattern.getPatterns()) {
+				if(p.getOffset() >= simpleRegexLogLine.length()) {
+					continue;
 				}
-				if(p.isPattern()) {
-					if(p.getOffset() >= simpleRegexLogLine.length()) {
-						continue;
-					}
-					
-					if(simpleRegexLogLine.equals(fullPattern)) {
-						return true;
-					}
-					
-					if(!simpleRegexLogLine.startsWith(p.getValue(),p.getOffset())) {
-						continue;
-					}
-					
-					if(validatePatternForLogLine(simpleRegexLogLine,logLine, p, rootPattern, fullPattern + p.getValue())) {
-						foundPattern = true;
-					}
+				
+				if(simpleRegexLogLine.equals(fullPattern + p.getValue())) {
+					return true;
+				}
+				
+				if(!simpleRegexLogLine.startsWith(p.getValue(),p.getOffset())) {
+					continue;
+				}
+				
+				if(validatePatternForLogLine(simpleRegexLogLine,logLine, p, rootPattern, fullPattern + p.getValue())) {
+					foundPattern = true;
 				}
 			}
 		}
