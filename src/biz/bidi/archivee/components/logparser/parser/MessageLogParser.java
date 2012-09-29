@@ -24,14 +24,15 @@ import java.util.ArrayList;
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
+import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.commons.model.mongodb.IPattern;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.mongodb.PatternChild;
 import biz.bidi.archivee.commons.model.mongodb.PatternKey;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
+import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
-import biz.bidi.archivee.components.listeners.logsender.ILogSender;
 import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
 
 import com.google.code.morphia.query.Query;
@@ -72,7 +73,9 @@ public class MessageLogParser implements ILogParser {
 	@Override
 	public void parseLog(ParserMessage message) throws ArchiveeException {
 		LogQueue logQueue = new LogQueue();
-		logQueue.setLine(message.getMessage());
+		logQueue.setMessage(message.getMessage());
+		logQueue.setLevel(message.getLevel());
+		logQueue.setDate(ArchiveeDateUtils.convertToDate(message.getDate()));
 		
 		Pattern pattern = findPattern(message);
 		if(pattern == null) { //pattern not found
@@ -90,8 +93,12 @@ public class MessageLogParser implements ILogParser {
 			if(nextLogQueue != null) { //if queue is not empty
 				logQueueDAO.delete(nextLogQueue, null);
 				
-				System.out.println("Sent old queue: " + nextLogQueue.getId());
-//				logParserSender.sendLogLine(logLine);
+				ParserMessage oldMessage = new ParserMessage();
+				oldMessage.setDate(ArchiveeDateUtils.convertDateToString(logQueue.getDate()));
+				oldMessage.setLevel(logQueue.getLevel());
+				oldMessage.setMessage(logQueue.getMessage());
+				
+				logParserSender.sendLogMessage(oldMessage);
 			}
 			
 			sendLogLineToIndex(message, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
@@ -252,7 +259,7 @@ public class MessageLogParser implements ILogParser {
 					lMax = logQueue.getSimpleRegex().length();
 				}
 				
-				if(logQueue.getLine().equals(logLine)) {
+				if(logQueue.getMessage().equals(logLine)) {
 					continue;
 				}
 				if((offset + l) >= simpleRegexLogLine.length() || (offset + l) >= logQueue.getSimpleRegex().length()) {
@@ -389,7 +396,7 @@ public class MessageLogParser implements ILogParser {
 	}
 
 	public void sendLogLineToIndex(ParserMessage message, Pattern pattern) {
-		System.out.println("Sent: " + message.getMessage());
+		
 	}
 	
 	/**

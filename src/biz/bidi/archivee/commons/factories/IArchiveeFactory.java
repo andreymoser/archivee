@@ -29,7 +29,7 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 public interface IArchiveeFactory<I,O> {
 	
 	/**
-	 * Creates the instance<I> using Object <O> as parameter
+	 * Creates the factoryManagerInstance<I> using Object <O> as parameter
 	 * @param object
 	 * @return
 	 * @throws ArchiveeException

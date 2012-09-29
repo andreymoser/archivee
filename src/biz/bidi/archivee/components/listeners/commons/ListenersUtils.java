@@ -21,11 +21,11 @@ package biz.bidi.archivee.components.listeners.commons;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager;
+import biz.bidi.archivee.commons.factories.IArchiveeFactoryManager;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
+import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.components.listeners.file.FileListenerThread;
 import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
-import biz.bidi.archivee.components.listeners.logsender.ILogSender;
 
 /**
  * @author Andrey Bidinotto
@@ -37,7 +37,7 @@ public class ListenersUtils {
 	/**
 	 * The file listener manager factory
 	 */
-	public static final IArchiveeGenericFactoryManager fileListenerManager = 
+	public static final IArchiveeFactoryManager fileListenerManager = 
 			new ListenerFactoryManager();
 	
 	@SuppressWarnings("rawtypes")

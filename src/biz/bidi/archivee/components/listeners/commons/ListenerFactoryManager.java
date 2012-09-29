@@ -23,10 +23,8 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
-import biz.bidi.archivee.components.listeners.file.logreader.LogReaderFactory;
 import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
-import biz.bidi.archivee.components.listeners.logsender.ILogSender;
-import biz.bidi.archivee.components.listeners.logsender.LogSenderFactory;
+import biz.bidi.archivee.components.listeners.file.logreader.LogReaderFactory;
 import biz.bidi.archivee.components.listeners.parser.LogParserFactory;
 
 /**
@@ -38,41 +36,26 @@ import biz.bidi.archivee.components.listeners.parser.LogParserFactory;
 public class ListenerFactoryManager extends ArchiveeGenericFactoryManager {
 
 	protected static IArchiveeFactory fileLogReaderFactory;
-	protected static IArchiveeFactory logSenderFactory;
 	protected static IArchiveeFactory logParserFactory;
 	
 	static {
 		instance = new ListenerFactoryManager();
 		
 		fileLogReaderFactory = new LogReaderFactory(); 
-		logSenderFactory = new LogSenderFactory(); 
-		logParserFactory = new LogParserFactory(); 
+		logParserFactory = new LogParserFactory();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.interfaces.IArchiveeSingleTonFactoryManager#getFactoryInstance(java.lang.Class)
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactoryManager#getFactoryInstance(java.lang.Class, java.lang.Class)
 	 */
 	@Override
-	public IArchiveeFactory getFactoryInstance(Class classObject) throws ArchiveeException {
-		return getFactoryInstance(classObject, null);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager#getFactoryInstance(java.lang.Class, java.lang.Class)
-	 */
-	@Override
-	public IArchiveeFactory getFactoryInstance(Class interfaceObject, Class classObject) throws ArchiveeException {
-		IArchiveeFactory factory = null;
+	public IArchiveeFactory getFactoryInstance(Class interfaceClass, Class classObject) throws ArchiveeException {
+		IArchiveeFactory factory = super.getFactoryInstance(interfaceClass, classObject);
 		
 		if(classObject == IFileLogReader.class) {
 			factory = fileLogReaderFactory; 
-		}
-		if(classObject == ILogSender.class) {
-			factory = logSenderFactory; 
 		}
 		if(classObject == ILogParser.class) {
 			factory = logParserFactory; 

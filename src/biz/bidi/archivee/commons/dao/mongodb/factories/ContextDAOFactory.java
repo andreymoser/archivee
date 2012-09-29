@@ -39,6 +39,7 @@ public class ContextDAOFactory implements IArchiveeFactory<IArchiveeGenericDAO<C
 	 * 
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public IArchiveeGenericDAO<Context, Query<Context>> createInstance(
 			Object object) throws ArchiveeException {

@@ -19,27 +19,67 @@
  */
 package biz.bidi.archivee.commons.factories;
 
+import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.jms.IArchiveeMessaging;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 6, 2012
  */
-public abstract class ArchiveeGenericFactoryManager implements IArchiveeGenericFactoryManager {
+public abstract class ArchiveeGenericFactoryManager implements IArchiveeFactoryManager {
 
-	protected static IArchiveeGenericFactoryManager instance;
+	public static IArchiveeFactoryManager instance;
+	
+	protected static IArchiveeFactoryManager daoFactoryManager;
+	protected static IArchiveeFactoryManager jmsFactoryManager;
+	
+	static {
+		daoFactoryManager = new DaoFactoryManager();
+		jmsFactoryManager = new JMSFactoryManager();
+	}
 	
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager#getManagerInstance()
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactoryManager#getManagerInstance()
 	 */
 	@Override
-	public IArchiveeGenericFactoryManager getManagerInstance() {
+	public IArchiveeFactoryManager getManagerInstance() {
 		return instance;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.interfaces.IArchiveeSingleTonFactoryManager#getFactoryInstance(java.lang.Class)
+	 */
+	@Override
+	public IArchiveeFactory getFactoryInstance(Class classObject) throws ArchiveeException {
+		return getFactoryInstance(classObject, null);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactoryManager#getFactoryInstance(java.lang.Class, java.lang.Object)
+	 */
+	@Override
+	public IArchiveeFactory getFactoryInstance(Class interfaceClass, Class classObject) throws ArchiveeException {
+		IArchiveeFactory factory = null;
+		
+		if(interfaceClass == IArchiveeGenericDAO.class) {
+			factory = daoFactoryManager.getFactoryInstance(interfaceClass, classObject);
+		}
+		if(interfaceClass == IArchiveeMessaging.class) {
+			factory = jmsFactoryManager.getFactoryInstance(interfaceClass, classObject); 
+		}
+		
+		return factory;
+	}
 	
+	@SuppressWarnings("rawtypes")
 	protected void validateFactory(IArchiveeFactory factory, Class classObject) throws ArchiveeException {
 		if(factory == null) {
 			throw new ArchiveeException("Invalid factory: null",factory,classObject);

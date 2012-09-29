@@ -24,7 +24,6 @@ package biz.bidi.archivee.commons.factories;
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-@SuppressWarnings("rawtypes")
 public abstract class ArchiveeSingletonFactory<I, O> implements IArchiveeFactory<I, O> {
 
 	protected static Object instance;

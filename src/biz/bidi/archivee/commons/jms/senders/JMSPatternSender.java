@@ -17,41 +17,47 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.logsender.jms;
+package biz.bidi.archivee.commons.jms.senders;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.IPatternSender;
 import biz.bidi.archivee.commons.jms.ArchiveeJMSConnectionData;
-import biz.bidi.archivee.commons.jms.ArchiveeJMSQueue;
-import biz.bidi.archivee.commons.model.xml.ParserMessage;
+import biz.bidi.archivee.commons.jms.ArchiveeJMSTopic;
+import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
-import biz.bidi.archivee.components.listeners.logsender.ILogSender;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 7, 2012
+ * @since Sep 29, 2012
  */
-public class JMSLogParserSender extends ArchiveeJMSQueue implements ILogSender, IArchiveePropertiesLoader {
+public class JMSPatternSender extends ArchiveeJMSTopic implements IPatternSender, IArchiveePropertiesLoader {
 
 	/**
 	 * The connection name
 	 */
 	private String connectionName;
 	
-	public JMSLogParserSender() {
-		connectionData = new ArchiveeJMSConnectionData();
-		loadProperties(this.getClass().getSimpleName() + ".");
+	public JMSPatternSender() {
+		try {
+			connectionData = new ArchiveeJMSConnectionData();
+			loadProperties(this.getClass().getSimpleName() + ".");
+			
+			this.open();
+		} catch (ArchiveeException e) {
+			ArchiveeException.log(e, "Error while connecting to topic", this);
+		}
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.listeners.logsender.ILogSender#sendLogMessage(java.lang.String)
+	 * @see biz.bidi.archivee.commons.interfaces.IPatternSender#sendPatternMessage(biz.bidi.archivee.commons.model.xml.PatternMessage)
 	 */
 	@Override
-	public void sendLogMessage(ParserMessage message) throws ArchiveeException {
+	public void sendPatternMessage(PatternMessage message) throws ArchiveeException {
 		send(ArchiveeXmlParser.convertoToXml(message));
 	}
 

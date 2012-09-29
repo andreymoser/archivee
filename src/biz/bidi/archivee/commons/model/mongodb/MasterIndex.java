@@ -42,7 +42,7 @@ public class MasterIndex implements IEntity {
 	 * @param word
 	 * @param patternsByAppId
 	 */
-	private MasterIndex() {
+	public MasterIndex() {
 		super();
 		this.patternsByAppId = new HashMap<Integer, ArrayList<Long>>();
 	}

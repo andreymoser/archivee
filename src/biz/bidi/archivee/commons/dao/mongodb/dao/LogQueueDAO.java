@@ -47,7 +47,7 @@ public class LogQueueDAO extends ArchiveeMongodbDAO<LogQueue> {
 			throws ArchiveeException {
 		
 		if(customSearchId.equals("all.starts.with.regex")) {
-			return find(entity).field("line").startsWith(entity.getLine());
+			return find(entity).field("line").startsWith(entity.getMessage());
 		}
 		
 		return null;
@@ -60,7 +60,7 @@ public class LogQueueDAO extends ArchiveeMongodbDAO<LogQueue> {
 	 */
 	@Override
 	public void save(LogQueue entity) throws ArchiveeException {
-		entity.setSimpleRegex(ArchiveePatternUtils.convertToSimpleRegex(entity.getLine()));
+		entity.setSimpleRegex(ArchiveePatternUtils.convertToSimpleRegex(entity.getMessage()));
 		
 		super.save(entity);
 	}

@@ -17,44 +17,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.masteridx.commons;
+package biz.bidi.archivee.commons.jms.factories;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
+import biz.bidi.archivee.commons.interfaces.IPatternSender;
+import biz.bidi.archivee.commons.jms.senders.JMSPatternSender;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 28, 2012
+ * @since Sep 29, 2012
  */
-@SuppressWarnings("rawtypes")
-public class MasterIndexerFactoryManager extends ArchiveeGenericFactoryManager {
+public class PatternSenderFactory extends ArchiveeSingletonFactory<IPatternSender,Object> {
 
-	protected static IArchiveeFactory masterIndexerFactory;
-	
 	static {
-		instance = new MasterIndexerFactoryManager();
-		
-		masterIndexerFactory = new MasterIndexerFactory();
+		instance = new JMSPatternSender(); 
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactoryManager#getFactoryInstance(java.lang.Class, java.lang.Object)
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
+	@SuppressWarnings("static-access")
 	@Override
-	public IArchiveeFactory getFactoryInstance(Class interfaceClass, Class classObject) throws ArchiveeException {
-		IArchiveeFactory factory = super.getFactoryInstance(interfaceClass, classObject);
-		
-		if(interfaceClass == IMasterIndexer.class) {
-			factory = masterIndexerFactory; 
-		}
-		
-		validateFactory(factory, interfaceClass);
-		
-		return factory;
+	public IPatternSender createInstance(Object object) throws ArchiveeException {
+		return (IPatternSender) this.getInstance();
 	}
+
 }

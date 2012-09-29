@@ -317,6 +317,30 @@ public class ArchiveePatternUtils {
 		return foundPattern;
 	}
 	
+	public static ArrayList<String> getPatternValues(String message) {
+		ArrayList<String> values = new ArrayList<String>();
+		
+		String simpleRegex = convertToSimpleRegex(message);
+		simpleRegex = simpleRegex.replaceAll("[WNM]", "X");
+		
+		int offset = 0;
+		int i = 0;
+		int j = 0;
+		while(i < message.length()) {
+			if(simpleRegex.charAt(j) == 'X') {
+				if(convertToSimpleRegex(message.substring(offset, i)).length() > 0) {
+					values.add(message.substring(offset, i-1));
+				}
+			} else {
+				offset = i;
+				j++;
+			}
+			i++;
+		}
+		
+		return values;
+	}
+	
 	
 	/**
 	 * @param s

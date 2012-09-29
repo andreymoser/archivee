@@ -19,8 +19,17 @@
  */
 package biz.bidi.archivee.components.masteridx.indexer;
 
+import java.util.ArrayList;
+
+import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
+import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
+import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
+import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
+
+import com.google.code.morphia.query.Query;
 
 /**
  * @author Andrey Bidinotto
@@ -28,7 +37,19 @@ import biz.bidi.archivee.commons.model.xml.PatternMessage;
  * @since Sep 28, 2012
  */
 public class MasterIndexer implements IMasterIndexer {
+	
+	private IArchiveeGenericDAO<Pattern, Query<Pattern>> patternDAO;
+	private IArchiveeGenericDAO<MasterIndex, Query<MasterIndex>> masterIndexDAO;
 
+	public MasterIndexer() {
+		try {
+			patternDAO = LogParserUtils.getPatternDAO();
+			masterIndexDAO = LogParserUtils.getMasterIndex();
+		} catch (ArchiveeException e) {
+			ArchiveeException.log(e, "Unable to init MasterIndexer sucessfully",this);
+		}
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -36,10 +57,52 @@ public class MasterIndexer implements IMasterIndexer {
 	 */
 	@Override
 	public void indexMasterData(PatternMessage message) throws ArchiveeException {
+		if(message.getPatternId() <= 0) {
+			throw new ArchiveeException("Invalid message received: pattern id <= 0",message);
+		}
 		
-		//TODO
+		Pattern pattern = new Pattern();
+		pattern.setId(message.getPatternId());
 		
+		for(Pattern p : patternDAO.find(pattern)) {
+			pattern = p;
+			break; // by pattern id is only one possible
+		}
+		
+		for(String word : ArchiveePatternUtils.getPatternValues(message.getMessage())) {
+			MasterIndex masterIndex = new MasterIndex();
+			masterIndex.setWord(word);
+			
+			boolean found = false;
+			for(MasterIndex idx : masterIndexDAO.find(masterIndex)) {
+				updateMasterIndex(idx, pattern);
+				masterIndex = idx;
+				
+				found = true;
+				break; //by word is only one
+			}
+			
+			if(!found) {
+				updateMasterIndex(masterIndex, pattern);
+			}
+			
+			masterIndexDAO.save(masterIndex);
+		}		
+	}
 
+	/**
+	 * @param idx
+	 * @param pattern
+	 */
+	private void updateMasterIndex(MasterIndex idx, Pattern pattern) {
+		if(!idx.getPatternsByAppId().containsKey(pattern.getAppId())) {
+			idx.getPatternsByAppId().put(pattern.getAppId(), new ArrayList<Long>());
+		}
+
+		ArrayList<Long> patternIds = idx.getPatternsByAppId().get(pattern.getAppId()); 
+		if(!patternIds.contains(pattern.getId())) {
+			patternIds.add(pattern.getId());
+		}
 	}
 
 }

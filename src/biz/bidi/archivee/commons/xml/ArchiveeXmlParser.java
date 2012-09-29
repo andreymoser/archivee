@@ -32,7 +32,7 @@ import com.thoughtworks.xstream.XStream;
 public class ArchiveeXmlParser {
 
 	/**
-	 * The singleton xstream instance
+	 * The singleton xstream factoryManagerInstance
 	 */
 	private static final XStream xstream = new XStream();
 	

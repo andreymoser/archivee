@@ -17,36 +17,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.jms;
+package biz.bidi.archivee.commons.interfaces;
+
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.xml.ParserMessage;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 9, 2012
+ * @since Sep 7, 2012
  */
-public abstract class ArchiveeJMSGeneric implements IArchiveeMessaging {
+public interface ILogSender {
+
+	/**
+	 * Sends the log message via jms to log parser
+	 * @param line
+	 * @throws ArchiveeException
+	 */
+	public void sendLogMessage(ParserMessage message) throws ArchiveeException;
 	
-	protected ArchiveeJMSConnectionData connectionData;
-
-	/**
-	 * 
-	 */
-	public ArchiveeJMSGeneric() {
-		connectionData = new ArchiveeJMSConnectionData();
-	}
-
-	/**
-	 * @return the connection
-	 */
-	public ArchiveeJMSConnectionData getConnectionData() {
-		return connectionData;
-	}
-
-	/**
-	 * @param connection the connection to set
-	 */
-	public void setConnection(ArchiveeJMSConnectionData connectionData) {
-		this.connectionData = connectionData;
-	}
-
 }

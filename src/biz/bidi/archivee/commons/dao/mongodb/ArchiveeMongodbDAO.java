@@ -42,7 +42,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 	implements IArchiveeGenericDAO<E, Query<E>>, IArchiveePropertiesLoader {
 	
 	/**
-	 * Singleton instance
+	 * Singleton factoryManagerInstance
 	 */
 	protected static ArchiveeMongodbDAO instance;
 
@@ -218,7 +218,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 	}
 
 	/**
-	 * @return the instance
+	 * @return the factoryManagerInstance
 	 */
 	public static ArchiveeMongodbDAO getInstance() {
 		return instance;

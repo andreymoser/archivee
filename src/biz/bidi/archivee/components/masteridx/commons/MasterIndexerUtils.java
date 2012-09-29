@@ -19,39 +19,20 @@
  */
 package biz.bidi.archivee.components.masteridx.commons;
 
-import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.factories.IArchiveeGenericFactoryManager;
-import biz.bidi.archivee.commons.interfaces.ILogParser;
-import biz.bidi.archivee.commons.model.mongodb.LogQueue;
-import biz.bidi.archivee.commons.model.mongodb.Pattern;
-import biz.bidi.archivee.components.listeners.logsender.ILogSender;
+import biz.bidi.archivee.commons.utils.ArchiveeFactoryUtils;
 import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
-
-import com.google.code.morphia.query.Query;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-public class MasterIndexerUtils {
+public class MasterIndexerUtils extends ArchiveeFactoryUtils {
 	
-	/**
-	 * The file listener manager factory
-	 */
-	public static final IArchiveeGenericFactoryManager masterIndexerManager = 
-			new MasterIndexerFactoryManager();
-	
-	@SuppressWarnings("rawtypes")
-	public static IArchiveeFactory getFactory(Class interfaceClass) throws ArchiveeException {
-		return masterIndexerManager.getFactoryInstance(interfaceClass);
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public static IArchiveeFactory getFactory(Class interfaceClass, Class classObject) throws ArchiveeException {
-		return masterIndexerManager.getFactoryInstance(interfaceClass, classObject);
+	static {
+		factoryManagerInstance = MasterIndexerFactoryManager.instance; 
 	}
 	
 	/**

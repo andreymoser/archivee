@@ -19,6 +19,8 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
+import java.util.Date;
+
 import org.bson.types.ObjectId;
 
 import com.google.code.morphia.annotations.Entity;
@@ -37,24 +39,28 @@ public class LogQueue implements IEntity {
 	@Id
 	private ObjectId id;
 	
+	private Date date;
+	
+	private String level;
+	
 	@Indexed
-	private String line = "";
+	private String message = "";
 	
 	@Indexed
 	private String simpleRegex = "";
 	
 	/**
-	 * @return the line
+	 * @return the message
 	 */
-	public String getLine() {
-		return line;
+	public String getMessage() {
+		return message;
 	}
 
 	/**
-	 * @param line the line to set
+	 * @param message the message to set
 	 */
-	public void setLine(String line) {
-		this.line = line;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	/**
@@ -83,6 +89,34 @@ public class LogQueue implements IEntity {
 	 */
 	public void setSimpleRegex(String simpleRegex) {
 		this.simpleRegex = simpleRegex;
+	}
+
+	/**
+	 * @return the date
+	 */
+	public Date getDate() {
+		return date;
+	}
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public String getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level the level to set
+	 */
+	public void setLevel(String level) {
+		this.level = level;
 	}
 
 }

@@ -17,31 +17,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.logsender;
+package biz.bidi.archivee.commons.interfaces;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
-import biz.bidi.archivee.components.listeners.logsender.jms.JMSLogParserSender;
+import biz.bidi.archivee.commons.model.xml.PatternMessage;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 7, 2012
  */
-public class LogSenderFactory extends ArchiveeSingletonFactory<ILogSender,Object> {
+public interface IPatternSender {
 
-	static {
-		instance = new JMSLogParserSender(); 
-	}
-	
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
+	 * Sends the pattern message containing the log data to be archived and indexed
+	 * @param line
+	 * @throws ArchiveeException
 	 */
-	@Override
-	public ILogSender createInstance(Object object) throws ArchiveeException {
-		return (ILogSender) this.getInstance();
-	}
-
+	public void sendPatternMessage(PatternMessage message) throws ArchiveeException;
+	
 }

@@ -55,7 +55,24 @@ public class ArchiveeDateUtils implements IArchiveePropertiesLoader {
 			ArchiveeException.log(e, "Unable to load common date properties", this);
 		}
 	}
-
+	
+	/**
+	 * @param dateString
+	 * @return
+	 */
+	public static Date convertToDate(String dateString) throws ArchiveeException {
+		Date date = null;
+		
+		try {
+			DateFormat dateFormat = new SimpleDateFormat(instance.getSimpleDateFormat(),new Locale(instance.getDateLocale()));
+			date = dateFormat.parse(dateString);
+		} catch (ParseException e) {
+			ArchiveeException.log(e, "Error on string to date conversion: " + dateString, dateString,instance);
+		}
+		
+		return date;
+	}
+	
 	/**
 	 * Converts the date using the default date format used among archivee components
 	 * @param date
@@ -173,5 +190,6 @@ public class ArchiveeDateUtils implements IArchiveePropertiesLoader {
 	public void setSimpleDateFormat(String simpleDateFormat) {
 		this.simpleDateFormat = simpleDateFormat;
 	}
+
 	
 }

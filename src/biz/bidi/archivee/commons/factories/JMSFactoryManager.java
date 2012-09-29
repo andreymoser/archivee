@@ -17,31 +17,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.logparser.commons;
+package biz.bidi.archivee.commons.factories;
 
-import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.factories.IArchiveeFactoryManager;
-import biz.bidi.archivee.commons.interfaces.ILogParser;
+import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.commons.jms.IArchiveeMessaging;
-import biz.bidi.archivee.components.logparser.parser.LogParserFactory;
+import biz.bidi.archivee.commons.jms.factories.LogSenderFactory;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 6, 2012
+ * @since Sep 29, 2012
  */
 @SuppressWarnings("rawtypes")
-public class LogParserFactoryManager extends ArchiveeGenericFactoryManager {
+public class JMSFactoryManager extends ArchiveeGenericFactoryManager {
 
-	protected static IArchiveeFactory logParserFactory;
+	protected static IArchiveeFactory logSenderFactory;
+	protected static IArchiveeFactory patternSenderFactory;
 	
 	static {
-		instance = new LogParserFactoryManager();
+		instance = new JMSFactoryManager();
 		
-		logParserFactory = new LogParserFactory(); 
+		logSenderFactory = new LogSenderFactory();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.interfaces.IArchiveeSingleTonFactoryManager#getFactoryInstance(java.lang.Class)
+	 */
+	@Override
+	public IArchiveeFactory getFactoryInstance(Class classObject) throws ArchiveeException {
+		return getFactoryInstance(classObject, null);
 	}
 
 	/**
@@ -51,10 +58,12 @@ public class LogParserFactoryManager extends ArchiveeGenericFactoryManager {
 	 */
 	@Override
 	public IArchiveeFactory getFactoryInstance(Class interfaceClass, Class classObject) throws ArchiveeException {
-		IArchiveeFactory factory = super.getFactoryInstance(interfaceClass,classObject); 
+		IArchiveeFactory factory = null;
 		
-		if(interfaceClass == ILogParser.class) {
-			factory = logParserFactory; 
+		if(interfaceClass == IArchiveeMessaging.class && classObject != null) {
+			if(classObject == ILogSender.class) {
+				factory = logSenderFactory;
+			}
 		}
 		
 		validateFactory(factory, interfaceClass);

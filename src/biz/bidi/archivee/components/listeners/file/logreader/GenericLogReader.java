@@ -23,11 +23,11 @@ import java.io.File;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
+import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.components.listeners.commons.ListenersUtils;
 import biz.bidi.archivee.components.listeners.file.FileListener;
 import biz.bidi.archivee.components.listeners.file.FileListenerThread;
-import biz.bidi.archivee.components.listeners.logsender.ILogSender;
 
 /**
  * @author Andrey Bidinotto

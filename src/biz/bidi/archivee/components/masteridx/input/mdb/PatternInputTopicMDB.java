@@ -35,7 +35,7 @@ import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
 @MessageDriven( activationConfig = {
 		@ActivationConfigProperty(
 					propertyName="destinationName",
-					propertyValue="jms.archivee.internalPatternTopic"
+					propertyValue="jms.archivee.patternTopic"
 				)
 })
 
@@ -47,7 +47,7 @@ import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
 public class PatternInputTopicMDB implements MessageListener {
 
 	/**
-	 * The masterIndexer instance
+	 * The masterIndexer factoryManagerInstance
 	 */
 	private IMasterIndexer masterIndexer;
 	

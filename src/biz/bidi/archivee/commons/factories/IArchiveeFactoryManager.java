@@ -27,13 +27,13 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
  * @email andreymoser@bidi.biz
  * @since Sep 6, 2012
  */
-public interface IArchiveeGenericFactoryManager {
+public interface IArchiveeFactoryManager {
 	
 	/**
-	 * Get manager factory instance
+	 * Get manager factory factoryManagerInstance
 	 * @return
 	 */
-	public IArchiveeGenericFactoryManager getManagerInstance();
+	public IArchiveeFactoryManager getManagerInstance();
 	
 	/**
 	 * Get the factory based on interface class object

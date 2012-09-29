@@ -78,9 +78,9 @@ public abstract class ArchiveeJMSQueue extends ArchiveeJMSGeneric {
 			
 			connection.start();
 		} catch (JMSException e) {
-			throw new ArchiveeException(e,"Unable to start JMS Topic connection",connectionData,this,connection);
+			throw new ArchiveeException(e,"Unable to start JMS Queue connection",connectionData,this,connection);
 		} catch (NamingException e) {
-			throw new ArchiveeException(e,"Unable to start JMS Topic connection by invalid connection data or unresolved application server",connectionData,this,connection);
+			throw new ArchiveeException(e,"Unable to start JMS Queue connection by invalid connection data or unresolved application server",connectionData,this,connection);
 		}
 	}
 
@@ -97,7 +97,7 @@ public abstract class ArchiveeJMSQueue extends ArchiveeJMSGeneric {
 			textMessage.setText(message);
 			sender.send(textMessage);
 		} catch (JMSException e) {
-			throw new ArchiveeException(e,"Unable to send message to JMS topic",connectionData,textMessage,this);			
+			throw new ArchiveeException(e,"Unable to send message to JMS queue",connectionData,textMessage,this);			
 		}
 	}
 
@@ -111,8 +111,20 @@ public abstract class ArchiveeJMSQueue extends ArchiveeJMSGeneric {
 		try {
 			connection.close();
 		} catch (JMSException e) {
-			throw new ArchiveeException(e,"Unable to close JMS topic connection",connectionData,this);			
+			throw new ArchiveeException(e,"Unable to close JMS queue connection",connectionData,this);			
 		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		this.close();
+		
+		super.finalize();
 	}
 
 }
