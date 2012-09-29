@@ -40,10 +40,10 @@ public class ContextQueue implements IEntity {
 	private ObjectId id;
 	
 	@Indexed
-	private int appId;
+	private ObjectId appId;
 	
 	@Indexed
-	private long patternId;
+	private ObjectId patternId;
 	
 	private ArrayList<String> lines;
 	
@@ -63,34 +63,6 @@ public class ContextQueue implements IEntity {
 	 */
 	public void setId(ObjectId id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the appId
-	 */
-	public int getAppId() {
-		return appId;
-	}
-
-	/**
-	 * @param appId the appId to set
-	 */
-	public void setAppId(int appId) {
-		this.appId = appId;
-	}
-
-	/**
-	 * @return the patternId
-	 */
-	public long getPatternId() {
-		return patternId;
-	}
-
-	/**
-	 * @param patternId the patternId to set
-	 */
-	public void setPatternId(long patternId) {
-		this.patternId = patternId;
 	}
 
 	/**
@@ -133,6 +105,34 @@ public class ContextQueue implements IEntity {
 	 */
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	/**
+	 * @return the appId
+	 */
+	public ObjectId getAppId() {
+		return appId;
+	}
+
+	/**
+	 * @param appId the appId to set
+	 */
+	public void setAppId(ObjectId appId) {
+		this.appId = appId;
+	}
+
+	/**
+	 * @return the patternId
+	 */
+	public ObjectId getPatternId() {
+		return patternId;
+	}
+
+	/**
+	 * @param patternId the patternId to set
+	 */
+	public void setPatternId(ObjectId patternId) {
+		this.patternId = patternId;
 	}
 
 }

@@ -21,44 +21,52 @@ package biz.bidi.archivee.components.logparser.parser;
 
 import java.util.ArrayList;
 
-import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
+import org.bson.types.ObjectId;
+
+import biz.bidi.archivee.commons.components.ArchiveeComponent;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
 import biz.bidi.archivee.commons.interfaces.ILogSender;
+import biz.bidi.archivee.commons.interfaces.IPatternSender;
+import biz.bidi.archivee.commons.model.mongodb.App;
 import biz.bidi.archivee.commons.model.mongodb.IPattern;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.mongodb.PatternChild;
 import biz.bidi.archivee.commons.model.mongodb.PatternKey;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
+import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
 import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
-
-import com.google.code.morphia.query.Query;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 11, 2012
  */
-public class MessageLogParser implements ILogParser {
-
-	private IArchiveeGenericDAO<Pattern, Query<Pattern>> patternDAO;
-	private IArchiveeGenericDAO<LogQueue, Query<LogQueue>> logQueueDAO;
+public class MessageLogParser extends ArchiveeComponent implements ILogParser {
+	
 	/**
 	 * The log parser sender
 	 */
 	private ILogSender logParserSender;
-
+	/**
+	 * The pattern sender
+	 */
+	private IPatternSender patternSender;
+	
 	/**
 	 * 
 	 */
 	public MessageLogParser() {
 		try {
 			logParserSender = LogParserUtils.getLogSender();
+			patternSender = LogParserUtils.getPatternSender();
+			
 			patternDAO = LogParserUtils.getPatternDAO();
 			logQueueDAO = LogParserUtils.getLoqQueue();
+			appDAO = LogParserUtils.getApp();
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Unable to init LogParser sucessfully",
 					this);
@@ -86,7 +94,7 @@ public class MessageLogParser implements ILogParser {
 			if(pattern == null) { //pattern not found
 				logQueueDAO.save(logQueue); // stores into log queue
 			} else {
-				sendLogLineToIndex(message, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
+				sendPatternMessage(message, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
 			}
 		} else { //pattern found
 			LogQueue nextLogQueue = getNextLogQueue();
@@ -101,7 +109,7 @@ public class MessageLogParser implements ILogParser {
 				logParserSender.sendLogMessage(oldMessage);
 			}
 			
-			sendLogLineToIndex(message, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
+			sendPatternMessage(message, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
 		}
 	}
 	
@@ -289,9 +297,9 @@ public class MessageLogParser implements ILogParser {
 				if(!hasInAll) {
 					PatternKey key = new PatternKey();
 					key.setValue(simpleRegexLogLine.substring(offset, offset + l));
-					key.setAppId(findAppId(message.getName()));
+					key.setAppId(findAndSaveAppId(message.getName()));
 					
-					newPattern = getNextPattern(key);
+					newPattern = new Pattern();
 					newPattern.setOffset(offset);
 					break;
 				}
@@ -320,42 +328,28 @@ public class MessageLogParser implements ILogParser {
 		
 		return newPattern;
 	}
-
-	/**
-	 * @return
-	 * @throws ArchiveeException 
-	 */
-	private Pattern getNextPattern(PatternKey key) {
-		Pattern pattern = new Pattern();
-		
-		int count = 0;
-		
-		while(count < 10) {
-			try {
-				if(count == 0) {
-					pattern.setId((int) patternDAO.getSize(pattern) + 1);
-				}
-				patternDAO.save(pattern);
-				pattern.setAppId(1);
-				pattern.setValue(key.getValue());
-			} catch(ArchiveeException e) {
-				count++;
-				pattern.setId(pattern.getId() + 1);
-				continue;
-			}
-			break;
-		}
-		
-		return pattern;
-	}
-
+	
 	/**
 	 * @param name
 	 * @return
+	 * @throws ArchiveeException 
 	 */
-	private int findAppId(String name) {
-		// TODO Auto-generated method stub
-		return 1;
+	private ObjectId findAndSaveAppId(String name) throws ArchiveeException {
+		ObjectId appId = null;
+		
+		App app = new App();
+		app.setName(name);
+		
+		for(App app2 : appDAO.find(app)) {
+			appId = app2.getId();
+			break;
+		}
+		
+		if(appId == null) {
+			appId = (ObjectId) appDAO.save(app).getId();
+		}
+		
+		return appId;
 	}
 
 	/**
@@ -395,8 +389,19 @@ public class MessageLogParser implements ILogParser {
 		return patternFound;
 	}
 
-	public void sendLogLineToIndex(ParserMessage message, Pattern pattern) {
-		
+	public void sendPatternMessage(ParserMessage message, Pattern pattern) {
+		PatternMessage patternMessage = new PatternMessage();
+		try {
+			patternMessage.setAppId(pattern.getAppId());
+			patternMessage.setPatternId(pattern.getId());
+			patternMessage.setDate(message.getDate());
+			patternMessage.setLevel(message.getLevel());
+			patternMessage.setMessage(message.getMessage());
+			
+			patternSender.sendPatternMessage(patternMessage);
+		} catch (ArchiveeException e) {
+			ArchiveeException.log(e, "Error while sending pattern message", patternMessage, message, pattern);
+		}
 	}
 	
 	/**

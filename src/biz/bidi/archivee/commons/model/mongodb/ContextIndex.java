@@ -22,6 +22,8 @@ package biz.bidi.archivee.commons.model.mongodb;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.bson.types.ObjectId;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
@@ -35,12 +37,12 @@ import com.google.code.morphia.annotations.Indexed;
 public class ContextIndex implements IEntity {
 
 	@Id
-	private long id;
+	private ObjectId id;
 
 	@Indexed(unique=true)
 	private ContextIndexKey key;
 	
-	private ArrayList<Long> contextSequences;
+	private ArrayList<ObjectId> contextsRef;
 	
 	@Indexed
 	private Date startDate;
@@ -54,21 +56,7 @@ public class ContextIndex implements IEntity {
 	private ContextIndex() {
 		super();
 		
-		contextSequences = new ArrayList<Long>();
-	}
-
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
+		contextsRef = new ArrayList<ObjectId>();
 	}
 
 	/**
@@ -86,17 +74,17 @@ public class ContextIndex implements IEntity {
 	}
 
 	/**
-	 * @return the contextSequences
+	 * @return the contextsRef
 	 */
-	public ArrayList<Long> getContextSequences() {
-		return contextSequences;
+	public ArrayList<ObjectId> getContextSequences() {
+		return contextsRef;
 	}
 
 	/**
-	 * @param contextSequences the contextSequences to set
+	 * @param contextsRef the contextsRef to set
 	 */
-	public void setContextSequences(ArrayList<Long> contextSequences) {
-		this.contextSequences = contextSequences;
+	public void setContextSequences(ArrayList<ObjectId> contextSequences) {
+		this.contextsRef = contextSequences;
 	}
 
 	/**
@@ -125,5 +113,19 @@ public class ContextIndex implements IEntity {
 	 */
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public ObjectId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(ObjectId id) {
+		this.id = id;
 	}
 }

@@ -24,6 +24,7 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
 
+import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
 
 /**
@@ -33,7 +34,7 @@ import com.google.code.morphia.query.Query;
  */
 public class ArchiveeMongoDBTests {
 	
-	private IArchiveeGenericDAO<Pattern, Query<Pattern>> patternDAO;
+	private IArchiveeGenericDAO<Pattern, Query<Pattern>, Key<Pattern>> patternDAO;
 	
 	public void run() {
 		try {
@@ -41,7 +42,6 @@ public class ArchiveeMongoDBTests {
 			patternDAO = LogParserUtils.getPatternDAO();
 			
 			Pattern pattern = new Pattern();
-			pattern.setId(1);
 			patternDAO.save(pattern);
 			
 			pattern.setValue("teste");

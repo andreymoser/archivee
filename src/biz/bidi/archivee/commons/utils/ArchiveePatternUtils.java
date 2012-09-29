@@ -20,6 +20,7 @@
 package biz.bidi.archivee.commons.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
@@ -100,9 +101,9 @@ public class ArchiveePatternUtils {
 			if(currentChar == 'W') {
 				regex += "[A-Za-z]+"; 
 			} else if(currentChar == 'N') {
-				regex += "-?[0-9]+"; 
+				regex += "(-|\\+)?[0-9]+(\\.[0-9]+)?"; 
 			} else if(currentChar == 'M') {
-				regex += "([A-Za-z]|-?[0-9])+"; 
+				regex += "([A-Za-z]+|(-|\\+)?[0-9]+(\\.[0-9]+)?)+"; 
 			} else if("\\.^$|?*+[]{}()-".indexOf(currentChar) != -1) {
 				regex += "\\" + Character.toString(currentChar);
 			} else {
@@ -146,6 +147,7 @@ public class ArchiveePatternUtils {
 		sr = sr.replaceAll("N\\.N", "N");
 		sr = sr.replaceAll("-N", "N");
 		sr = sr.replaceAll("\\+N", "N");
+		sr = sr.replaceAll("N+", "N");
 		
 		sr = sr.replaceAll("WN", "M");
 		sr = sr.replaceAll("NW", "M");
@@ -153,10 +155,7 @@ public class ArchiveePatternUtils {
 		sr = sr.replaceAll("MN", "M");
 		sr = sr.replaceAll("WM", "M");
 		sr = sr.replaceAll("MW", "M");
-		sr = sr.replaceAll("MM", "M");
-		sr = sr.replaceAll("MM", "M");
-		sr = sr.replaceAll("MM", "M");
-		sr = sr.replaceAll("MM", "M");
+		sr = sr.replaceAll("M+", "M");
 		
 		return sr;
 	}
@@ -317,30 +316,17 @@ public class ArchiveePatternUtils {
 		return foundPattern;
 	}
 	
-	public static ArrayList<String> getPatternValues(String message) {
-		ArrayList<String> values = new ArrayList<String>();
-		
-		String simpleRegex = convertToSimpleRegex(message);
-		simpleRegex = simpleRegex.replaceAll("[WNM]", "X");
-		
-		int offset = 0;
-		int i = 0;
-		int j = 0;
-		while(i < message.length()) {
-			if(simpleRegex.charAt(j) == 'X') {
-				if(convertToSimpleRegex(message.substring(offset, i)).length() > 0) {
-					values.add(message.substring(offset, i-1));
-				}
-			} else {
-				offset = i;
-				j++;
-			}
-			i++;
-		}
-		
+	/**
+	 * Returns all the pattern values for the given message
+	 * @param message
+	 * @return
+	 * @throws ArchiveeException
+	 */
+	public static ArrayList<String> getPatternValues(String message) throws ArchiveeException {
+		ArrayList<String> values;
+		values = new ArrayList<String>(Arrays.asList(getRegexValues(message, convertSimpleRegexToRegex("M"))));
 		return values;
 	}
-	
 	
 	/**
 	 * @param s

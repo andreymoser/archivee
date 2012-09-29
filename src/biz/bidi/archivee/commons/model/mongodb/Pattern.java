@@ -21,6 +21,8 @@ package biz.bidi.archivee.commons.model.mongodb;
 
 import java.util.ArrayList;
 
+import org.bson.types.ObjectId;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
@@ -34,7 +36,7 @@ import com.google.code.morphia.annotations.Indexed;
 public class Pattern implements IEntity, IPattern {
 
 	@Id
-	private long id;
+	private ObjectId id;
 	
 	@Indexed(unique=true)
 	private PatternKey key;
@@ -67,14 +69,14 @@ public class Pattern implements IEntity, IPattern {
 	/**
 	 * @return the appId
 	 */
-	public int getAppId() {
+	public ObjectId getAppId() {
 		return this.key.getAppId();
 	}
 	
 	/**
 	 * @param value the appId to set
 	 */
-	public void setAppId(int appId) {
+	public void setAppId(ObjectId appId) {
 		this.key.setAppId(appId);
 	}
 
@@ -159,14 +161,14 @@ public class Pattern implements IEntity, IPattern {
 	/**
 	 * @return the id
 	 */
-	public long getId() {
+	public ObjectId getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(long id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 

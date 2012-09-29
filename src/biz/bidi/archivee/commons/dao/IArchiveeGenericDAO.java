@@ -26,14 +26,14 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
  * @email andreymoser@bidi.biz
  * @since Sep 12, 2012
  */
-public interface IArchiveeGenericDAO<O,Q> {
+public interface IArchiveeGenericDAO<O,Q,I> {
 	
 	/**
 	 * Inserts and updates the given entity by id
 	 * @param entity
 	 * @throws ArchiveeException
 	 */
-	public void save(O entity) throws ArchiveeException;
+	public I save(O entity) throws ArchiveeException;
 
 	/**
 	 * Deletes the given entity by its id

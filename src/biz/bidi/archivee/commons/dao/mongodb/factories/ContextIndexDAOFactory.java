@@ -25,6 +25,7 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.model.mongodb.ContextIndex;
 
+import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
 
 /**
@@ -32,7 +33,7 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-public class ContextIndexDAOFactory implements IArchiveeFactory<IArchiveeGenericDAO<ContextIndex, Query<ContextIndex>>, Object> {
+public class ContextIndexDAOFactory implements IArchiveeFactory<IArchiveeGenericDAO<ContextIndex, Query<ContextIndex>, Key<ContextIndex>>, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -40,8 +41,7 @@ public class ContextIndexDAOFactory implements IArchiveeFactory<IArchiveeGeneric
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public IArchiveeGenericDAO<ContextIndex, Query<ContextIndex>> createInstance(
-			Object object) throws ArchiveeException {
+	public IArchiveeGenericDAO<ContextIndex, Query<ContextIndex>, Key<ContextIndex>> createInstance(Object object) throws ArchiveeException {
 		return ContextIndexDAO.getInstance();
 	}
 	

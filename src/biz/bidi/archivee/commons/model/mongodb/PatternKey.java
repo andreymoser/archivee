@@ -19,6 +19,8 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
+import org.bson.types.ObjectId;
+
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
@@ -26,23 +28,9 @@ package biz.bidi.archivee.commons.model.mongodb;
  */
 public class PatternKey {
 	
-	private int appId;
+	private ObjectId appId;
 	
 	private String value;
-
-	/**
-	 * @return the appId
-	 */
-	public int getAppId() {
-		return appId;
-	}
-
-	/**
-	 * @param appId the appId to set
-	 */
-	public void setAppId(int appId) {
-		this.appId = appId;
-	}
 
 	/**
 	 * @return the value
@@ -56,6 +44,20 @@ public class PatternKey {
 	 */
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	/**
+	 * @return the appId
+	 */
+	public ObjectId getAppId() {
+		return appId;
+	}
+
+	/**
+	 * @param appId the appId to set
+	 */
+	public void setAppId(ObjectId appId) {
+		this.appId = appId;
 	}
 
 }

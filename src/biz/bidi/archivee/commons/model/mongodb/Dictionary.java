@@ -21,6 +21,8 @@ package biz.bidi.archivee.commons.model.mongodb;
 
 import java.util.HashMap;
 
+import org.bson.types.ObjectId;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
@@ -34,7 +36,7 @@ import com.google.code.morphia.annotations.Indexed;
 public class Dictionary implements IEntity {
 
 	@Id
-	private long id;
+	private ObjectId id;
 	
 	@Indexed(unique=true)
 	private DictionaryKey key;
@@ -42,20 +44,6 @@ public class Dictionary implements IEntity {
 	private HashMap<String, DictionaryEntry> entries;
 	
 	private HashMap<Bits, String> entriesIndex;
-
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	/**
 	 * @return the key
@@ -97,6 +85,20 @@ public class Dictionary implements IEntity {
 	 */
 	public void setEntriesIndex(HashMap<Bits, String> entriesIndex) {
 		this.entriesIndex = entriesIndex;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public ObjectId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(ObjectId id) {
+		this.id = id;
 	}
 
 }

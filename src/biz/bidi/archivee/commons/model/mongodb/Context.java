@@ -21,6 +21,8 @@ package biz.bidi.archivee.commons.model.mongodb;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
+
 import biz.bidi.archivee.commons.ArchiveeConstants;
 
 import com.google.code.morphia.annotations.Entity;
@@ -36,7 +38,7 @@ import com.google.code.morphia.annotations.Indexed;
 public class Context implements IEntity {
 
 	@Id
-	private long id;
+	private ObjectId id;
 	
 	@Indexed(unique=true)
 	private ContextKey key;
@@ -72,6 +74,18 @@ public class Context implements IEntity {
 		this.data = data;
 	}
 
-	
+	/**
+	 * @return the id
+	 */
+	public ObjectId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
 
 }

@@ -22,6 +22,8 @@ package biz.bidi.archivee.commons.model.mongodb;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bson.types.ObjectId;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 
@@ -36,7 +38,7 @@ public class MasterIndex implements IEntity {
 	@Id
 	private String word;
 	
-	private HashMap<Integer, ArrayList<Long>> patternsByAppId;
+	private HashMap<ObjectId, ArrayList<ObjectId>> patternsByAppId;
 
 	/**
 	 * @param word
@@ -44,7 +46,7 @@ public class MasterIndex implements IEntity {
 	 */
 	public MasterIndex() {
 		super();
-		this.patternsByAppId = new HashMap<Integer, ArrayList<Long>>();
+		this.patternsByAppId = new HashMap<ObjectId, ArrayList<ObjectId>>();
 	}
 
 	/**
@@ -64,15 +66,17 @@ public class MasterIndex implements IEntity {
 	/**
 	 * @return the patternsByAppId
 	 */
-	public HashMap<Integer, ArrayList<Long>> getPatternsByAppId() {
+	public HashMap<ObjectId, ArrayList<ObjectId>> getPatternsByAppId() {
 		return patternsByAppId;
 	}
 
 	/**
 	 * @param patternsByAppId the patternsByAppId to set
 	 */
-	public void setPatternsByAppId(HashMap<Integer, ArrayList<Long>> patternsByAppId) {
+	public void setPatternsByAppId(
+			HashMap<ObjectId, ArrayList<ObjectId>> patternsByAppId) {
 		this.patternsByAppId = patternsByAppId;
 	}
+
 	
 }

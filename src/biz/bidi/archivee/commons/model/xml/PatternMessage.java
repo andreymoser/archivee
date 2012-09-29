@@ -19,6 +19,8 @@
  */
 package biz.bidi.archivee.commons.model.xml;
 
+import org.bson.types.ObjectId;
+
 
 /**
  * Message sent from listener to log parser
@@ -31,11 +33,12 @@ public class PatternMessage implements IXmlObject {
 	/**
 	 * The pattern id
 	 */
-	private int patternId;
+	private ObjectId patternId;
 	/**
 	 * The application id
 	 */
-	private String appId;
+	private ObjectId appId
+	;
 	/**
 	 * The date of log line
 	 */
@@ -94,29 +97,30 @@ public class PatternMessage implements IXmlObject {
 	/**
 	 * @return the patternId
 	 */
-	public int getPatternId() {
+	public ObjectId getPatternId() {
 		return patternId;
 	}
 
 	/**
 	 * @param patternId the patternId to set
 	 */
-	public void setPatternId(int patternId) {
+	public void setPatternId(ObjectId patternId) {
 		this.patternId = patternId;
 	}
 
 	/**
 	 * @return the appId
 	 */
-	public String getAppId() {
+	public ObjectId getAppId() {
 		return appId;
 	}
 
 	/**
 	 * @param appId the appId to set
 	 */
-	public void setAppId(String appId) {
+	public void setAppId(ObjectId appId) {
 		this.appId = appId;
-	} 
+	}
+
 
 }

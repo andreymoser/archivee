@@ -25,6 +25,7 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 
+import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
 
 /**
@@ -33,7 +34,7 @@ import com.google.code.morphia.query.Query;
  * @since Sep 13, 2012
  */
 public class LogQueueDAOFactory 
-	implements IArchiveeFactory<IArchiveeGenericDAO<LogQueue, Query<LogQueue>>, Object> {
+	implements IArchiveeFactory<IArchiveeGenericDAO<LogQueue, Query<LogQueue>, Key<LogQueue>>, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -41,7 +42,7 @@ public class LogQueueDAOFactory
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public IArchiveeGenericDAO<LogQueue, Query<LogQueue>> createInstance(
+	public IArchiveeGenericDAO<LogQueue, Query<LogQueue>, Key<LogQueue>> createInstance(
 			Object object) throws ArchiveeException {
 		return LogQueueDAO.getInstance();
 	}

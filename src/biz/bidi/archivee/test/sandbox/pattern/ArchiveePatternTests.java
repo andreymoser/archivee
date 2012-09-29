@@ -17,54 +17,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
+package biz.bidi.archivee.test.sandbox.pattern;
 
-import org.bson.types.ObjectId;
-
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 27, 2012
+ * @since Sep 29, 2012
  */
-@Entity(value="app", noClassnameStored=true)
-public class App implements IEntity {
-
-	@Id
-	private ObjectId id;
-	
-	@Indexed(unique=true)
-	private String name;
+public class ArchiveePatternTests {
 
 	/**
-	 * @return the id
+	 * @param args
 	 */
-	public ObjectId getId() {
-		return id;
-	}
+	public static void main(String[] args) {
+		try {
+			String message = "[ABCD].[ABCDABCD]----+-+A +123\\24-12324-.[ABCD ABCDABCD]";
+			System.out.println(message);
+			System.out.println(ArchiveePatternUtils.convertToSimpleRegex(message));
+			System.out.println(ArchiveePatternUtils.getPatternValues(message));
+		} catch (ArchiveeException e) {
+			e.printStackTrace();
+		}
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 }

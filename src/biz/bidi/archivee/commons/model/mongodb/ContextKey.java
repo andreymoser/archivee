@@ -19,6 +19,8 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
+import org.bson.types.ObjectId;
+
 
 /**
  * @author Andrey Bidinotto
@@ -27,25 +29,11 @@ package biz.bidi.archivee.commons.model.mongodb;
  */
 public class ContextKey {
 	
-	private int appId;
+	private ObjectId appId;
 	
-	private int templateId;
+	private ObjectId templateId;
 	
 	private long sequence;
-
-	/**
-	 * @return the appId
-	 */
-	public int getAppId() {
-		return appId;
-	}
-
-	/**
-	 * @param appId the appId to set
-	 */
-	public void setAppId(int appId) {
-		this.appId = appId;
-	}
 
 	/**
 	 * @return the sequence
@@ -62,16 +50,30 @@ public class ContextKey {
 	}
 
 	/**
+	 * @return the appId
+	 */
+	public ObjectId getAppId() {
+		return appId;
+	}
+
+	/**
+	 * @param appId the appId to set
+	 */
+	public void setAppId(ObjectId appId) {
+		this.appId = appId;
+	}
+
+	/**
 	 * @return the templateId
 	 */
-	public int getTemplateId() {
+	public ObjectId getTemplateId() {
 		return templateId;
 	}
 
 	/**
 	 * @param templateId the templateId to set
 	 */
-	public void setTemplateId(int templateId) {
+	public void setTemplateId(ObjectId templateId) {
 		this.templateId = templateId;
 	}
 

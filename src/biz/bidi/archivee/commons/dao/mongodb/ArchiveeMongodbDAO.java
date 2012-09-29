@@ -20,15 +20,23 @@
 package biz.bidi.archivee.commons.dao.mongodb;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
-import biz.bidi.archivee.commons.dao.mongodb.dao.ContextDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.mongodb.App;
+import biz.bidi.archivee.commons.model.mongodb.Context;
+import biz.bidi.archivee.commons.model.mongodb.ContextIndex;
+import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
+import biz.bidi.archivee.commons.model.mongodb.Dictionary;
+import biz.bidi.archivee.commons.model.mongodb.DictionaryQueue;
 import biz.bidi.archivee.commons.model.mongodb.IEntity;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
+import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.commons.model.mongodb.Template;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
 
 import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Key;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.query.Query;
 import com.mongodb.Mongo;
@@ -39,7 +47,7 @@ import com.mongodb.Mongo;
  * @since Sep 12, 2012
  */
 public abstract class ArchiveeMongodbDAO<E extends IEntity> 
-	implements IArchiveeGenericDAO<E, Query<E>>, IArchiveePropertiesLoader {
+	implements IArchiveeGenericDAO<E, Query<E>, Key<E>>, IArchiveePropertiesLoader {
 	
 	/**
 	 * Singleton factoryManagerInstance
@@ -71,6 +79,14 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 			Morphia morphia = new Morphia();
 			morphia.map(Pattern.class);
 			morphia.map(LogQueue.class);
+			morphia.map(Context.class);
+			morphia.map(ContextIndex.class);
+			morphia.map(ContextQueue.class);
+			morphia.map(Dictionary.class);
+			morphia.map(DictionaryQueue.class);
+			morphia.map(Template.class);
+			morphia.map(App.class);
+			morphia.map(MasterIndex.class);
 			
 			ds = morphia.createDatastore(mongo, database); 
 			ds.ensureIndexes();
@@ -84,13 +100,14 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 	
 	/**
 	 * {@inheritDoc}
+	 * @param <I>
 	 * 
 	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#save(java.lang.Object)
 	 */
 	@Override
-	public void save(E entity) throws ArchiveeException {
+	public Key<E> save(E entity) throws ArchiveeException {
 		try {
-			ds.save(entity);
+			return ds.save(entity);
 		} catch (Exception e) {
 			throw new ArchiveeException(e, "Error while saving in mongoDB", entity, this);
 		}

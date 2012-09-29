@@ -24,6 +24,7 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
 
+import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
 
 /**
@@ -59,10 +60,10 @@ public class LogQueueDAO extends ArchiveeMongodbDAO<LogQueue> {
 	 * @see biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO#save(biz.bidi.archivee.commons.model.IEntity)
 	 */
 	@Override
-	public void save(LogQueue entity) throws ArchiveeException {
+	public Key<LogQueue> save(LogQueue entity) throws ArchiveeException {
 		entity.setSimpleRegex(ArchiveePatternUtils.convertToSimpleRegex(entity.getMessage()));
 		
-		super.save(entity);
+		return super.save(entity);
 	}
 
 

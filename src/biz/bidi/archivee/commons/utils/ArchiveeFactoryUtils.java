@@ -24,6 +24,7 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.factories.IArchiveeFactoryManager;
 import biz.bidi.archivee.commons.interfaces.ILogSender;
+import biz.bidi.archivee.commons.interfaces.IPatternSender;
 import biz.bidi.archivee.commons.jms.IArchiveeMessaging;
 import biz.bidi.archivee.commons.model.mongodb.App;
 import biz.bidi.archivee.commons.model.mongodb.Context;
@@ -35,6 +36,7 @@ import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.mongodb.Template;
 
+import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
 
 /**
@@ -65,7 +67,7 @@ public class ArchiveeFactoryUtils {
 	 */
 	
 	@SuppressWarnings("unchecked")
-	public static IArchiveeGenericDAO<Pattern, Query<Pattern>> getPatternDAO() throws ArchiveeException {
+	public static IArchiveeGenericDAO<Pattern, Query<Pattern>, Key<Pattern>> getPatternDAO() throws ArchiveeException {
 		IArchiveeGenericDAO daoInstance = null;
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,Pattern.class);
 		daoInstance = factory.createInstance(null);
@@ -73,7 +75,7 @@ public class ArchiveeFactoryUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static IArchiveeGenericDAO<LogQueue, Query<LogQueue>> getLoqQueue() throws ArchiveeException {
+	public static IArchiveeGenericDAO<LogQueue, Query<LogQueue>, Key<LogQueue>> getLoqQueue() throws ArchiveeException {
 		IArchiveeGenericDAO daoInstance = null;
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,LogQueue.class);
 		daoInstance = factory.createInstance(null);
@@ -81,7 +83,7 @@ public class ArchiveeFactoryUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static IArchiveeGenericDAO<App, Query<App>> getApp() throws ArchiveeException {
+	public static IArchiveeGenericDAO<App, Query<App>, Key<App>> getApp() throws ArchiveeException {
 		IArchiveeGenericDAO daoInstance = null;
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,App.class);
 		daoInstance = factory.createInstance(null);
@@ -89,7 +91,7 @@ public class ArchiveeFactoryUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static IArchiveeGenericDAO<Context, Query<Context>> getContext() throws ArchiveeException {
+	public static IArchiveeGenericDAO<Context, Query<Context>, Key<Context>> getContext() throws ArchiveeException {
 		IArchiveeGenericDAO daoInstance = null;
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,Context.class);
 		daoInstance = factory.createInstance(null);
@@ -97,7 +99,7 @@ public class ArchiveeFactoryUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static IArchiveeGenericDAO<ContextIndex, Query<ContextIndex>> getContextIndex() throws ArchiveeException {
+	public static IArchiveeGenericDAO<ContextIndex, Query<ContextIndex>, Key<ContextIndex>> getContextIndex() throws ArchiveeException {
 		IArchiveeGenericDAO daoInstance = null;
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,ContextIndex.class);
 		daoInstance = factory.createInstance(null);
@@ -105,7 +107,7 @@ public class ArchiveeFactoryUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static IArchiveeGenericDAO<ContextQueue, Query<ContextQueue>> getContextQueue() throws ArchiveeException {
+	public static IArchiveeGenericDAO<ContextQueue, Query<ContextQueue>, Key<ContextQueue>> getContextQueue() throws ArchiveeException {
 		IArchiveeGenericDAO daoInstance = null;
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,ContextQueue.class);
 		daoInstance = factory.createInstance(null);
@@ -113,7 +115,7 @@ public class ArchiveeFactoryUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static IArchiveeGenericDAO<Dictionary, Query<Dictionary>> getDictionary() throws ArchiveeException {
+	public static IArchiveeGenericDAO<Dictionary, Query<Dictionary>, Key<Dictionary>> getDictionary() throws ArchiveeException {
 		IArchiveeGenericDAO daoInstance = null;
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,Dictionary.class);
 		daoInstance = factory.createInstance(null);
@@ -121,7 +123,7 @@ public class ArchiveeFactoryUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static IArchiveeGenericDAO<MasterIndex, Query<MasterIndex>> getMasterIndex() throws ArchiveeException {
+	public static IArchiveeGenericDAO<MasterIndex, Query<MasterIndex>, Key<MasterIndex>> getMasterIndex() throws ArchiveeException {
 		IArchiveeGenericDAO daoInstance = null;
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,MasterIndex.class);
 		daoInstance = factory.createInstance(null);
@@ -129,7 +131,7 @@ public class ArchiveeFactoryUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static IArchiveeGenericDAO<Template, Query<Template>> getTemplate() throws ArchiveeException {
+	public static IArchiveeGenericDAO<Template, Query<Template>, Key<Template>> getTemplate() throws ArchiveeException {
 		IArchiveeGenericDAO daoInstance = null;
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,Template.class);
 		daoInstance = factory.createInstance(null);
@@ -152,6 +154,14 @@ public class ArchiveeFactoryUtils {
 		IArchiveeFactory<ILogSender, Object> factory = getFactory(IArchiveeMessaging.class,ILogSender.class);
 		logSender = factory.createInstance(null);
 		return logSender;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static IPatternSender getPatternSender() throws ArchiveeException {
+		IPatternSender patternSender = null;
+		IArchiveeFactory<IPatternSender, Object> factory = getFactory(IArchiveeMessaging.class,IPatternSender.class);
+		patternSender = factory.createInstance(null);
+		return patternSender;
 	}
 
 }
