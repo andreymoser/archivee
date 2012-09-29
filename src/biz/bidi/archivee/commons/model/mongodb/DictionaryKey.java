@@ -26,40 +26,24 @@ package biz.bidi.archivee.commons.model.mongodb;
  */
 public class DictionaryKey {
 
-	private long patternId;
-	
-	private int patternPath;
+	private TemplateKey templateKey;
 	
 	private int elementIndex;
 
 	/**
-	 * @return the patternId
+	 * @return the templateKey
 	 */
-	public long getPatternId() {
-		return patternId;
+	public TemplateKey getTemplateKey() {
+		return templateKey;
 	}
 
 	/**
-	 * @param patternId the patternId to set
+	 * @param templateKey the templateKey to set
 	 */
-	public void setPatternId(long patternId) {
-		this.patternId = patternId;
+	public void setTemplateKey(TemplateKey templateKey) {
+		this.templateKey = templateKey;
 	}
-
-	/**
-	 * @return the patternPath
-	 */
-	public int getPatternPath() {
-		return patternPath;
-	}
-
-	/**
-	 * @param patternPath the patternPath to set
-	 */
-	public void setPatternPath(int patternPath) {
-		this.patternPath = patternPath;
-	}
-
+	
 	/**
 	 * @return the elementIndex
 	 */
@@ -73,4 +57,5 @@ public class DictionaryKey {
 	public void setElementIndex(int elementIndex) {
 		this.elementIndex = elementIndex;
 	}
+	
 }

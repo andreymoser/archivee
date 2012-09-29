@@ -29,6 +29,8 @@ public class ContextKey {
 	
 	private int appId;
 	
+	private int templateId;
+	
 	private long sequence;
 
 	/**
@@ -57,6 +59,20 @@ public class ContextKey {
 	 */
 	public void setSequence(long sequence) {
 		this.sequence = sequence;
+	}
+
+	/**
+	 * @return the templateId
+	 */
+	public int getTemplateId() {
+		return templateId;
+	}
+
+	/**
+	 * @param templateId the templateId to set
+	 */
+	public void setTemplateId(int templateId) {
+		this.templateId = templateId;
 	}
 
 }

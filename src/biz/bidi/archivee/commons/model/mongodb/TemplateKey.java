@@ -30,6 +30,8 @@ public class TemplateKey {
 	private long patternId;
 	
 	private PatternPath patternPath;
+	
+	private int sequence; 
 
 	/**
 	 * @return the patternId
@@ -57,6 +59,20 @@ public class TemplateKey {
 	 */
 	public void setPatternPath(PatternPath patternPath) {
 		this.patternPath = patternPath;
+	}
+
+	/**
+	 * @return the sequence
+	 */
+	public int getSequence() {
+		return sequence;
+	}
+
+	/**
+	 * @param sequence the sequence to set
+	 */
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
 	}
 	
 }

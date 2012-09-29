@@ -17,21 +17,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.logsender;
+package biz.bidi.archivee.components.masteridx.commons;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
-import biz.bidi.archivee.components.listeners.logsender.jms.JMSLogParserSender;
+import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
+import biz.bidi.archivee.components.masteridx.indexer.MasterIndexer;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 7, 2012
+ * @since Sep 28, 2012
  */
-public class LogSenderFactory extends ArchiveeSingletonFactory<ILogSender,Object> {
+public class MasterIndexerFactory extends ArchiveeSingletonFactory<IMasterIndexer, Object> {
 
 	static {
-		instance = new JMSLogParserSender(); 
+		instance = new MasterIndexer();
 	}
 	
 	/**
@@ -39,9 +40,10 @@ public class LogSenderFactory extends ArchiveeSingletonFactory<ILogSender,Object
 	 * 
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
+	@SuppressWarnings("static-access")
 	@Override
-	public ILogSender createInstance(Object object) throws ArchiveeException {
-		return (ILogSender) this.getInstance();
+	public IMasterIndexer createInstance(Object object) throws ArchiveeException {
+		return (IMasterIndexer) this.getInstance();
 	}
 
 }

@@ -52,7 +52,5 @@ public class PatternPath {
 	 */
 	public void setValues(ArrayList<Integer> values) {
 		this.values = values;
-	}
-	
-	
+	}	
 }
