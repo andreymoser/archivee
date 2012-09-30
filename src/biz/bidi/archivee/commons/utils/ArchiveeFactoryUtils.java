@@ -31,6 +31,7 @@ import biz.bidi.archivee.commons.model.mongodb.Context;
 import biz.bidi.archivee.commons.model.mongodb.ContextIndex;
 import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
 import biz.bidi.archivee.commons.model.mongodb.Dictionary;
+import biz.bidi.archivee.commons.model.mongodb.DictionaryQueue;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
@@ -118,6 +119,14 @@ public class ArchiveeFactoryUtils {
 	public static IArchiveeGenericDAO<Dictionary, Query<Dictionary>, Key<Dictionary>> getDictionary() throws ArchiveeException {
 		IArchiveeGenericDAO daoInstance = null;
 		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,Dictionary.class);
+		daoInstance = factory.createInstance(null);
+		return daoInstance;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static IArchiveeGenericDAO<DictionaryQueue, Query<DictionaryQueue>, Key<DictionaryQueue>> getDictionaryQueue() throws ArchiveeException {
+		IArchiveeGenericDAO daoInstance = null;
+		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = getFactory(IArchiveeGenericDAO.class,DictionaryQueue.class);
 		daoInstance = factory.createInstance(null);
 		return daoInstance;
 	}

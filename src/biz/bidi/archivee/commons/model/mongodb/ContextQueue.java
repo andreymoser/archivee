@@ -19,10 +19,15 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.TreeSet;
 
 import org.bson.types.ObjectId;
+
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.xml.PatternMessage;
+import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
@@ -40,16 +45,27 @@ public class ContextQueue implements IEntity {
 	private ObjectId id;
 	
 	@Indexed
-	private ObjectId appId;
-	
-	@Indexed
 	private ObjectId patternId;
 	
-	private ArrayList<String> lines;
+	private TreeSet<PatternMessage> messages;
 	
 	private Date startDate;
 	
 	private Date endDate;
+	
+	public ContextQueue() {
+		messages = new TreeSet<PatternMessage>(new Comparator<PatternMessage>() {
+			@Override
+			public int compare(PatternMessage p1, PatternMessage p2) {
+				try {
+					return ArchiveeDateUtils.convertToDate(p1.getDate()).compareTo(ArchiveeDateUtils.convertToDate(p2.getDate()));
+				} catch (ArchiveeException e) {
+					ArchiveeException.log(e, "Error in comparator - ContextQueue", this, p1, p2);
+				}
+				return 0;
+			}
+		}); 
+	}
 
 	/**
 	 * @return the id
@@ -63,20 +79,6 @@ public class ContextQueue implements IEntity {
 	 */
 	public void setId(ObjectId id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the lines
-	 */
-	public ArrayList<String> getLines() {
-		return lines;
-	}
-
-	/**
-	 * @param lines the lines to set
-	 */
-	public void setLines(ArrayList<String> lines) {
-		this.lines = lines;
 	}
 
 	/**
@@ -108,20 +110,6 @@ public class ContextQueue implements IEntity {
 	}
 
 	/**
-	 * @return the appId
-	 */
-	public ObjectId getAppId() {
-		return appId;
-	}
-
-	/**
-	 * @param appId the appId to set
-	 */
-	public void setAppId(ObjectId appId) {
-		this.appId = appId;
-	}
-
-	/**
 	 * @return the patternId
 	 */
 	public ObjectId getPatternId() {
@@ -133,6 +121,20 @@ public class ContextQueue implements IEntity {
 	 */
 	public void setPatternId(ObjectId patternId) {
 		this.patternId = patternId;
+	}
+
+	/**
+	 * @return the messages
+	 */
+	public TreeSet<PatternMessage> getMessages() {
+		return messages;
+	}
+
+	/**
+	 * @param messages the messages to set
+	 */
+	public void setMessages(TreeSet<PatternMessage> messages) {
+		this.messages = messages;
 	}
 
 }

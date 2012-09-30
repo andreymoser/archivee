@@ -17,40 +17,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
+package biz.bidi.archivee.components.archiver.commons;
 
-import java.util.ArrayList;
-
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
+import biz.bidi.archivee.components.archiver.Archiver;
+import biz.bidi.archivee.components.archiver.IArchiver;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 27, 2012
+ * @since Sep 29, 2012
  */
-public class PatternPath {
+public class ArchiverFactory extends ArchiveeSingletonFactory<IArchiver, Object> {
 
-	private ArrayList<PatternPathEntry> values;
+	static {
+		instance = new Archiver();
+	}
 	
 	/**
+	 * {@inheritDoc}
 	 * 
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
-	public PatternPath() {
-		super();
-		
-		values = new ArrayList<PatternPathEntry>();	}
-
-	/**
-	 * @return the values
-	 */
-	public ArrayList<PatternPathEntry> getValues() {
-		return values;
-	}
-
-	/**
-	 * @param values the values to set
-	 */
-	public void setValues(ArrayList<PatternPathEntry> values) {
-		this.values = values;
+	@SuppressWarnings("static-access")
+	@Override
+	public IArchiver createInstance(Object object) throws ArchiveeException {
+		return (IArchiver) this.getInstance();
 	}
 
 }

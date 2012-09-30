@@ -21,11 +21,14 @@ package biz.bidi.archivee.commons.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.regex.Matcher;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.mongodb.PatternChild;
+import biz.bidi.archivee.commons.model.mongodb.PatternPath;
+import biz.bidi.archivee.commons.model.mongodb.PatternPathEntry;
 
 /**
  * Generic class which contains generic pattern rules/processes
@@ -329,24 +332,54 @@ public class ArchiveePatternUtils {
 	}
 	
 	/**
-	 * @param s
+	 * Builds the pattern path based on the log message given and its pattern data 
+	 * @param message
+	 * @param pattern
 	 * @return
-	 * @deprecated
+	 * @throws ArchiveeException
 	 */
-	public static String createRegex(String s) {  
-	    StringBuilder b = new StringBuilder();  
-	    for(int i=0; i<s.length(); ++i) {  
-	        char ch = s.charAt(i);  
-	        if ("\\.^$|?*+[]{}()".indexOf(ch) != -1)  
-	            b.append('\\').append(ch);  
-	        else if (Character.isLetter(ch))  
-	            b.append("[A-Za-z]");  
-	        else if (Character.isDigit(ch))  
-	            b.append("\\d");  
-	        else  
-	            b.append(ch);  
-	    }  
-	    return b.toString();  
+	public static PatternPath findPatternPath(String message, Pattern pattern) throws ArchiveeException {
+		PatternPath patternPath = new PatternPath();
+		String simpleRegex = convertToSimpleRegex(message);
+		
+		int i = 0;
+		for(PatternChild p : pattern.getPatterns()) {
+			if(findPatternPath(simpleRegex,p,patternPath)) {
+				PatternPathEntry value = new PatternPathEntry();
+				value.setIndex(i);
+				value.setWords(getPatternValues(p.getValue()).size());
+				patternPath.getValues().add(value);
+				break;
+			}
+			i++;
+		}
+		
+		Collections.reverse(patternPath.getValues());
+		
+		return patternPath;
+	}
+	
+	private static boolean findPatternPath(String simpleRegex, PatternChild patternChild, PatternPath patternPath) throws ArchiveeException {
+		boolean found = false; 
+		
+		int i = 0;
+		for(PatternChild p : patternChild.getPatterns()) {
+			if(simpleRegex.startsWith(p.getValue(), p.getOffset())) {
+				if(findPatternPath(simpleRegex,p,patternPath)) {
+					PatternPathEntry value = new PatternPathEntry();
+					value.setIndex(i);
+					value.setWords(getPatternValues(p.getValue()).size());
+					patternPath.getValues().add(value);
+					break;
+				}
+			}
+			i++;
+		}
+		if(patternChild.getPatterns().size() == 0) {
+			found = true;
+		}
+		
+		return found;
 	}
 
 }

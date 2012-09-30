@@ -19,38 +19,40 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-import java.util.ArrayList;
-
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 27, 2012
+ * @since Sep 29, 2012
  */
-public class PatternPath {
+public class PatternPathEntry {
 
-	private ArrayList<PatternPathEntry> values;
+	private int index;
+	
+	private int words;
 	
 	/**
-	 * 
+	 * @return the index
 	 */
-	public PatternPath() {
-		super();
-		
-		values = new ArrayList<PatternPathEntry>();	}
-
-	/**
-	 * @return the values
-	 */
-	public ArrayList<PatternPathEntry> getValues() {
-		return values;
+	public int getIndex() {
+		return index;
 	}
-
 	/**
-	 * @param values the values to set
+	 * @param index the index to set
 	 */
-	public void setValues(ArrayList<PatternPathEntry> values) {
-		this.values = values;
+	public void setIndex(int index) {
+		this.index = index;
 	}
-
+	/**
+	 * @return the words
+	 */
+	public int getWords() {
+		return words;
+	}
+	/**
+	 * @param words the words to set
+	 */
+	public void setWords(int words) {
+		this.words = words;
+	}
+	
 }

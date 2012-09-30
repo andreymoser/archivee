@@ -122,5 +122,4 @@ public class PatternMessage implements IXmlObject {
 		this.appId = appId;
 	}
 
-
 }

@@ -17,40 +17,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
+package biz.bidi.archivee.components.archiver;
 
-import java.util.ArrayList;
-
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.xml.PatternMessage;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 27, 2012
+ * @since Sep 29, 2012
  */
-public class PatternPath {
-
-	private ArrayList<PatternPathEntry> values;
+public interface IArchiver {
 	
-	/**
-	 * 
-	 */
-	public PatternPath() {
-		super();
-		
-		values = new ArrayList<PatternPathEntry>();	}
-
-	/**
-	 * @return the values
-	 */
-	public ArrayList<PatternPathEntry> getValues() {
-		return values;
-	}
-
-	/**
-	 * @param values the values to set
-	 */
-	public void setValues(ArrayList<PatternPathEntry> values) {
-		this.values = values;
-	}
+	public void archiveData(PatternMessage message) throws ArchiveeException;
 
 }

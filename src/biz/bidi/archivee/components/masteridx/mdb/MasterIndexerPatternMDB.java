@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.masteridx.input.mdb;
+package biz.bidi.archivee.components.masteridx.mdb;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
@@ -44,7 +44,7 @@ import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-public class PatternInputTopicMDB implements MessageListener {
+public class MasterIndexerPatternMDB implements MessageListener {
 
 	/**
 	 * The masterIndexer factoryManagerInstance

@@ -46,7 +46,7 @@ public class DictionaryQueue implements IEntity {
 	/**
 	 * 
 	 */
-	private DictionaryQueue() {
+	public DictionaryQueue() {
 		super();
 		counts = new HashMap<String, Long>();
 	}

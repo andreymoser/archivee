@@ -17,40 +17,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
+package biz.bidi.archivee.components.archiver.commons;
 
-import java.util.ArrayList;
-
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.utils.ArchiveeFactoryUtils;
+import biz.bidi.archivee.components.archiver.IArchiver;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 27, 2012
+ * @since Sep 29, 2012
  */
-public class PatternPath {
-
-	private ArrayList<PatternPathEntry> values;
+public class ArchiverUtils extends ArchiveeFactoryUtils {
+	
+	static {
+		factoryManagerInstance = ArchiverFactoryManager.instance; 
+	}
 	
 	/**
-	 * 
+	 * @return
+	 * @throws ArchiveeException 
 	 */
-	public PatternPath() {
-		super();
-		
-		values = new ArrayList<PatternPathEntry>();	}
-
-	/**
-	 * @return the values
-	 */
-	public ArrayList<PatternPathEntry> getValues() {
-		return values;
+	@SuppressWarnings("unchecked")
+	public static IArchiver getArchiver() throws ArchiveeException {
+		IArchiver archiver = null;
+		IArchiveeFactory<IArchiver, Object> factory = getFactory(IArchiver.class);
+		archiver = factory.createInstance(null);
+		return archiver;
 	}
-
-	/**
-	 * @param values the values to set
-	 */
-	public void setValues(ArrayList<PatternPathEntry> values) {
-		this.values = values;
-	}
-
 }
