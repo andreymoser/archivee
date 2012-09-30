@@ -26,23 +26,11 @@ package biz.bidi.archivee.commons.model.mongodb;
  */
 public class DictionaryEntry {
 
-	private Bits bits;
+	private long bytes;
+	
+	private int bitsLength;
 	
 	private long count;
-
-	/**
-	 * @return the bits
-	 */
-	public Bits getBits() {
-		return bits;
-	}
-
-	/**
-	 * @param bits the bits to set
-	 */
-	public void setBits(Bits bits) {
-		this.bits = bits;
-	}
 
 	/**
 	 * @return the count
@@ -56,6 +44,34 @@ public class DictionaryEntry {
 	 */
 	public void setCount(long count) {
 		this.count = count;
+	}
+
+	/**
+	 * @return the bytes
+	 */
+	public long getBytes() {
+		return bytes;
+	}
+
+	/**
+	 * @param bytes the bytes to set
+	 */
+	public void setBytes(long bytes) {
+		this.bytes = bytes;
+	}
+
+	/**
+	 * @return the bitsLength
+	 */
+	public int getBitsLength() {
+		return bitsLength;
+	}
+
+	/**
+	 * @param bitsLength the bitsLength to set
+	 */
+	public void setBitsLength(int bitsLength) {
+		this.bitsLength = bitsLength;
 	}
 	
 }

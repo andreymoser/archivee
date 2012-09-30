@@ -46,7 +46,7 @@ import com.google.code.morphia.query.Query;
  * @since Sep 29, 2012
  */
 @SuppressWarnings(value="rawtypes")
-public class ArchiveeFactoryUtils {
+public abstract class ArchiveeFactoryUtils {
 
 	/**
 	 * The file listener manager factory

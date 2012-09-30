@@ -28,8 +28,9 @@ public abstract class ArchiveeSingletonFactory<I, O> implements IArchiveeFactory
 
 	protected static Object instance;
 	
-	public static Object getInstance() {
-		return instance;
+	@SuppressWarnings("unchecked")
+	public I getInstance() {
+		return (I) instance;
 	}
 	
 }

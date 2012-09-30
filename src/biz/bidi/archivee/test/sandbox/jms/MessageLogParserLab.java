@@ -21,21 +21,20 @@ package biz.bidi.archivee.test.sandbox.jms;
 
 import java.io.File;
 
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.Query;
-
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.interfaces.ILogParser;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
 import biz.bidi.archivee.components.listeners.parser.DateLevelLogParser;
-import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
+import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 import biz.bidi.archivee.components.logparser.parser.MessageLogParser;
 import biz.bidi.archivee.test.commons.FileReaderUtilsTest;
+
+import com.google.code.morphia.Key;
+import com.google.code.morphia.query.Query;
 
 /**
  * Class test for LogParser component
@@ -56,8 +55,8 @@ public class MessageLogParserLab {
 			
 			System.out.println("Analysing log file: " + logFile);
 			
-			patternDAO = LogParserUtils.getPatternDAO();
-			logQueueDAO = LogParserUtils.getLoqQueue();
+			patternDAO = LogParserManager.getInstance().getPatternDAO();
+			logQueueDAO = LogParserManager.getInstance().getLoqQueue();
 			
 			for (Pattern pattern : patternDAO.find(new Pattern())) {
 				patternDAO.delete(pattern, null);

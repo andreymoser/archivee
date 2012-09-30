@@ -31,19 +31,17 @@ import biz.bidi.archivee.commons.jms.senders.JMSLogParserSender;
  */
 public class LogSenderFactory extends ArchiveeSingletonFactory<ILogSender,Object> {
 
-	static {
-		instance = new JMSLogParserSender();
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
-	@SuppressWarnings("static-access")
 	@Override
 	public ILogSender createInstance(Object object) throws ArchiveeException {
-		return (ILogSender) this.getInstance();
+		if(instance == null) {
+			instance = new JMSLogParserSender();
+		}
+		return this.getInstance();
 	}
 
 }

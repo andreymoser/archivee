@@ -19,6 +19,8 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
+import org.bson.types.ObjectId;
+
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
@@ -26,23 +28,9 @@ package biz.bidi.archivee.commons.model.mongodb;
  */
 public class DictionaryKey {
 
-	private TemplateKey templateKey;
+	private ObjectId templateId;
 	
 	private int elementIndex;
-
-	/**
-	 * @return the templateKey
-	 */
-	public TemplateKey getTemplateKey() {
-		return templateKey;
-	}
-
-	/**
-	 * @param templateKey the templateKey to set
-	 */
-	public void setTemplateKey(TemplateKey templateKey) {
-		this.templateKey = templateKey;
-	}
 	
 	/**
 	 * @return the elementIndex
@@ -56,6 +44,20 @@ public class DictionaryKey {
 	 */
 	public void setElementIndex(int elementIndex) {
 		this.elementIndex = elementIndex;
+	}
+
+	/**
+	 * @return the templateId
+	 */
+	public ObjectId getTemplateId() {
+		return templateId;
+	}
+
+	/**
+	 * @param templateId the templateId to set
+	 */
+	public void setTemplateId(ObjectId templateId) {
+		this.templateId = templateId;
 	}
 	
 }

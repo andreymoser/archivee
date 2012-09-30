@@ -20,8 +20,9 @@
 package biz.bidi.archivee.components.archiver.commons;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
+import biz.bidi.archivee.commons.factories.ArchiveeFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.IArchiveeFactoryManager;
 import biz.bidi.archivee.components.archiver.IArchiver;
 
 /**
@@ -30,13 +31,12 @@ import biz.bidi.archivee.components.archiver.IArchiver;
  * @since Sep 29, 2012
  */
 @SuppressWarnings("rawtypes")
-public class ArchiverFactoryManager extends ArchiveeGenericFactoryManager {
+public abstract class ArchiverFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
 
 	protected static IArchiveeFactory archiverFactory;
 	
-	static {
-		instance = new ArchiverFactoryManager();
-		
+	public ArchiverFactoryManager() {
+		super();
 		archiverFactory = new ArchiverFactory();
 	}
 	
@@ -57,4 +57,17 @@ public class ArchiverFactoryManager extends ArchiveeGenericFactoryManager {
 		
 		return factory;
 	}
+	
+	/**
+	 * @return
+	 * @throws ArchiveeException 
+	 */
+	@SuppressWarnings("unchecked")
+	public static IArchiver getArchiver() throws ArchiveeException {
+		IArchiver archiver = null;
+		IArchiveeFactory<IArchiver, Object> factory = instance.getFactoryInstance(IArchiver.class);
+		archiver = factory.createInstance(null);
+		return archiver;
+	}
+	
 }

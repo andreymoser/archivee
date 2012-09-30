@@ -43,7 +43,7 @@ public class Dictionary implements IEntity {
 	
 	private HashMap<String, DictionaryEntry> entries;
 	
-	private HashMap<Bits, String> entriesIndex;
+	private HashMap<Long, String> entriesIndex;
 
 	/**
 	 * @return the key
@@ -74,20 +74,6 @@ public class Dictionary implements IEntity {
 	}
 
 	/**
-	 * @return the entriesIndex
-	 */
-	public HashMap<Bits, String> getEntriesIndex() {
-		return entriesIndex;
-	}
-
-	/**
-	 * @param entriesIndex the entriesIndex to set
-	 */
-	public void setEntriesIndex(HashMap<Bits, String> entriesIndex) {
-		this.entriesIndex = entriesIndex;
-	}
-
-	/**
 	 * @return the id
 	 */
 	public ObjectId getId() {
@@ -100,5 +86,20 @@ public class Dictionary implements IEntity {
 	public void setId(ObjectId id) {
 		this.id = id;
 	}
+
+	/**
+	 * @return the entriesIndex
+	 */
+	public HashMap<Long, String> getEntriesIndex() {
+		return entriesIndex;
+	}
+
+	/**
+	 * @param entriesIndex the entriesIndex to set
+	 */
+	public void setEntriesIndex(HashMap<Long, String> entriesIndex) {
+		this.entriesIndex = entriesIndex;
+	}
+
 
 }

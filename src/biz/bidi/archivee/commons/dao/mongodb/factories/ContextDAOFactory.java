@@ -20,9 +20,8 @@
 package biz.bidi.archivee.commons.dao.mongodb.factories;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
-import biz.bidi.archivee.commons.dao.mongodb.dao.ContextDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
 import biz.bidi.archivee.commons.model.mongodb.Context;
 
 import com.google.code.morphia.Key;
@@ -33,17 +32,19 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-public class ContextDAOFactory implements IArchiveeFactory<IArchiveeGenericDAO<Context, Query<Context>, Key<Context>>, Object> {
+public class ContextDAOFactory extends ArchiveeSingletonFactory<IArchiveeGenericDAO<Context, Query<Context>, Key<Context>>, Object> {
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public IArchiveeGenericDAO<Context, Query<Context>, Key<Context>> createInstance(Object object) throws ArchiveeException {
-		return ContextDAO.getInstance();
+		if(instance == null) {
+			instance = new ContextDAOFactory(); 
+		}
+		return this.getInstance();
 	}
 	
 }

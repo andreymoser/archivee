@@ -32,10 +32,6 @@ import com.google.code.morphia.query.Query;
  */
 public class MasterIndexDAO extends ArchiveeMongodbDAO<MasterIndex> {
 
-	static {
-		instance = new MasterIndexDAO();
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 

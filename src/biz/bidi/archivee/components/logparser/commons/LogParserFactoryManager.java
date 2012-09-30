@@ -19,13 +19,11 @@
  */
 package biz.bidi.archivee.components.logparser.commons;
 
-import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
+import biz.bidi.archivee.commons.factories.ArchiveeFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.factories.IArchiveeFactoryManager;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
-import biz.bidi.archivee.commons.jms.IArchiveeMessaging;
 import biz.bidi.archivee.components.logparser.parser.LogParserFactory;
 
 /**
@@ -34,13 +32,15 @@ import biz.bidi.archivee.components.logparser.parser.LogParserFactory;
  * @since Sep 6, 2012
  */
 @SuppressWarnings("rawtypes")
-public class LogParserFactoryManager extends ArchiveeGenericFactoryManager {
+public abstract class LogParserFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
 
 	protected static IArchiveeFactory logParserFactory;
 	
-	static {
-		instance = new LogParserFactoryManager();
-		
+	/**
+	 * @param instance
+	 */
+	public LogParserFactoryManager() {
+		super();
 		logParserFactory = new LogParserFactory(); 
 	}
 
@@ -61,4 +61,13 @@ public class LogParserFactoryManager extends ArchiveeGenericFactoryManager {
 		
 		return factory;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public ILogParser getLogParser() throws ArchiveeException {
+		ILogParser logParser = null;
+		IArchiveeFactory<ILogParser, Object> factory = instance.getFactoryInstance(ILogParser.class);
+		logParser = factory.createInstance(null);
+		return logParser;
+	}
+
 }

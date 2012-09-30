@@ -41,14 +41,15 @@ public class DictionaryQueue implements IEntity {
 	@Indexed(unique=true)
 	private DictionaryKey key;
 	
-	private HashMap<String, Long> counts;
+	private HashMap<String, Integer> counts;
 
 	/**
 	 * 
 	 */
 	public DictionaryQueue() {
 		super();
-		counts = new HashMap<String, Long>();
+		counts = new HashMap<String, Integer>();
+		key = new DictionaryKey();
 	}
 
 	/**
@@ -68,14 +69,14 @@ public class DictionaryQueue implements IEntity {
 	/**
 	 * @return the counts
 	 */
-	public HashMap<String, Long> getCounts() {
+	public HashMap<String, Integer> getCounts() {
 		return counts;
 	}
 
 	/**
 	 * @param counts the counts to set
 	 */
-	public void setCounts(HashMap<String, Long> counts) {
+	public void setCounts(HashMap<String, Integer> counts) {
 		this.counts = counts;
 	}
 

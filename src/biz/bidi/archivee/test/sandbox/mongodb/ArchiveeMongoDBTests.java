@@ -19,10 +19,12 @@
  */
 package biz.bidi.archivee.test.sandbox.mongodb;
 
+import org.bson.types.ObjectId;
+
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
-import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
+import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 
 import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
@@ -39,16 +41,28 @@ public class ArchiveeMongoDBTests {
 	public void run() {
 		try {
 			
-			patternDAO = LogParserUtils.getPatternDAO();
+			patternDAO = LogParserManager.getInstance().getPatternDAO();
 			
 			Pattern pattern = new Pattern();
-			patternDAO.save(pattern);
-			
-			pattern.setValue("teste");
-			patternDAO.save(pattern);
-			
+//			pattern.setId(new ObjectId("5068a0069f03f2cce1d9c0db"));
 			pattern.setValue("teste 2");
-			patternDAO.save(pattern);
+			
+			for(Pattern p : patternDAO.find(pattern)) {
+				System.out.println(p.getId());
+				System.out.println(p.getValue());
+			}
+			
+//			patternDAO.save(pattern);
+//			System.out.println(pattern.getId());
+//			
+//			
+//			pattern.setValue("teste");
+//			patternDAO.save(pattern);
+//			System.out.println(pattern.getId());
+//			
+//			pattern.setValue("teste 2");
+//			patternDAO.save(pattern);
+//			System.out.println(pattern.getId());
 			
 			for(Pattern p : patternDAO.find(new Pattern())) {
 //				patternDAO.delete(p, null);

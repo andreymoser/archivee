@@ -32,10 +32,6 @@ import com.google.code.morphia.query.Query;
  */
 public class ContextDAO extends ArchiveeMongodbDAO<Context> {
 
-	static {
-		instance = new ContextDAO();
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 * 

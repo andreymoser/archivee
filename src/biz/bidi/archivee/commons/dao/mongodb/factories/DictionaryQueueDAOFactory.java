@@ -20,9 +20,8 @@
 package biz.bidi.archivee.commons.dao.mongodb.factories;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
-import biz.bidi.archivee.commons.dao.mongodb.dao.DictionaryQueueDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
 import biz.bidi.archivee.commons.model.mongodb.DictionaryQueue;
 
 import com.google.code.morphia.Key;
@@ -33,8 +32,7 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-public class DictionaryQueueDAOFactory 
-implements IArchiveeFactory<IArchiveeGenericDAO<DictionaryQueue, Query<DictionaryQueue>, Key<DictionaryQueue>>, Object> {
+public class DictionaryQueueDAOFactory extends ArchiveeSingletonFactory<IArchiveeGenericDAO<DictionaryQueue, Query<DictionaryQueue>, Key<DictionaryQueue>>, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -42,9 +40,11 @@ implements IArchiveeFactory<IArchiveeGenericDAO<DictionaryQueue, Query<Dictionar
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public IArchiveeGenericDAO<DictionaryQueue, Query<DictionaryQueue>, Key<DictionaryQueue>> createInstance(
-			Object object) throws ArchiveeException {
-		return DictionaryQueueDAO.getInstance();
+	public IArchiveeGenericDAO<DictionaryQueue, Query<DictionaryQueue>, Key<DictionaryQueue>> createInstance(Object object) throws ArchiveeException {
+		if(instance == null) {
+			instance = new DictionaryQueueDAOFactory(); 
+		}
+		return this.getInstance();
 	}
 	
 }

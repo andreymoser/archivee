@@ -23,6 +23,7 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.commons.jms.IArchiveeMessaging;
 import biz.bidi.archivee.commons.jms.factories.LogSenderFactory;
+import biz.bidi.archivee.commons.jms.factories.PatternSenderFactory;
 
 /**
  * @author Andrey Bidinotto
@@ -30,15 +31,18 @@ import biz.bidi.archivee.commons.jms.factories.LogSenderFactory;
  * @since Sep 29, 2012
  */
 @SuppressWarnings("rawtypes")
-public class JMSFactoryManager extends ArchiveeGenericFactoryManager {
+public class JMSFactoryManager implements IArchiveeFactoryManager {
 
-	protected static IArchiveeFactory logSenderFactory;
-	protected static IArchiveeFactory patternSenderFactory;
+	protected IArchiveeFactoryManager archiveeFactoryManager;
 	
-	static {
-		instance = new JMSFactoryManager();
+	protected IArchiveeFactory logSenderFactory;
+	protected IArchiveeFactory patternSenderFactory;
+	
+	public JMSFactoryManager(IArchiveeFactoryManager archiveeFactoryManager) {
+		this.archiveeFactoryManager = archiveeFactoryManager;
 		
 		logSenderFactory = new LogSenderFactory();
+		patternSenderFactory = new PatternSenderFactory();
 	}
 
 	/**
@@ -66,8 +70,16 @@ public class JMSFactoryManager extends ArchiveeGenericFactoryManager {
 			}
 		}
 		
-		validateFactory(factory, interfaceClass);
-		
 		return factory;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactoryManager#getManagerInstance()
+	 */
+	@Override
+	public IArchiveeFactoryManager getManagerInstance() {
+		return archiveeFactoryManager;
 	}
 }

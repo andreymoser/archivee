@@ -32,10 +32,6 @@ import com.google.code.morphia.query.Query;
  */
 public class PatternDAO extends ArchiveeMongodbDAO<Pattern> {
 
-	static {
-		instance = new PatternDAO();
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 * 

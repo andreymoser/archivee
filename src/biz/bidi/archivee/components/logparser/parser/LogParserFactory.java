@@ -30,19 +30,17 @@ import biz.bidi.archivee.commons.interfaces.ILogParser;
  */
 public class LogParserFactory extends ArchiveeSingletonFactory<ILogParser, Object> {
 
-	static {
-		instance = new MessageLogParser();
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
-	@SuppressWarnings("static-access")
 	@Override
 	public ILogParser createInstance(Object object) throws ArchiveeException {
-		return (ILogParser) this.getInstance();
+		if(instance == null) {
+			instance = new MessageLogParser();
+		}
+		return this.getInstance();
 	}
 
 }

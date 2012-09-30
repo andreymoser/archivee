@@ -20,9 +20,8 @@
 package biz.bidi.archivee.commons.dao.mongodb.factories;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
-import biz.bidi.archivee.commons.dao.mongodb.dao.DictionaryDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
 import biz.bidi.archivee.commons.model.mongodb.Dictionary;
 
 import com.google.code.morphia.Key;
@@ -33,7 +32,7 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-public class DictionaryDAOFactory implements IArchiveeFactory<IArchiveeGenericDAO<Dictionary, Query<Dictionary>, Key<Dictionary>>, Object> {
+public class DictionaryDAOFactory extends ArchiveeSingletonFactory<IArchiveeGenericDAO<Dictionary, Query<Dictionary>, Key<Dictionary>>, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -43,7 +42,10 @@ public class DictionaryDAOFactory implements IArchiveeFactory<IArchiveeGenericDA
 	@Override
 	public IArchiveeGenericDAO<Dictionary, Query<Dictionary>, Key<Dictionary>> createInstance(
 			Object object) throws ArchiveeException {
-		return DictionaryDAO.getInstance();
+		if(instance == null) {
+			instance = new DictionaryDAOFactory(); 
+		}
+		return this.getInstance();
 	}
 	
 }

@@ -23,25 +23,25 @@ import java.util.ArrayList;
 
 import org.bson.types.ObjectId;
 
-import biz.bidi.archivee.commons.components.ArchiveeComponent;
+import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
-import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
+import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-public class MasterIndexer extends ArchiveeComponent implements IMasterIndexer {
+public class MasterIndexer extends ArchiveeManagedComponent implements IMasterIndexer {
 	
 	public MasterIndexer() {
 		try {
-			patternDAO = LogParserUtils.getPatternDAO();
-			masterIndexDAO = LogParserUtils.getMasterIndex();
+			patternDAO = LogParserManager.getInstance().getPatternDAO();
+			masterIndexDAO = LogParserManager.getInstance().getMasterIndex();
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Unable to init MasterIndexer sucessfully",this);
 		}

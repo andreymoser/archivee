@@ -19,6 +19,8 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
+import org.bson.types.ObjectId;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
@@ -32,24 +34,28 @@ import com.google.code.morphia.annotations.Indexed;
 public class Template implements IEntity {
 
 	@Id
-	private long id;
+	private ObjectId id;
 
 	@Indexed(unique=true)
 	private TemplateKey key;
 	
 	private int count;
 
+	public Template() {
+		key = new TemplateKey();
+	}
+	
 	/**
 	 * @return the id
 	 */
-	public long getId() {
+	public ObjectId getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(long id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 

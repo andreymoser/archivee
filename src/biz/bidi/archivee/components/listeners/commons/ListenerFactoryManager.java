@@ -20,7 +20,7 @@
 package biz.bidi.archivee.components.listeners.commons;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
+import biz.bidi.archivee.commons.factories.ArchiveeFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
 import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
@@ -33,7 +33,7 @@ import biz.bidi.archivee.components.listeners.parser.LogParserFactory;
  * @since Sep 6, 2012
  */
 @SuppressWarnings("rawtypes")
-public class ListenerFactoryManager extends ArchiveeGenericFactoryManager {
+public class ListenerFactoryManager extends ArchiveeFactoryManager {
 
 	protected static IArchiveeFactory fileLogReaderFactory;
 	protected static IArchiveeFactory logParserFactory;

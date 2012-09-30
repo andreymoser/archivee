@@ -30,7 +30,7 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 import biz.bidi.archivee.components.archiver.IArchiver;
-import biz.bidi.archivee.components.archiver.commons.ArchiverUtils;
+import biz.bidi.archivee.components.archiver.commons.ArchiverManager;
 
 @MessageDriven( activationConfig = {
 		@ActivationConfigProperty(
@@ -63,7 +63,7 @@ public class ArchiverPatternMDB implements MessageListener {
 			String xml = "";
 			try {
 				xml = textMessage.getText();
-				archiver = ArchiverUtils.getArchiver();
+				archiver = ArchiverManager.getArchiver();
 				archiver.archiveData((PatternMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
 				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);

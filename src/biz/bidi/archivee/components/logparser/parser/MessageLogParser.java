@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import org.bson.types.ObjectId;
 
-import biz.bidi.archivee.commons.components.ArchiveeComponent;
+import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
 import biz.bidi.archivee.commons.interfaces.ILogSender;
@@ -38,14 +38,14 @@ import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
-import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
+import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 11, 2012
  */
-public class MessageLogParser extends ArchiveeComponent implements ILogParser {
+public class MessageLogParser extends ArchiveeManagedComponent implements ILogParser {
 	
 	/**
 	 * The log parser sender
@@ -61,12 +61,12 @@ public class MessageLogParser extends ArchiveeComponent implements ILogParser {
 	 */
 	public MessageLogParser() {
 		try {
-			logParserSender = LogParserUtils.getLogSender();
-			patternSender = LogParserUtils.getPatternSender();
+			logParserSender = LogParserManager.getInstance().getLogSender();
+			patternSender = LogParserManager.getInstance().getPatternSender();
 			
-			patternDAO = LogParserUtils.getPatternDAO();
-			logQueueDAO = LogParserUtils.getLoqQueue();
-			appDAO = LogParserUtils.getApp();
+			patternDAO = LogParserManager.getInstance().getPatternDAO();
+			logQueueDAO = LogParserManager.getInstance().getLoqQueue();
+			appDAO = LogParserManager.getInstance().getApp();
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Unable to init LogParser sucessfully",
 					this);

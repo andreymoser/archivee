@@ -39,7 +39,7 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 29, 2012
  */
-public abstract class ArchiveeComponent {
+public abstract class ArchiveeManagedComponent {
 
 	/**
 	 * DAOs instances - component will instantiate only the ones it uses

@@ -17,45 +17,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
+package biz.bidi.archivee.components.logparser.commons;
+
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 27, 2012
+ * @since Sep 6, 2012
  */
-public class Bits {
-
-	private int value;
+public class LogParserManager extends LogParserFactoryManager {
 	
-	private int length;
-
-	/**
-	 * @return the value
-	 */
-	public int getValue() {
-		return value;
+	public LogParserManager() {
+		super();
+		instance = this;
 	}
-
-	/**
-	 * @param value the value to set
-	 */
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-	/**
-	 * @return the length
-	 */
-	public int getLength() {
-		return length;
-	}
-
-	/**
-	 * @param length the length to set
-	 */
-	public void setLength(int length) {
-		this.length = length;
+	
+	public static LogParserManager getInstance() {
+		if(instance == null) {
+			return new LogParserManager();
+		}
+		return (LogParserManager) instance;
 	}
 	
 }

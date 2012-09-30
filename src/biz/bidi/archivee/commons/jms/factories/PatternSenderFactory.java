@@ -31,19 +31,17 @@ import biz.bidi.archivee.commons.jms.senders.JMSPatternSender;
  */
 public class PatternSenderFactory extends ArchiveeSingletonFactory<IPatternSender,Object> {
 
-	static {
-		instance = new JMSPatternSender(); 
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
-	@SuppressWarnings("static-access")
 	@Override
 	public IPatternSender createInstance(Object object) throws ArchiveeException {
-		return (IPatternSender) this.getInstance();
+		if(instance == null) {
+			instance = new JMSPatternSender(); 
+		}
+		return this.getInstance();
 	}
 
 }

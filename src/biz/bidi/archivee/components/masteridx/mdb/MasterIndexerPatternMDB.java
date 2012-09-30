@@ -29,7 +29,7 @@ import javax.jms.TextMessage;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
-import biz.bidi.archivee.components.masteridx.commons.MasterIndexerUtils;
+import biz.bidi.archivee.components.masteridx.commons.MasterIndexerManager;
 import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
 
 @MessageDriven( activationConfig = {
@@ -63,7 +63,7 @@ public class MasterIndexerPatternMDB implements MessageListener {
 			String xml = "";
 			try {
 				xml = textMessage.getText();
-				masterIndexer = MasterIndexerUtils.getMasterIndexer();
+				masterIndexer = MasterIndexerManager.getMasterIndexer();
 				masterIndexer.indexMasterData((PatternMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
 				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);

@@ -17,30 +17,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.logparser.commons;
-
-import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.interfaces.ILogParser;
-import biz.bidi.archivee.commons.utils.ArchiveeFactoryUtils;
+package biz.bidi.archivee.components.archiver.commons;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 6, 2012
+ * @since Sep 29, 2012
  */
-public class LogParserUtils extends ArchiveeFactoryUtils {
+public class ArchiverManager extends ArchiverFactoryManager {
 	
-	static {
-		factoryManagerInstance = LogParserFactoryManager.instance; 
+	public ArchiverManager() {
+		super();
+		instance = this;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static ILogParser getLogParser() throws ArchiveeException {
-		ILogParser logParser = null;
-		IArchiveeFactory<ILogParser, Object> factory = getFactory(ILogParser.class);
-		logParser = factory.createInstance(null);
-		return logParser;
+	public static ArchiverManager getInstance() {
+		if(instance == null) {
+			return new ArchiverManager();
+		}
+		return (ArchiverManager) instance;
 	}
 	
 }

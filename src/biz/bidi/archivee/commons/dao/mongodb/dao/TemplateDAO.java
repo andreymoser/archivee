@@ -32,10 +32,6 @@ import com.google.code.morphia.query.Query;
  */
 public class TemplateDAO extends ArchiveeMongodbDAO<Template> {
 
-	static {
-		instance = new TemplateDAO();
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -47,6 +43,5 @@ public class TemplateDAO extends ArchiveeMongodbDAO<Template> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 }

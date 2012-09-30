@@ -31,19 +31,17 @@ import biz.bidi.archivee.components.masteridx.indexer.MasterIndexer;
  */
 public class MasterIndexerFactory extends ArchiveeSingletonFactory<IMasterIndexer, Object> {
 
-	static {
-		instance = new MasterIndexer();
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
-	@SuppressWarnings("static-access")
 	@Override
 	public IMasterIndexer createInstance(Object object) throws ArchiveeException {
-		return (IMasterIndexer) this.getInstance();
+		if(instance == null) {
+			instance = new MasterIndexer();
+		}
+		return this.getInstance();
 	}
 
 }

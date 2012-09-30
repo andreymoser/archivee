@@ -44,7 +44,7 @@ public class ContextQueue implements IEntity {
 	@Id
 	private ObjectId id;
 	
-	@Indexed
+	@Indexed(unique=true)
 	private ObjectId patternId;
 	
 	private TreeSet<PatternMessage> messages;

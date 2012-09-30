@@ -48,11 +48,6 @@ import com.mongodb.Mongo;
  */
 public abstract class ArchiveeMongodbDAO<E extends IEntity> 
 	implements IArchiveeGenericDAO<E, Query<E>, Key<E>>, IArchiveePropertiesLoader {
-	
-	/**
-	 * Singleton factoryManagerInstance
-	 */
-	protected static ArchiveeMongodbDAO instance;
 
 	/*
 	 * The mongo db host
@@ -232,13 +227,6 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 	 */
 	public void setDatabase(String database) {
 		this.database = database;
-	}
-
-	/**
-	 * @return the factoryManagerInstance
-	 */
-	public static ArchiveeMongodbDAO getInstance() {
-		return instance;
 	}
 
 }

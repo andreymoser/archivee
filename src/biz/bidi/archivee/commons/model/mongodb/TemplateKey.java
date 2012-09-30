@@ -19,6 +19,8 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
+import org.bson.types.ObjectId;
+
 
 /**
  * @author Andrey Bidinotto
@@ -27,23 +29,27 @@ package biz.bidi.archivee.commons.model.mongodb;
  */
 public class TemplateKey {
 
-	private long patternId;
+	private ObjectId patternId;
 	
 	private PatternPath patternPath;
 	
 	private int sequence; 
 
+	public TemplateKey() {
+		patternPath = new PatternPath();
+	}
+	
 	/**
 	 * @return the patternId
 	 */
-	public long getPatternId() {
+	public ObjectId getPatternId() {
 		return patternId;
 	}
 
 	/**
 	 * @param patternId the patternId to set
 	 */
-	public void setPatternId(long patternId) {
+	public void setPatternId(ObjectId patternId) {
 		this.patternId = patternId;
 	}
 

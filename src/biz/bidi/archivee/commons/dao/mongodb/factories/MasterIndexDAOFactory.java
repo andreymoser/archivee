@@ -22,7 +22,7 @@ package biz.bidi.archivee.commons.dao.mongodb.factories;
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.dao.mongodb.dao.MasterIndexDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 
 import com.google.code.morphia.Key;
@@ -33,8 +33,7 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-public class MasterIndexDAOFactory 
-implements IArchiveeFactory<IArchiveeGenericDAO<MasterIndex, Query<MasterIndex>, Key<MasterIndex>>, Object> {
+public class MasterIndexDAOFactory extends ArchiveeSingletonFactory<IArchiveeGenericDAO<MasterIndex, Query<MasterIndex>, Key<MasterIndex>>, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -42,9 +41,11 @@ implements IArchiveeFactory<IArchiveeGenericDAO<MasterIndex, Query<MasterIndex>,
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public IArchiveeGenericDAO<MasterIndex, Query<MasterIndex>, Key<MasterIndex>> createInstance(
-			Object object) throws ArchiveeException {
-		return MasterIndexDAO.getInstance();
+	public IArchiveeGenericDAO<MasterIndex, Query<MasterIndex>, Key<MasterIndex>> createInstance(Object object) throws ArchiveeException {
+		if(instance == null) {
+			instance = new MasterIndexDAO();
+		}
+		return this.getInstance();
 	}
 	
 }

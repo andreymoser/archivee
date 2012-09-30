@@ -32,10 +32,6 @@ import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
  */
 public class ContextQueueDAO extends ArchiveeMongodbDAO<ContextQueue> {
 
-	static {
-		instance = new ContextQueueDAO();
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 

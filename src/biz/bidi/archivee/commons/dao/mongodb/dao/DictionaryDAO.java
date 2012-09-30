@@ -32,10 +32,6 @@ import com.google.code.morphia.query.Query;
  */
 public class DictionaryDAO extends ArchiveeMongodbDAO<Dictionary> {
 
-	static {
-		instance = new DictionaryDAO();
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 

@@ -31,19 +31,17 @@ import biz.bidi.archivee.components.archiver.IArchiver;
  */
 public class ArchiverFactory extends ArchiveeSingletonFactory<IArchiver, Object> {
 
-	static {
-		instance = new Archiver();
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
-	@SuppressWarnings("static-access")
 	@Override
 	public IArchiver createInstance(Object object) throws ArchiveeException {
-		return (IArchiver) this.getInstance();
+		if(instance == null) {
+			instance = new Archiver();
+		}
+		return this.getInstance();
 	}
 
 }

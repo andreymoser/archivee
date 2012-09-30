@@ -46,21 +46,23 @@ import biz.bidi.archivee.commons.model.mongodb.Template;
  * @since Sep 6, 2012
  */
 @SuppressWarnings("rawtypes")
-public class DaoFactoryManager extends ArchiveeGenericFactoryManager {
+public class DaoFactoryManager implements IArchiveeFactoryManager {
 
-	protected static IArchiveeFactory patternDAOFactory;
-	protected static IArchiveeFactory logQueueDAOFactory;
-	protected static IArchiveeFactory appDAOFactory;
-	protected static IArchiveeFactory contextDAOFactory;
-	protected static IArchiveeFactory contextQueueDAOFactory;
-	protected static IArchiveeFactory contextIndexDAOFactory;
-	protected static IArchiveeFactory dictionaryDAOFactory;
-	protected static IArchiveeFactory dictionaryQueueDAOFactory;
-	protected static IArchiveeFactory masterIndexDAOFactory;
-	protected static IArchiveeFactory templateDAOFactory;
+	protected IArchiveeFactoryManager archiveeFactoryManager;
 	
-	static {
-		instance = new DaoFactoryManager();
+	protected IArchiveeFactory patternDAOFactory;
+	protected IArchiveeFactory logQueueDAOFactory;
+	protected IArchiveeFactory appDAOFactory;
+	protected IArchiveeFactory contextDAOFactory;
+	protected IArchiveeFactory contextQueueDAOFactory;
+	protected IArchiveeFactory contextIndexDAOFactory;
+	protected IArchiveeFactory dictionaryDAOFactory;
+	protected IArchiveeFactory dictionaryQueueDAOFactory;
+	protected IArchiveeFactory masterIndexDAOFactory;
+	protected IArchiveeFactory templateDAOFactory;
+	
+	public DaoFactoryManager(IArchiveeFactoryManager archiveeFactoryManager) {
+		this.archiveeFactoryManager = archiveeFactoryManager;
 		
 		patternDAOFactory = new PatternDAOFactory(); 
 		logQueueDAOFactory = new LogQueueDAOFactory(); 
@@ -123,8 +125,16 @@ public class DaoFactoryManager extends ArchiveeGenericFactoryManager {
 			}
 		}
 		
-		validateFactory(factory, interfaceClass);
-		
 		return factory;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactoryManager#getManagerInstance()
+	 */
+	@Override
+	public IArchiveeFactoryManager getManagerInstance() {
+		return archiveeFactoryManager;
 	}
 }

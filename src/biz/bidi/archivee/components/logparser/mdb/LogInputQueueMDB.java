@@ -30,7 +30,7 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
-import biz.bidi.archivee.components.logparser.commons.LogParserUtils;
+import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 
 @MessageDriven( activationConfig = {
 		@ActivationConfigProperty(
@@ -63,7 +63,7 @@ public class LogInputQueueMDB implements MessageListener {
 			String xml = "";
 			try {
 				xml = textMessage.getText();
-				logParser = LogParserUtils.getLogParser();
+				logParser = LogParserManager.getInstance().getLogParser();
 				logParser.parseLog((ParserMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
 				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);

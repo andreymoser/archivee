@@ -22,7 +22,7 @@ package biz.bidi.archivee.commons.dao.mongodb.factories;
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.dao.mongodb.dao.TemplateDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
 import biz.bidi.archivee.commons.model.mongodb.Template;
 
 import com.google.code.morphia.Key;
@@ -33,7 +33,7 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-public class TemplateDAOFactory implements IArchiveeFactory<IArchiveeGenericDAO<Template, Query<Template>, Key<Template>>, Object> {
+public class TemplateDAOFactory extends ArchiveeSingletonFactory<IArchiveeGenericDAO<Template, Query<Template>, Key<Template>>, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -43,7 +43,10 @@ public class TemplateDAOFactory implements IArchiveeFactory<IArchiveeGenericDAO<
 	@Override
 	public IArchiveeGenericDAO<Template, Query<Template>, Key<Template>> createInstance(
 			Object object) throws ArchiveeException {
-		return TemplateDAO.getInstance();
+		if(instance == null) {
+			instance = new TemplateDAO();
+		}
+		return this.getInstance();
 	}
 	
 }

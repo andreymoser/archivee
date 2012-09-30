@@ -20,8 +20,9 @@
 package biz.bidi.archivee.components.masteridx.commons;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.ArchiveeGenericFactoryManager;
+import biz.bidi.archivee.commons.factories.ArchiveeFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.IArchiveeFactoryManager;
 import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
 
 /**
@@ -30,13 +31,12 @@ import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
  * @since Sep 28, 2012
  */
 @SuppressWarnings("rawtypes")
-public class MasterIndexerFactoryManager extends ArchiveeGenericFactoryManager {
+public abstract class MasterIndexerFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
 
 	protected static IArchiveeFactory masterIndexerFactory;
 	
-	static {
-		instance = new MasterIndexerFactoryManager();
-		
+	public MasterIndexerFactoryManager() {
+		super();
 		masterIndexerFactory = new MasterIndexerFactory();
 	}
 	
@@ -57,4 +57,17 @@ public class MasterIndexerFactoryManager extends ArchiveeGenericFactoryManager {
 		
 		return factory;
 	}
+	
+	/**
+	 * @return
+	 * @throws ArchiveeException 
+	 */
+	@SuppressWarnings("unchecked")
+	public static IMasterIndexer getMasterIndexer() throws ArchiveeException {
+		IMasterIndexer masterIndexer = null;
+		IArchiveeFactory<IMasterIndexer, Object> factory = instance.getFactoryInstance(IMasterIndexer.class);
+		masterIndexer = factory.createInstance(null);
+		return masterIndexer;
+	}
+
 }

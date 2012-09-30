@@ -22,7 +22,7 @@ package biz.bidi.archivee.commons.dao.mongodb.factories;
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.dao.mongodb.dao.PatternDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 
 import com.google.code.morphia.Key;
@@ -33,18 +33,19 @@ import com.google.code.morphia.query.Query;
  * @email andreymoser@bidi.biz
  * @since Sep 13, 2012
  */
-public class PatternDAOFactory 
-	implements IArchiveeFactory<IArchiveeGenericDAO<Pattern, Query<Pattern>, Key<Pattern>>, Object> {
-
+public class PatternDAOFactory extends ArchiveeSingletonFactory<IArchiveeGenericDAO<Pattern, Query<Pattern>, Key<Pattern>>, Object> {
+	
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public IArchiveeGenericDAO<Pattern, Query<Pattern>, Key<Pattern>> createInstance(
-			Object object) throws ArchiveeException {
-		return PatternDAO.getInstance();
+	public IArchiveeGenericDAO<Pattern, Query<Pattern>, Key<Pattern>> createInstance(Object object) throws ArchiveeException {
+		if(instance == null) {
+			instance = new PatternDAO();
+		}
+		return this.getInstance();
 	}
 	
 }

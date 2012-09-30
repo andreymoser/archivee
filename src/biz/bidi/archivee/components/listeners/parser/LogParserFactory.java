@@ -20,7 +20,7 @@
 package biz.bidi.archivee.components.listeners.parser;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
 
 /**
@@ -28,7 +28,7 @@ import biz.bidi.archivee.commons.interfaces.ILogParser;
  * @email andreymoser@bidi.biz
  * @since Sep 11, 2012
  */
-public class LogParserFactory implements IArchiveeFactory<ILogParser, Object> {
+public class LogParserFactory extends ArchiveeSingletonFactory<ILogParser, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -37,7 +37,10 @@ public class LogParserFactory implements IArchiveeFactory<ILogParser, Object> {
 	 */
 	@Override
 	public ILogParser createInstance(Object object) throws ArchiveeException {
-		return new DateLevelLogParser();
+		if(instance == null) {
+			instance = new DateLevelLogParser(); 
+		}
+		return this.getInstance();
 	}
 
 }

@@ -17,33 +17,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.archiver.commons;
-
-import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.utils.ArchiveeFactoryUtils;
-import biz.bidi.archivee.components.archiver.IArchiver;
+package biz.bidi.archivee.components.masteridx.commons;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 29, 2012
+ * @since Sep 28, 2012
  */
-public class ArchiverUtils extends ArchiveeFactoryUtils {
+public class MasterIndexerManager extends MasterIndexerFactoryManager {
 	
-	static {
-		factoryManagerInstance = ArchiverFactoryManager.instance; 
+	public MasterIndexerManager() {
+		super();
+		instance = this;
 	}
 	
-	/**
-	 * @return
-	 * @throws ArchiveeException 
-	 */
-	@SuppressWarnings("unchecked")
-	public static IArchiver getArchiver() throws ArchiveeException {
-		IArchiver archiver = null;
-		IArchiveeFactory<IArchiver, Object> factory = getFactory(IArchiver.class);
-		archiver = factory.createInstance(null);
-		return archiver;
+	public static MasterIndexerManager getInstance() {
+		if(instance == null) {
+			return new MasterIndexerManager();
+		}
+		return (MasterIndexerManager) instance;
 	}
+	
 }

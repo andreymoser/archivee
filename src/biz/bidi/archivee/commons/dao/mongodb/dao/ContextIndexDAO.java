@@ -32,10 +32,6 @@ import com.google.code.morphia.query.Query;
  */
 public class ContextIndexDAO extends ArchiveeMongodbDAO<ContextIndex> {
 
-	static {
-		instance = new ContextIndexDAO();
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
