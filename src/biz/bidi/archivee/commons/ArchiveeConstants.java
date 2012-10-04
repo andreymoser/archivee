@@ -59,5 +59,13 @@ public class ArchiveeConstants {
 	 * The context data max size 
 	 */
 	public static final int CONTEXT_MAX_DATA_SIZE = MAX_BYTE_ARRAY_SIZE/4;
+	/**
+	 * The context queue data max size 
+	 */
+	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = MAX_BYTE_ARRAY_SIZE;
+	/**
+	 * The context queue status delay 
+	 */
+	public static final int CONTEXT_QUEUE_STATUS_DELAY = 1000;
 
 }

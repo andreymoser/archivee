@@ -47,7 +47,7 @@ import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 public class LogInputQueueMDB implements MessageListener {
 
 	/**
-	 * The logParser factoryManagerInstance
+	 * The logParser instance
 	 */
 	private ILogParser logParser;
 	

@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
 import biz.bidi.archivee.commons.ArchiveeConstants;
 
 /**
- * ByteBuffer utilities
+ * Byte utilities
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 5, 2012

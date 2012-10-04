@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.archiver.mdb;
+package biz.bidi.archivee.components.compressor.mdb;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
@@ -27,29 +27,29 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.xml.PatternMessage;
+import biz.bidi.archivee.commons.model.xml.CompressorMessage;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
-import biz.bidi.archivee.components.archiver.IArchiver;
-import biz.bidi.archivee.components.archiver.commons.ArchiverManager;
+import biz.bidi.archivee.components.compressor.ICompressor;
+import biz.bidi.archivee.components.compressor.commons.CompressorManager;
 
 @MessageDriven( activationConfig = {
 		@ActivationConfigProperty(
 					propertyName="destinationName",
-					propertyValue="jms.archivee.patternTopic"
+					propertyValue="jms.archivee.compressorQueue"
 				)
 })
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 29, 2012
+ * @since Oct 1, 2012
  */
-public class ArchiverPatternMDB implements MessageListener {
+public class CompressorMDB implements MessageListener {
 
 	/**
-	 * The archiver instance
+	 * The compressor instance
 	 */
-	private IArchiver archiver;
+	private ICompressor compressor;
 	
 	/**
 	 * {@inheritDoc}
@@ -63,12 +63,12 @@ public class ArchiverPatternMDB implements MessageListener {
 			String xml = "";
 			try {
 				xml = textMessage.getText();
-				archiver = ArchiverManager.getArchiver();
-				archiver.archiveData((PatternMessage) ArchiveeXmlParser.convertoToObject(xml));
+				compressor = CompressorManager.getCompressor();
+				compressor.compressData((CompressorMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
 				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);
 			} catch (ArchiveeException e) {
-				ArchiveeException.log(this,"Unable to parse log line",xml,archiver);
+				ArchiveeException.log(e,"Unable to parse log line",xml,compressor);
 			}
 		} else {
 			ArchiveeException.log(this,"Invalid mdb message, expected TextMessage",message);

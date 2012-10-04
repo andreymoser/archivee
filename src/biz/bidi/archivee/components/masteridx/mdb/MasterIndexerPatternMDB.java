@@ -47,7 +47,7 @@ import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
 public class MasterIndexerPatternMDB implements MessageListener {
 
 	/**
-	 * The masterIndexer factoryManagerInstance
+	 * The masterIndexer instance
 	 */
 	private IMasterIndexer masterIndexer;
 	

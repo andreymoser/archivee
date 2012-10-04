@@ -22,6 +22,7 @@ package biz.bidi.archivee.components.archiver;
 import java.util.ArrayList;
 import java.util.Date;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
@@ -48,7 +49,7 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 			dictionaryQueueDAO = ArchiverManager.getInstance().getDictionaryQueue();
 			contextQueueDAO = ArchiverManager.getInstance().getContextQueue();
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Error in init Archiver component.", this);
+			ArchiveeException.log(e, "Error in init Compressor component.", this);
 		}
 	}
 
@@ -85,36 +86,32 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 			throw new ArchiveeException("Invalid template found for message received in archiver, discarding message.",this,message,pattern,patternPath);
 		}
 		
-		ArrayList<String> words = ArchiveePatternUtils.getPatternValues(message.getMessage());
+		ContextQueue contextQueue = getContextData(message, messageDate, template);
 		
-		saveDictionaryData(words, patternPath, pattern, template);
+		saveDictionaryData(message, patternPath, pattern, template, contextQueue);
 		
-		saveContextData(message, messageDate);
+		//TODO send message to compressor when context is not anymore at queue
 		
-		//TODO verify queues and trigger context archiver component
-		checkQueues();
 	}
 
-	/**
-	 * 
-	 */
-	private void checkQueues() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	/**
 	 * @param message
 	 * @param pattern
 	 * @throws ArchiveeException 
 	 */
-	private void saveContextData(PatternMessage message, Date messageDate) throws ArchiveeException {
+	private ContextQueue getContextData(PatternMessage message, Date messageDate, Template template) throws ArchiveeException {
 		ContextQueue contextQueue = new ContextQueue();
-		contextQueue.setPatternId(message.getPatternId());
+		contextQueue.getKey().setPatternId(message.getPatternId());
+		contextQueue.getKey().setAtQueue(true);
 		
 		for(ContextQueue cq : contextQueueDAO.find(contextQueue)) {
 			contextQueue = cq;
 			break;
+		}
+		
+		if(contextQueue.getId() == null) {
+			contextQueue.getKey().setSequence(new Date().getTime());
 		}
 		
 		if(contextQueue.getStartDate() == null || contextQueue.getStartDate().compareTo(messageDate) == -1) {
@@ -125,8 +122,9 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 		}
 		
 		contextQueue.getMessages().add(message);
+		contextQueue.setDataLength(contextQueue.getDataLength() + message.getMessage().length());
 		
-		contextQueueDAO.save(contextQueue);
+		return contextQueue;
 	}
 
 	/**
@@ -153,13 +151,53 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 	}
 
 	/**
+	 * @param message 
 	 * @param message
 	 * @param patternPath
 	 * @param words
 	 * @param pattern
 	 * @throws ArchiveeException 
 	 */
-	private void saveDictionaryData(ArrayList<String> words, PatternPath patternPath, Pattern pattern, Template template) throws ArchiveeException {
+	private void saveDictionaryData(PatternMessage message, PatternPath patternPath, Pattern pattern, Template template, ContextQueue contextQueue) throws ArchiveeException {
+		
+		/**
+		 * Context queue and its dictionary should be sent to compressor, first to needs
+		 * flag them as not at the queue to prevent concurrent access problems  
+		 */
+		//TODO if any dictionary size is close to 64 bits it also should remove context from queue 
+		boolean isAtQueue = true;
+		if(contextQueue.getDataLength() >= ArchiveeConstants.CONTEXT_QUEUE_MAX_DATA_SIZE) {
+			isAtQueue = false;
+		}
+		
+		contextQueue.getKey().setAtQueue(isAtQueue);
+		contextQueueDAO.save(contextQueue);
+		
+		if(!isAtQueue) {
+			try {
+				Thread.sleep(ArchiveeConstants.CONTEXT_QUEUE_STATUS_DELAY);
+			} catch (InterruptedException e) {
+				throw new ArchiveeException(e, "Unable to sleep Compressor for " + ArchiveeConstants.CONTEXT_QUEUE_STATUS_DELAY +" miliseconds at save dictionary data!",this,message,pattern,template,contextQueue);
+			}
+			
+			Template templateAux = new Template();
+			templateAux.getKey().setPatternId(pattern.getId());
+			
+			for(Template t : templateDAO.find(templateAux)) {
+				DictionaryQueue dictionaryQueue = new DictionaryQueue();
+				dictionaryQueue.getKey().setAtQueue(!isAtQueue);
+				dictionaryQueue.getKey().setTemplateId(t.getId());
+				dictionaryQueue.getKey().setSequence(contextQueue.getKey().getSequence());
+				
+				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue)) {
+					dq.getKey().setAtQueue(isAtQueue);
+					dictionaryQueueDAO.save(dq);
+				}
+			}			
+		}
+		
+		ArrayList<String> words = ArchiveePatternUtils.getPatternValues(message.getMessage());		
+		
 		for(int i = 0; i < words.size(); i++) {
 			String word = words.get(i);
 			
@@ -174,6 +212,8 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 				DictionaryQueue dictionaryQueue = new DictionaryQueue();
 				dictionaryQueue.getKey().setElementIndex(j);
 				dictionaryQueue.getKey().setTemplateId(template.getId());
+				dictionaryQueue.getKey().setSequence(contextQueue.getKey().getSequence());
+				dictionaryQueue.getKey().setAtQueue(isAtQueue);
 				
 				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue)) {
 					dictionaryQueue = dq;
@@ -198,5 +238,5 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 			}
 		}
 	}
-	
+
 }

@@ -45,15 +45,19 @@ public class ContextQueue implements IEntity {
 	private ObjectId id;
 	
 	@Indexed(unique=true)
-	private ObjectId patternId;
+	private ContextQueueKey key;
 	
 	private TreeSet<PatternMessage> messages;
+	
+	private long dataLength;
 	
 	private Date startDate;
 	
 	private Date endDate;
 	
 	public ContextQueue() {
+		key = new ContextQueueKey();
+		
 		messages = new TreeSet<PatternMessage>(new Comparator<PatternMessage>() {
 			@Override
 			public int compare(PatternMessage p1, PatternMessage p2) {
@@ -64,7 +68,7 @@ public class ContextQueue implements IEntity {
 				}
 				return 0;
 			}
-		}); 
+		});
 	}
 
 	/**
@@ -110,20 +114,6 @@ public class ContextQueue implements IEntity {
 	}
 
 	/**
-	 * @return the patternId
-	 */
-	public ObjectId getPatternId() {
-		return patternId;
-	}
-
-	/**
-	 * @param patternId the patternId to set
-	 */
-	public void setPatternId(ObjectId patternId) {
-		this.patternId = patternId;
-	}
-
-	/**
 	 * @return the messages
 	 */
 	public TreeSet<PatternMessage> getMessages() {
@@ -135,6 +125,34 @@ public class ContextQueue implements IEntity {
 	 */
 	public void setMessages(TreeSet<PatternMessage> messages) {
 		this.messages = messages;
+	}
+
+	/**
+	 * @return the key
+	 */
+	public ContextQueueKey getKey() {
+		return key;
+	}
+
+	/**
+	 * @param key the key to set
+	 */
+	public void setKey(ContextQueueKey key) {
+		this.key = key;
+	}
+
+	/**
+	 * @return the dataLength
+	 */
+	public long getDataLength() {
+		return dataLength;
+	}
+
+	/**
+	 * @param dataLength the dataLength to set
+	 */
+	public void setDataLength(long dataLength) {
+		this.dataLength = dataLength;
 	}
 
 }

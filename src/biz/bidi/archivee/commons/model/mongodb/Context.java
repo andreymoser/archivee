@@ -54,7 +54,7 @@ public class Context implements IEntity {
 	/**
 	 * 
 	 */
-	private Context() {
+	public Context() {
 		super();
 		
 		data = new Byte[ArchiveeConstants.CONTEXT_MAX_DATA_SIZE];
@@ -86,6 +86,34 @@ public class Context implements IEntity {
 	 */
 	public void setId(ObjectId id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the key
+	 */
+	public ContextKey getKey() {
+		return key;
+	}
+
+	/**
+	 * @param key the key to set
+	 */
+	public void setKey(ContextKey key) {
+		this.key = key;
+	}
+
+	/**
+	 * @return the startDate
+	 */
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	/**
+	 * @param startDate the startDate to set
+	 */
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 
 }

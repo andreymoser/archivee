@@ -24,48 +24,28 @@ import org.bson.types.ObjectId;
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 27, 2012
+ * @since Oct 1, 2012
  */
-public class DictionaryKey {
+public class ContextQueueKey {
 
-	private ObjectId templateId;
-	
-	private int elementIndex;
+	private ObjectId patternId;
 	
 	private long sequence;
 	
-	/**
-	 * Used only in queue
-	 */
-	//TODO fix by creating DictionaryQueueKey
 	private boolean isAtQueue;
-	
+
 	/**
-	 * @return the elementIndex
+	 * @return the patternId
 	 */
-	public int getElementIndex() {
-		return elementIndex;
+	public ObjectId getPatternId() {
+		return patternId;
 	}
 
 	/**
-	 * @param elementIndex the elementIndex to set
+	 * @param patternId the patternId to set
 	 */
-	public void setElementIndex(int elementIndex) {
-		this.elementIndex = elementIndex;
-	}
-
-	/**
-	 * @return the templateId
-	 */
-	public ObjectId getTemplateId() {
-		return templateId;
-	}
-
-	/**
-	 * @param templateId the templateId to set
-	 */
-	public void setTemplateId(ObjectId templateId) {
-		this.templateId = templateId;
+	public void setPatternId(ObjectId patternId) {
+		this.patternId = patternId;
 	}
 
 	/**
