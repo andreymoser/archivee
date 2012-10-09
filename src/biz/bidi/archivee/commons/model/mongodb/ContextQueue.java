@@ -21,6 +21,7 @@ package biz.bidi.archivee.commons.model.mongodb;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.bson.types.ObjectId;
@@ -55,6 +56,8 @@ public class ContextQueue implements IEntity {
 	
 	private Date endDate;
 	
+	private HashMap<ObjectId, Integer> templateCounts;
+	
 	public ContextQueue() {
 		key = new ContextQueueKey();
 		
@@ -69,6 +72,8 @@ public class ContextQueue implements IEntity {
 				return 0;
 			}
 		});
+		
+		templateCounts = new HashMap<ObjectId, Integer>();
 	}
 
 	/**
@@ -153,6 +158,20 @@ public class ContextQueue implements IEntity {
 	 */
 	public void setDataLength(long dataLength) {
 		this.dataLength = dataLength;
+	}
+	
+	/**
+	 * @return the templateCounts
+	 */
+	public HashMap<ObjectId, Integer> getTemplateCounts() {
+		return templateCounts;
+	}
+
+	/**
+	 * @param templateCounts the templateCounts to set
+	 */
+	public void setTemplateCounts(HashMap<ObjectId, Integer> templateCounts) {
+		this.templateCounts = templateCounts;
 	}
 
 }

@@ -17,58 +17,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
+package biz.bidi.archivee.commons.dao.mongodb.dao;
 
-import org.bson.types.ObjectId;
+import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.mongodb.TemplateDictionary;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.query.Query;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 25, 2012
+ * @since Oct 8, 2012
  */
-@Entity(value="template", noClassnameStored=true)
-public class Template implements IEntity {
-
-	@Id
-	private ObjectId id;
-
-	@Indexed(unique=true)
-	private TemplateKey key;
-
-	public Template() {
-		key = new TemplateKey();
-	}
-	
-	/**
-	 * @return the id
-	 */
-	public ObjectId getId() {
-		return id;
-	}
+public class TemplateDictionaryDAO extends ArchiveeMongodbDAO<TemplateDictionary> {
 
 	/**
-	 * @param id the id to set
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
 	 */
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the key
-	 */
-	public TemplateKey getKey() {
-		return key;
-	}
-
-	/**
-	 * @param key the key to set
-	 */
-	public void setKey(TemplateKey key) {
-		this.key = key;
+	@Override
+	public Query<TemplateDictionary> find(TemplateDictionary entity, String customSearchId)
+			throws ArchiveeException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

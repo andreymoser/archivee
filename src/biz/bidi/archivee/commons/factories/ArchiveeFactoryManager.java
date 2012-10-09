@@ -24,6 +24,7 @@ import com.google.code.morphia.query.Query;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.ICompressorSender;
 import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.commons.interfaces.IPatternSender;
 import biz.bidi.archivee.commons.jms.IArchiveeMessaging;
@@ -37,6 +38,7 @@ import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.mongodb.Template;
+import biz.bidi.archivee.commons.model.mongodb.TemplateDictionary;
 
 /**
  * @author Andrey Bidinotto
@@ -189,6 +191,14 @@ public abstract class ArchiveeFactoryManager implements IArchiveeFactoryManager 
 		return daoInstance;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public IArchiveeGenericDAO<TemplateDictionary, Query<TemplateDictionary>, Key<TemplateDictionary>> getTemplateDictionary() throws ArchiveeException {
+		IArchiveeGenericDAO daoInstance = null;
+		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = instance.getFactoryInstance(IArchiveeGenericDAO.class,TemplateDictionary.class);
+		daoInstance = factory.createInstance(null);
+		return daoInstance;
+	}
+	
 	/**
 	 *
 	 * JMS instances
@@ -215,4 +225,11 @@ public abstract class ArchiveeFactoryManager implements IArchiveeFactoryManager 
 		return patternSender;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public ICompressorSender getCompressorSender() throws ArchiveeException {
+		ICompressorSender compressorSender = null;
+		IArchiveeFactory<ICompressorSender, Object> factory = instance.getFactoryInstance(IArchiveeMessaging.class,ICompressorSender.class);
+		compressorSender = factory.createInstance(null);
+		return compressorSender;
+	}
 }

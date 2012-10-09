@@ -20,6 +20,7 @@
 package biz.bidi.archivee.commons.dao.mongodb;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
+import biz.bidi.archivee.commons.dao.mongodb.dao.TemplateDictionaryDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.App;
 import biz.bidi.archivee.commons.model.mongodb.Context;
@@ -80,6 +81,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 			morphia.map(Dictionary.class);
 			morphia.map(DictionaryQueue.class);
 			morphia.map(Template.class);
+			morphia.map(TemplateDictionaryDAO.class);
 			morphia.map(App.class);
 			morphia.map(MasterIndex.class);
 			

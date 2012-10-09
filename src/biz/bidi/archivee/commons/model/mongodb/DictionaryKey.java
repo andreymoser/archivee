@@ -32,6 +32,8 @@ public class DictionaryKey {
 	
 	private int elementIndex;
 	
+	private int subElementIndex;
+	
 	private long sequence;
 	
 	/**
@@ -94,6 +96,20 @@ public class DictionaryKey {
 	 */
 	public void setAtQueue(boolean isAtQueue) {
 		this.isAtQueue = isAtQueue;
+	}
+	
+	/**
+	 * @return the subElementIndex
+	 */
+	public int getSubElementIndex() {
+		return subElementIndex;
+	}
+
+	/**
+	 * @param subElementIndex the subElementIndex to set
+	 */
+	public void setSubElementIndex(int subElementIndex) {
+		this.subElementIndex = subElementIndex;
 	}
 	
 }

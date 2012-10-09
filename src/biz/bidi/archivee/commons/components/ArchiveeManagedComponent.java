@@ -30,6 +30,7 @@ import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.mongodb.Template;
+import biz.bidi.archivee.commons.model.mongodb.TemplateDictionary;
 
 import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
@@ -53,6 +54,7 @@ public abstract class ArchiveeManagedComponent {
 	protected IArchiveeGenericDAO<Dictionary, Query<Dictionary>, Key<Dictionary>> dictionaryDAO;
 	protected IArchiveeGenericDAO<DictionaryQueue, Query<DictionaryQueue>, Key<DictionaryQueue>> dictionaryQueueDAO;
 	protected IArchiveeGenericDAO<Template, Query<Template>, Key<Template>> templateDAO;
+	protected IArchiveeGenericDAO<TemplateDictionary, Query<TemplateDictionary>, Key<TemplateDictionary>> templateDictionaryDAO;
 	protected IArchiveeGenericDAO<MasterIndex, Query<MasterIndex>, Key<MasterIndex>> masterIndexDAO;
 
 }

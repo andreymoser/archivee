@@ -19,56 +19,68 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
+import java.util.HashMap;
+
 import org.bson.types.ObjectId;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 25, 2012
+ * @since Oct 8, 2012
  */
-@Entity(value="template", noClassnameStored=true)
-public class Template implements IEntity {
+@Entity(value="template_dictionary", noClassnameStored=true)
+public class TemplateDictionary implements IEntity {
 
 	@Id
-	private ObjectId id;
+	private ObjectId contextId;
 
-	@Indexed(unique=true)
-	private TemplateKey key;
-
-	public Template() {
-		key = new TemplateKey();
-	}
+	private HashMap<ObjectId, DictionaryEntry> templateEntries;
+	
+	private HashMap<Long, ObjectId> templateEntriesIndex;
 	
 	/**
-	 * @return the id
+	 * @return the contextId
 	 */
-	public ObjectId getId() {
-		return id;
+	public ObjectId getContextId() {
+		return contextId;
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param contextId the patternId to set
 	 */
-	public void setId(ObjectId id) {
-		this.id = id;
+	public void setContextId(ObjectId contextId) {
+		this.contextId = contextId;
 	}
 
 	/**
-	 * @return the key
+	 * @return the templateEntries
 	 */
-	public TemplateKey getKey() {
-		return key;
+	public HashMap<ObjectId, DictionaryEntry> getTemplateEntries() {
+		return templateEntries;
 	}
 
 	/**
-	 * @param key the key to set
+	 * @param templateEntries the templateEntries to set
 	 */
-	public void setKey(TemplateKey key) {
-		this.key = key;
+	public void setTemplateEntries(HashMap<ObjectId, DictionaryEntry> templateDictionary) {
+		this.templateEntries = templateDictionary;
+	}
+
+	/**
+	 * @return the templateDictionaryIndex
+	 */
+	public HashMap<Long, ObjectId> getTemplateEntriesIndex() {
+		return templateEntriesIndex;
+	}
+
+	/**
+	 * @param templateDictionaryIndex the templateDictionaryIndex to set
+	 */
+	public void setTemplateEntriesIndex(HashMap<Long, ObjectId> templateEntriesIndex) {
+		this.templateEntriesIndex = templateEntriesIndex;
 	}
 
 }

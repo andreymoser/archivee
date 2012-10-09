@@ -17,58 +17,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
+package biz.bidi.archivee.commons.interfaces;
 
-import org.bson.types.ObjectId;
-
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.xml.CompressorMessage;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 25, 2012
+ * @since Oct 5, 2012
  */
-@Entity(value="template", noClassnameStored=true)
-public class Template implements IEntity {
+public interface ICompressorSender {
 
-	@Id
-	private ObjectId id;
-
-	@Indexed(unique=true)
-	private TemplateKey key;
-
-	public Template() {
-		key = new TemplateKey();
-	}
+	public void sendCompressorMessage(CompressorMessage message) throws ArchiveeException;
 	
-	/**
-	 * @return the id
-	 */
-	public ObjectId getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the key
-	 */
-	public TemplateKey getKey() {
-		return key;
-	}
-
-	/**
-	 * @param key the key to set
-	 */
-	public void setKey(TemplateKey key) {
-		this.key = key;
-	}
-
 }

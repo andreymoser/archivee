@@ -20,13 +20,14 @@
 package biz.bidi.archivee.commons.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+import org.bson.types.ObjectId;
 
-import antlr.ByteBuffer;
+import biz.bidi.archivee.commons.model.huffman.HuffmanObjectIdTree;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordNode;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordTree;
-
+import biz.bidi.archivee.commons.model.mongodb.TemplateDictionary;
 
 /**
  * Byte utilities
@@ -107,7 +108,7 @@ public class ArchiveeByteUtils {
 				}
 				int shift = (tail>8?8:tail);
 				offset += shift;
-				tail = tail - shift; 
+				tail = tail - shift;
 				
 				if(offset >= 8) {
 					offset = 0;
@@ -177,6 +178,18 @@ public class ArchiveeByteUtils {
 		return nodes;
 	}
 	
+	public static long append(Object value, ArrayList<Byte> buffer, long bitOffset, HashMap<Object,Long> dictionary) {
+		return 0;
+	}
+
+	public Object next(ArrayList<Byte> buffer, long bitOffset, HashMap<Object,Long> dictionary) {
+		return null;
+	}
+	
+	public long getBitLength(long value) {
+		//TODO
+		return 0;
+	}
 	
 	public static String convertToBitsString(Byte[] bytes) {
 		String bitstr = "";

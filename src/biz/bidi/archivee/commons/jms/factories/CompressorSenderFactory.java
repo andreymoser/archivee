@@ -17,58 +17,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
+package biz.bidi.archivee.commons.jms.factories;
 
-import org.bson.types.ObjectId;
-
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
+import biz.bidi.archivee.commons.interfaces.ICompressorSender;
+import biz.bidi.archivee.commons.jms.senders.JMSCompressorSender;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 25, 2012
+ * @since Oct 8, 2012
  */
-@Entity(value="template", noClassnameStored=true)
-public class Template implements IEntity {
-
-	@Id
-	private ObjectId id;
-
-	@Indexed(unique=true)
-	private TemplateKey key;
-
-	public Template() {
-		key = new TemplateKey();
-	}
-	
-	/**
-	 * @return the id
-	 */
-	public ObjectId getId() {
-		return id;
-	}
+public class CompressorSenderFactory extends ArchiveeSingletonFactory<ICompressorSender,Object> {
 
 	/**
-	 * @param id the id to set
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the key
-	 */
-	public TemplateKey getKey() {
-		return key;
-	}
-
-	/**
-	 * @param key the key to set
-	 */
-	public void setKey(TemplateKey key) {
-		this.key = key;
+	@Override
+	public ICompressorSender createInstance(Object object) throws ArchiveeException {
+		if(instance == null) {
+			instance = new JMSCompressorSender(); 
+		}
+		return this.getInstance();
 	}
 
 }

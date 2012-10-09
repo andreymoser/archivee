@@ -57,6 +57,7 @@ public class Context implements IEntity {
 	public Context() {
 		super();
 		
+		key = new ContextKey();
 		data = new Byte[ArchiveeConstants.CONTEXT_MAX_DATA_SIZE];
 	}
 

@@ -20,19 +20,33 @@
 package biz.bidi.archivee.components.compressor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.bson.types.ObjectId;
 
 import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.ICompressorSender;
+import biz.bidi.archivee.commons.model.huffman.HuffmanObjectIdNode;
+import biz.bidi.archivee.commons.model.huffman.HuffmanObjectIdTree;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordNode;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordTree;
+import biz.bidi.archivee.commons.model.mongodb.Context;
 import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
 import biz.bidi.archivee.commons.model.mongodb.Dictionary;
 import biz.bidi.archivee.commons.model.mongodb.DictionaryEntry;
 import biz.bidi.archivee.commons.model.mongodb.DictionaryQueue;
+import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.commons.model.mongodb.PatternPath;
 import biz.bidi.archivee.commons.model.mongodb.Template;
+import biz.bidi.archivee.commons.model.mongodb.TemplateDictionary;
 import biz.bidi.archivee.commons.model.xml.CompressorMessage;
+import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.model.xml.enums.CompressorMessageType;
+import biz.bidi.archivee.commons.utils.ArchiveeByteUtils;
+import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
 import biz.bidi.archivee.components.archiver.commons.ArchiverManager;
+import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 
 /**
  * @author Andrey Bidinotto
@@ -41,6 +55,11 @@ import biz.bidi.archivee.components.archiver.commons.ArchiverManager;
  */
 public class Compressor extends ArchiveeManagedComponent implements ICompressor {
 
+	/**
+	 * The compressor sender
+	 */
+	protected ICompressorSender compressorSender;
+	
 	public Compressor() {
 		try {
 			templateDAO = ArchiverManager.getInstance().getTemplate();
@@ -52,6 +71,10 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 			contextQueueDAO = ArchiverManager.getInstance().getContextQueue();
 			contextIndexDAO = ArchiverManager.getInstance().getContextIndex();
 			contextDAO = ArchiverManager.getInstance().getContext();
+
+			templateDictionaryDAO = ArchiverManager.getInstance().getTemplateDictionary();
+			
+			compressorSender = LogParserManager.getInstance().getCompressorSender();
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Error in init Compressor component.", this);
 		}
@@ -83,29 +106,105 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 			
 			for(Template template : templates) {
 				DictionaryQueue dictionaryQueue = new DictionaryQueue();
+				dictionaryQueue.getKey().setTemplateId(template.getId());
 				dictionaryQueue.getKey().setAtQueue(false);
 				dictionaryQueue.getKey().setSequence(contextQueue.getKey().getSequence());
 				
 				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue)) {
 					createDictionary(template, dq);
+					
 					dictionaryQueueDAO.delete(dq,null);
 				}
 			}
 			
-			//TODO remove all dict queue
-			
-			//TODO send message to this queue with type compressa data
-			
+			message.setMessageType(CompressorMessageType.COMPRESS_DATA);
+			compressorSender.sendCompressorMessage(message);
 		}
 		
 		if(message.getMessageType().equals(CompressorMessageType.COMPRESS_DATA)) {
 			
-			//TODO compress data and remove context queue
+			compressContextQueueData(message, contextQueue);
+			contextQueueDAO.delete(contextQueue, null);
 		}
-		
-		
 	}
 	
+	@SuppressWarnings("unchecked")
+	private void compressContextQueueData(CompressorMessage message, ContextQueue contextQueue) throws ArchiveeException {
+		Context context = new Context();
+		context.getKey().setPatternId(contextQueue.getKey().getPatternId());
+		context.getKey().setSequence(contextQueue.getKey().getSequence());
+		context.setStartDate(contextQueue.getStartDate());
+		
+		TemplateDictionary templateDictionary = new TemplateDictionary();
+		templateDictionary.setContextId(contextQueue.getId());
+		createTemplateDictionary(templateDictionary, contextQueue);
+
+		ArrayList<Byte> data = new ArrayList<Byte>();
+		
+		long bitOffset = 0;
+		
+		for(PatternMessage patternMessage : contextQueue.getMessages()) {
+			//Finds the pattern
+			Pattern pattern = new Pattern();
+			pattern.setId(patternMessage.getPatternId());
+			for(Pattern p : patternDAO.find(pattern)) {
+				pattern = p;
+				break;
+			}
+			//TODO validate pattern - it should not save on error
+			
+			Template template = null; //TODO find template
+			
+			PatternPath patternPath = ArchiveePatternUtils.findPatternPath(patternMessage.getMessage(), pattern);
+			bitOffset = ArchiveeByteUtils.append(template.getId(), data, bitOffset, (HashMap) templateDictionary.getTemplateEntries());
+			//TODO implement append
+			
+			ArrayList<String> words = ArchiveePatternUtils.getPatternValues(patternMessage.getMessage());		
+			
+			for(int i = 0; i < words.size(); i++) {
+				String word = words.get(i);
+				
+				PatternPath patternPath2 = new PatternPath();
+				patternPath2.getValues().addAll(patternPath.getValues());
+				for(int j=i+1; j < patternPath.getValues().size(); j++) {
+					patternPath2.getValues().remove(j);
+				}
+				
+				int j=0;
+				for(j=0; j < patternPath2.getValues().get(i).getWords(); j++) {
+					Dictionary dictionary = new Dictionary();
+					dictionary.getKey().setElementIndex(i);
+					dictionary.getKey().setSubElementIndex(j);
+					dictionary.getKey().setTemplateId(template.getId());
+					dictionary.getKey().setSequence(contextQueue.getKey().getSequence());
+					
+					for(Dictionary dq : dictionaryDAO.find(dictionary)) {
+						dictionary = dq;
+						break;
+					}
+					//TODO validate if not found
+					
+					bitOffset = ArchiveeByteUtils.append(word, data, bitOffset, (HashMap) dictionary.getEntries());
+					
+					i++;
+					if(i >= words.size()) {
+						break;
+					}
+					word = words.get(i);
+				}
+			}
+			
+		}
+		
+		context.setData(data.toArray(new Byte[data.size()]));
+		//TODO set bitOffset on context data
+		
+		//TODO save context index
+		
+		//TODO save context data
+		
+	}
+
 	/**
 	 * @param template
 	 * @param dictQueue
@@ -118,6 +217,8 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 		dictionary.getKey().setSequence(dictQueue.getKey().getSequence());
 		
 		createDictionary(dictionary, dictQueue);
+		
+		//TODO save context queue with template counts
 	}
 
 	/**
@@ -130,8 +231,6 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 		huffmanWordTree.buildTree(dictQueue.getCounts());
 		
 		for(String word : dictQueue.getCounts().keySet()) {
-			dictionary.getEntries().containsKey(word);
-			
 			HuffmanWordNode node = huffmanWordTree.getNode(word);
 			
 			if(node == null) {
@@ -148,6 +247,35 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 		}
 		
 		dictionaryDAO.save(dictionary);
+	}
+	
+	/**
+	 * @param message
+	 * @param contextQueue
+	 * @return
+	 * @throws ArchiveeException 
+	 */
+	private void createTemplateDictionary(TemplateDictionary templateDictionary, ContextQueue contextQueue) throws ArchiveeException {
+		HuffmanObjectIdTree huffmanObjectIdTree = new HuffmanObjectIdTree();
+		huffmanObjectIdTree.buildTree(contextQueue.getTemplateCounts());
+		
+		for(ObjectId templateId : contextQueue.getTemplateCounts().keySet()) {
+			HuffmanObjectIdNode node = huffmanObjectIdTree.getNode(templateId);
+			
+			if(node == null) {
+				throw new ArchiveeException("Not found huffman node for template dictionary creation: " + templateId, huffmanObjectIdTree, contextQueue, templateDictionary);
+			}
+				
+			DictionaryEntry dictionaryEntry = new DictionaryEntry();
+			dictionaryEntry.setBitsLength(node.getLevel());
+			dictionaryEntry.setBytes(node.getCode());
+			dictionaryEntry.setCount(contextQueue.getTemplateCounts().get(templateId));
+			
+			templateDictionary.getTemplateEntries().put(templateId, dictionaryEntry);
+			templateDictionary.getTemplateEntriesIndex().put(node.getCode(), templateId);
+		}
+		
+		templateDictionaryDAO.save(templateDictionary);
 	}
 
 	/**

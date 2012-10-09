@@ -31,7 +31,7 @@ public class ContextKey {
 	
 	private ObjectId appId;
 	
-	private ObjectId templateId;
+	private ObjectId patternId;
 	
 	private long sequence;
 
@@ -66,15 +66,15 @@ public class ContextKey {
 	/**
 	 * @return the templateId
 	 */
-	public ObjectId getTemplateId() {
-		return templateId;
+	public ObjectId getPatternId() {
+		return patternId;
 	}
 
 	/**
 	 * @param templateId the templateId to set
 	 */
-	public void setTemplateId(ObjectId templateId) {
-		this.templateId = templateId;
+	public void setPatternId(ObjectId templateId) {
+		this.patternId = templateId;
 	}
 
 }

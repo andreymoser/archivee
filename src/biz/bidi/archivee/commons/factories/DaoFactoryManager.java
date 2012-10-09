@@ -39,6 +39,7 @@ import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.mongodb.Template;
+import biz.bidi.archivee.commons.model.mongodb.TemplateDictionary;
 
 /**
  * @author Andrey Bidinotto
@@ -60,6 +61,7 @@ public class DaoFactoryManager implements IArchiveeFactoryManager {
 	protected IArchiveeFactory dictionaryQueueDAOFactory;
 	protected IArchiveeFactory masterIndexDAOFactory;
 	protected IArchiveeFactory templateDAOFactory;
+	protected IArchiveeFactory templateDictionaryDAOFactory;
 	
 	public DaoFactoryManager(IArchiveeFactoryManager archiveeFactoryManager) {
 		this.archiveeFactoryManager = archiveeFactoryManager;
@@ -122,6 +124,9 @@ public class DaoFactoryManager implements IArchiveeFactoryManager {
 			}
 			if(classObject == Template.class) {
 				factory = templateDAOFactory;
+			}
+			if(classObject == TemplateDictionary.class) {
+				factory = templateDictionaryDAOFactory;
 			}
 		}
 		
