@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  version="3.0" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd">
+  <enterprise-beans>
+  	<message-driven>
+  		<ejb-name>logparser</ejb-name>
+  		<ejb-class>biz.bidi.archivee.components.logparser.mdb.LogInputQueueMDB</ejb-class>
+  	</message-driven>
+  	<message-driven>
+  		<ejb-name>masteridx</ejb-name>
+  		<ejb-class>biz.bidi.archivee.components.masteridx.mdb.MasterIndexerPatternMDB</ejb-class>
+  	</message-driven>
+  	<message-driven>
+  		<ejb-name>archiver</ejb-name>
+  		<ejb-class>biz.bidi.archivee.components.archiver.mdb.ArchiverPatternMDB</ejb-class>
+  	</message-driven>
+  	<message-driven>
+  		<ejb-name>compressor</ejb-name>
+  		<ejb-class>biz.bidi.archivee.components.compressor.mdb.CompressorMDB</ejb-class>
+  	</message-driven>
+  </enterprise-beans>
+</ejb-jar>

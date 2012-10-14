@@ -19,6 +19,7 @@
  */
 package biz.bidi.archivee.commons.dao.mongodb.dao;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.ContextIndex;
@@ -38,9 +39,15 @@ public class ContextIndexDAO extends ArchiveeMongodbDAO<ContextIndex> {
 	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public Query<ContextIndex> find(ContextIndex entity, String customSearchId)
-			throws ArchiveeException {
-		// TODO Auto-generated method stub
+	public Query<ContextIndex> find(ContextIndex entity, String customSearchId) throws ArchiveeException {
+		
+		if(customSearchId.equals(ArchiveeConstants.CONTEXT_INDEX_LATEST_QUERY)) {
+			return find(entity).
+					field("key.appId").equal(entity.getKey().getAppId()).
+					field("key.word").equal(entity.getKey().getWord()).
+					field("key.sequence").lessThanOrEq(Long.MAX_VALUE);
+		}
+		
 		return null;
 	}
 

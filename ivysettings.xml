@@ -1,0 +1,23 @@
+<ivysettings>
+	
+	<settings defaultResolver="chain"/>
+	
+	<resolvers>
+		<chain name="chain">
+			<filesystem name="local">
+				<ivy pattern="${ivy.default.ivy.user.dir}/local/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]"/>
+				<artifact pattern="${ivy.default.ivy.user.dir}/local/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]"/>
+			</filesystem>
+			
+			<ibiblio name="archivee-repo" root="https://github.com/andreymoser/archivee-repo/raw/master"/>
+			<ibiblio name="bidisoft" root="http://bidisoft.org/repo"/>
+			<ibiblio name="central" m2compatible="true"/>
+		</chain>
+	</resolvers>
+	
+	<statuses default="snapshot">
+		<status name="release"/>
+		<status name="snapshot"/>
+	</statuses>
+	
+</ivysettings>

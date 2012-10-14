@@ -4,3 +4,8 @@
 *.jar
 *.war
 *.ear
+/lib
+/lib-deprecated
+/archivee-1.0.0.tar.gz
+/build
+/.project

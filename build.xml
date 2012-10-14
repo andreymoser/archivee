@@ -1,0 +1,195 @@
+<project name="archivee" default="package" xmlns:ivy="antlib:org.apache.ivy.ant">
+	
+	<property file="./ant/build.properties"/>
+	
+	<!-- task definition -->
+	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ant.task.ivy}"/>
+	
+	<target name="download-libraries">
+    	<mkdir dir="${lib.dir}"/>
+		
+		<ivy:retrieve />
+		
+		<!-- project classpath -->
+		<path id="project.classpath">
+			<fileset dir="${lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+	</target>
+	
+	<!-- you should not call this target directly -->
+	<target name="pre-compile" depends="download-libraries">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.src.dir}"/>
+		<mkdir dir="${build.bin.dir}"/>
+		<mkdir dir="${build.lib.dir}"/>
+		<mkdir dir="${build.config.dir}"/>
+		
+		<!-- copy resources -->
+		<copy todir="${build.src.dir}">
+			<fileset dir="${src.dir}"/>
+		</copy>
+		
+		<copy todir="${build.lib.dir}">
+			<fileset dir="${lib.dir}"/>
+		</copy>
+		
+		<copy todir="${build.config.dir}">
+			<fileset dir="${config.dir}"/>
+		</copy>
+		
+		<!-- classpath -->
+		<path id="compile.classpath">
+			<fileset dir="${build.lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+	</target>
+	
+	<target name="compile" depends="pre-compile">
+		<!-- compile java -->
+		<javac srcdir="${build.src.dir}" destdir="${build.bin.dir}" source="${build.level}" target="${build.level}" includeantruntime="false">
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+	
+	<target name="build" depends="compile">
+		<!-- file name -->
+		<condition property="build.file" value="${build.basename}-${publish.version}" else="${build.basename}">
+			<isset property="publish.version"/>
+		</condition>
+		<condition property="build.core.file" value="${build.basename}-core-${publish.version}" else="${build.basename}">
+			<isset property="publish.version"/>
+		</condition>
+		<condition property="build.ejbs.file" value="${build.basename}-ejbs-${publish.version}" else="${build.basename}">
+			<isset property="publish.version"/>
+		</condition>
+		
+		<tstamp>
+			<format property="build.time" pattern="${build.timeformat}"/>
+		</tstamp>
+		
+		<jar destfile="${build.dir}/${build.core.file}.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Built-On" value="${build.time}"/>
+			</manifest>
+			<fileset dir="${build.bin.dir}">
+				<include name="biz/bidi/archivee/commons/**"/>
+			</fileset>
+		</jar>
+		
+		<replace file="${build.config.dir}/application.xml">
+			<replacefilter token="@appxml.app.name@" value="${ear.app.name}"/>
+			<replacefilter token="@appxml.ejbs.file@" value="${build.ejbs.file}.jar"/>
+			<replacefilter token="@appxml.lib.dir@" value="${ear.lib.dir}"/>
+		</replace>
+		
+		<jar destfile="${build.dir}/${build.ejbs.file}.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Built-On" value="${build.time}"/>
+			</manifest>
+			<metainf file="${build.config.dir}/ejb-jar.xml"/>
+			<fileset dir="${build.bin.dir}">
+				<include name="biz/bidi/archivee/components/logparser/**"/>
+				<include name="biz/bidi/archivee/components/archiver/**"/>
+				<include name="biz/bidi/archivee/components/masteridx/**"/>
+				<include name="biz/bidi/archivee/components/compressor/**"/>
+			</fileset>
+		</jar>
+		
+		<ear destfile="${build.dir}/${build.file}.ear" appxml="${build.config.dir}/application.xml">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Built-On" value="${build.time}"/>
+			</manifest>
+			
+			<fileset dir="${build.dir}">
+				<include name="${build.core.file}.jar"/>
+				<include name="${build.ejbs.file}.jar"/>
+			</fileset>
+		</ear>
+		
+		<delete dir="${build.bin.dir}"/>
+		
+		<!-- usage -->
+		<echo message="usage: specify logging configuration by using -Dlogback.configurationFile property"/>
+		<echo message="usage: specify database store by using -Drhinoceros.store property"/>
+	</target>
+	
+	<target name="package" depends="build">
+		
+		<!-- compress and package -->
+		<tar destfile="${build.file}.tar.gz" compression="gzip" longfile="fail">
+			<tarfileset dir="${build.dir}"/>
+		</tar>
+	</target>
+	
+	<!-- you should not call this target directly -->
+	<target name="version" description="test">
+		
+		<input message="input version number" addproperty="publish.revision"/>
+		
+		<!-- build number -->
+		<ivy:buildnumber resolver="${publish.repository}"
+						organisation="${publish.organisation}"
+						module="${publish.module}"
+						revision="${publish.revision}"
+						defaultBuildNumber="0"
+						revSep="."/>
+		
+		<!-- version -->
+		<property name="publish.version" value="${ivy.new.revision}"/>
+		
+		<echo message="previous version: ${ivy.revision}"/>
+		<echo message="new version: ${ivy.new.revision}"/>
+	</target>
+	
+	<target name="publish" depends="version, package">
+		
+		<input message="input build status" addproperty="publish.status" validargs="snapshot,release"/>
+		
+		<!-- publish -->
+		<ivy:publish resolver="${publish.repository}"
+					organisation="${publish.organisation}"
+					module="${publish.module}"
+					pubrevision="${publish.version}"
+					status="${publish.status}"
+					forcedeliver="true"
+					overwrite="true">
+			<artifacts pattern="${build.dir}/[artifact]-[revision].[ext]"/>
+	    </ivy:publish>
+		
+	</target>
+	
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<delete dir="${log.dir}"/>
+		<delete dir="${lib.dir}"/>
+		
+		<!-- packages -->
+		<delete>
+			<fileset dir=".">
+				<include name="${build.basename}*.tar.gz"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="sync-eclipse" depends="download-libraries">
+	
+	<pathconvert property="eclipse.lib.entries" pathsep="&quot;&#47;&gt;&lt;classpathentry kind=&quot;lib&quot; path=&quot;" refid="project.classpath"/>
+		
+	<echo file="${basedir}/.classpath" encoding="UTF-8">&lt;classpath&gt;
+		&lt;classpathentry kind=&quot;src&quot; path=&quot;src&quot;&#47;&gt;
+		&lt;classpathentry exported=&quot;true&quot; kind=&quot;con&quot; path=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot;&#47;&gt;
+		&lt;classpathentry kind=&quot;lib&quot; path=&quot;${eclipse.lib.entries}&quot;&#47;&gt;
+		&lt;classpathentry kind=&quot;output&quot; path=&quot;bin&quot;&#47;&gt;&lt;&#47;classpath&gt;</echo>
+	</target>
+	
+	<target name="clean-all" depends="clean">
+		<ivy:cleancache/>
+	</target>
+	
+</project>

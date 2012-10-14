@@ -60,6 +60,10 @@ public class ArchiveeConstants {
 	 */
 	public static final int CONTEXT_MAX_DATA_SIZE = MAX_BYTE_ARRAY_SIZE/4;
 	/**
+	 * The context index array list max size 
+	 */
+	public static final int CONTEXT_INDEX_MAX_DATA_SIZE = 100;
+	/**
 	 * The context queue data max size 
 	 */
 	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = MAX_BYTE_ARRAY_SIZE;
@@ -67,5 +71,9 @@ public class ArchiveeConstants {
 	 * The context queue status delay 
 	 */
 	public static final int CONTEXT_QUEUE_STATUS_DELAY = 1000;
+	/**
+	 * The latest context index query 
+	 */
+	public static final String CONTEXT_INDEX_LATEST_QUERY = "context.index.latest.query";
 
 }

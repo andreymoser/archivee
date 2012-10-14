@@ -53,7 +53,7 @@ public class ContextIndex implements IEntity {
 	/**
 	 * 
 	 */
-	private ContextIndex() {
+	public ContextIndex() {
 		super();
 		
 		contextsRef = new ArrayList<ObjectId>();

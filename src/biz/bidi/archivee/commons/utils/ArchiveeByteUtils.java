@@ -22,12 +22,10 @@ package biz.bidi.archivee.commons.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bson.types.ObjectId;
-
-import biz.bidi.archivee.commons.model.huffman.HuffmanObjectIdTree;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordNode;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordTree;
-import biz.bidi.archivee.commons.model.mongodb.TemplateDictionary;
+import biz.bidi.archivee.commons.model.mongodb.DictionaryEntry;
 
 /**
  * Byte utilities
@@ -178,12 +176,124 @@ public class ArchiveeByteUtils {
 		return nodes;
 	}
 	
-	public static long append(Object value, ArrayList<Byte> buffer, long bitOffset, HashMap<Object,Long> dictionary) {
-		return 0;
+	public static int append(Object value, ArrayList<Byte> buffer, int offset, HashMap<Object,DictionaryEntry> dictionary) throws ArchiveeException {
+		int index = buffer.size() - 1;
+
+		DictionaryEntry dictionaryEntry = dictionary.get(value);
+		
+		Byte byteValue = null;
+		if(index >= 0 && offset != 0) {
+			byteValue = buffer.get(index);
+			buffer.remove(index);
+		} else {
+			byteValue = new Byte((byte) 0);
+		}
+		
+		
+		if(dictionaryEntry == null) {
+			throw new ArchiveeException("Invalid object for dictionary ",value,dictionary);
+		}
+		
+		boolean added = false;
+		
+		int bits = dictionaryEntry.getBitsLength();
+		int bitsHeader = 0;
+		
+		while(bits > 0) {
+			
+			int bitsAdded = 0;
+			
+			bitsAdded = 8 - offset;
+			if(bitsAdded > bits) {
+				bitsAdded = bits; 
+			} 
+			
+			byteValue = (byte) ((byteValue | ((dictionaryEntry.getBytes() >> bitsHeader) & 0xFF) << offset) & 0xFF) ;
+			
+			if((offset + bitsAdded) >= 8) {
+				offset = (offset + bitsAdded) - 8;
+				buffer.add(byteValue);
+				added = true;
+			} else {
+				offset = offset + bitsAdded;
+				added = false;
+			}
+			
+			bits = bits - bitsAdded;
+			bitsHeader = bitsHeader + bitsAdded;
+		}
+		
+		if(!added) {
+			buffer.add(byteValue);
+		}
+		
+		return offset;
 	}
 
-	public Object next(ArrayList<Byte> buffer, long bitOffset, HashMap<Object,Long> dictionary) {
-		return null;
+	
+	public static Object decode(ArrayList<Byte> buffer, int index, int offset, HashMap<Object,DictionaryEntry> dictionary) {
+		Object object = null;
+		
+		long value = 0;
+		int bits = 0;
+		int shift = 0;
+		int size = 1;
+			
+		while(index < buffer.size()) {
+			Byte b = buffer.get(index);
+			
+			value = value | (b & 0xFF) << shift;
+//			System.out.println(convertToBitsString(value));
+			
+			while(true) {
+				DictionaryEntry entry = new DictionaryEntry();
+				
+				entry.setBitsLength(size);
+				entry.setBytes(getBitsValue(value, offset, size));
+				
+				Object o = getUniqueObject(entry, dictionary); 
+				if(o != null) {
+					object = o;
+					break;
+				} else {
+					bits++;
+					size++;
+				}
+						
+				if(bits > 8 || (shift == 0 && (offset + bits) >= 8)) {
+					shift = shift + 8;
+					break;
+				}
+			}
+			
+			if(object != null) {
+				break;
+			}
+			
+			index++;
+		}
+		
+		return object;
+	}
+	
+	private static Object getUniqueObject(DictionaryEntry entry, HashMap<Object,DictionaryEntry> dictionary) {
+		Object object = null;
+		
+		int found = 0;
+		
+		for(Object o : dictionary.keySet()) {
+			DictionaryEntry entry2 = dictionary.get(o);
+			if(entry.equals(entry2)) {
+				object = o;
+				found++;
+				if(found > 1) {
+					object = null;
+					break;
+				}
+			}
+		}
+		
+		return object;
 	}
 	
 	public long getBitLength(long value) {

@@ -24,6 +24,7 @@ import java.util.HashMap;
 
 import org.bson.types.ObjectId;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ICompressorSender;
@@ -32,6 +33,7 @@ import biz.bidi.archivee.commons.model.huffman.HuffmanObjectIdTree;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordNode;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordTree;
 import biz.bidi.archivee.commons.model.mongodb.Context;
+import biz.bidi.archivee.commons.model.mongodb.ContextIndex;
 import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
 import biz.bidi.archivee.commons.model.mongodb.Dictionary;
 import biz.bidi.archivee.commons.model.mongodb.DictionaryEntry;
@@ -130,7 +132,16 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 	
 	@SuppressWarnings("unchecked")
 	private void compressContextQueueData(CompressorMessage message, ContextQueue contextQueue) throws ArchiveeException {
+		Pattern pattern = new Pattern();
+		pattern.setId(contextQueue.getKey().getPatternId());
+		for(Pattern p : patternDAO.find(pattern)) {
+			pattern = p;
+			break;
+		}
+		//TODO validate pattern - it should not save on error
+
 		Context context = new Context();
+		context.getKey().setAppId(pattern.getAppId());
 		context.getKey().setPatternId(contextQueue.getKey().getPatternId());
 		context.getKey().setSequence(contextQueue.getKey().getSequence());
 		context.setStartDate(contextQueue.getStartDate());
@@ -141,23 +152,17 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 
 		ArrayList<Byte> data = new ArrayList<Byte>();
 		
-		long bitOffset = 0;
+		int bitOffset = 0;
 		
 		for(PatternMessage patternMessage : contextQueue.getMessages()) {
-			//Finds the pattern
-			Pattern pattern = new Pattern();
-			pattern.setId(patternMessage.getPatternId());
-			for(Pattern p : patternDAO.find(pattern)) {
-				pattern = p;
-				break;
-			}
-			//TODO validate pattern - it should not save on error
-			
-			Template template = null; //TODO find template
-			
 			PatternPath patternPath = ArchiveePatternUtils.findPatternPath(patternMessage.getMessage(), pattern);
+			
+			//TODO validate pattern path - it should not save on error
+			//TODO validate pattern id, it should not differ
+			
+			Template template = findTemplate(patternPath, pattern);
+			
 			bitOffset = ArchiveeByteUtils.append(template.getId(), data, bitOffset, (HashMap) templateDictionary.getTemplateEntries());
-			//TODO implement append
 			
 			ArrayList<String> words = ArchiveePatternUtils.getPatternValues(patternMessage.getMessage());		
 			
@@ -190,6 +195,20 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 					if(i >= words.size()) {
 						break;
 					}
+					
+					//Saves context index data
+					ContextIndex contextIndex = new ContextIndex();
+					contextIndex.getKey().setAppId(pattern.getAppId());
+					contextIndex.getKey().setWord(word);
+					for(ContextIndex ci : contextIndexDAO.find(contextIndex, ArchiveeConstants.CONTEXT_INDEX_LATEST_QUERY)) {
+						contextIndex = ci;
+						break;
+					}
+					//TODO validate context index
+					if(contextIndex !=  null && contextIndex.getId() != null) {
+						contextIndexDAO.save(contextIndex);
+					}
+					
 					word = words.get(i);
 				}
 			}
@@ -197,11 +216,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 		}
 		
 		context.setData(data.toArray(new Byte[data.size()]));
-		//TODO set bitOffset on context data
-		
-		//TODO save context index
-		
-		//TODO save context data
+		contextDAO.save(context);
 		
 	}
 
@@ -220,7 +235,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 		
 		//TODO save context queue with template counts
 	}
-
+	
 	/**
 	 * @param dictionary
 	 * @param dictQueue
@@ -295,6 +310,25 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 		}
 		
 		return templates;
+	}
+	
+	/**
+	 * @param patternPath
+	 * @param message
+	 * @return
+	 * @throws ArchiveeException 
+	 */
+	private Template findTemplate(PatternPath patternPath,Pattern pattern) throws ArchiveeException {
+		Template template = new Template();
+		template.getKey().setPatternId(pattern.getId());
+		template.getKey().setPatternPath(patternPath);
+		
+		for(Template t : templateDAO.find(template)) {
+			template = t;
+			break;
+		}
+		
+		return template;
 	}
 
 }

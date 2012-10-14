@@ -185,6 +185,7 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 			isAtQueue = false;
 		}
 		
+		contextQueue.getMessages().add(message);
 		contextQueue.getKey().setAtQueue(isAtQueue);
 		contextQueueDAO.save(contextQueue);
 		
