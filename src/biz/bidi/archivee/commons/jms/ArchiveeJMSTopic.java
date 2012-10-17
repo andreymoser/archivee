@@ -40,12 +40,15 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
  * @email andreymoser@bidi.biz
  * @since Sep 9, 2012
  */
-@SuppressWarnings("unused")
 public abstract class ArchiveeJMSTopic extends ArchiveeJMSGeneric {
 
 	protected TopicSession publisherSession;
 	protected TopicPublisher publisher;
 	protected TopicConnection connection;
+	
+	public ArchiveeJMSTopic() {
+		super();
+	}
 	
 	/**
 	 * {@inheritDoc}

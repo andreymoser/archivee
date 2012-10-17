@@ -32,12 +32,14 @@ import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 import biz.bidi.archivee.components.compressor.ICompressor;
 import biz.bidi.archivee.components.compressor.commons.CompressorManager;
 
-@MessageDriven( activationConfig = {
-		@ActivationConfigProperty(
-					propertyName="destinationName",
-					propertyValue="jms.archivee.compressorQueue"
-				)
-})
+@MessageDriven( 
+		mappedName = "jms.archivee.connection.compressorQueue",
+		name = "CompressorBean",
+		activationConfig = {
+				@ActivationConfigProperty(
+						propertyName = "destinationType", 
+						propertyValue = "javax.jms.Queue")
+							})
 
 /**
  * @author Andrey Bidinotto

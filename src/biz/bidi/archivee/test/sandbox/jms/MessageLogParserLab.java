@@ -21,20 +21,14 @@ package biz.bidi.archivee.test.sandbox.jms;
 
 import java.io.File;
 
-import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.mongodb.LogQueue;
-import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
+import biz.bidi.archivee.components.listeners.commons.ListenerManager;
 import biz.bidi.archivee.components.listeners.parser.DateLevelLogParser;
-import biz.bidi.archivee.components.logparser.commons.LogParserManager;
-import biz.bidi.archivee.components.logparser.parser.MessageLogParser;
 import biz.bidi.archivee.test.commons.FileReaderUtilsTest;
-
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.Query;
 
 /**
  * Class test for LogParser component
@@ -44,9 +38,6 @@ import com.google.code.morphia.query.Query;
  */
 public class MessageLogParserLab {
 	
-	private IArchiveeGenericDAO<Pattern, Query<Pattern>, Key<Pattern>> patternDAO;
-	private IArchiveeGenericDAO<LogQueue, Query<LogQueue>, Key<LogQueue>> logQueueDAO;
-	
 	private String logFile;
 	
 	public void run() {
@@ -55,20 +46,12 @@ public class MessageLogParserLab {
 			
 			System.out.println("Analysing log file: " + logFile);
 			
-			patternDAO = LogParserManager.getInstance().getPatternDAO();
-			logQueueDAO = LogParserManager.getInstance().getLoqQueue();
-			
-			for (Pattern pattern : patternDAO.find(new Pattern())) {
-				patternDAO.delete(pattern, null);
-			}
-			for (LogQueue logQueue : logQueueDAO.find(new LogQueue())) {
-				logQueueDAO.delete(logQueue, null);
-			}	
-			
 			FileReaderUtilsTest fileReader = new FileReaderUtilsTest(new File(logFile));
 			
 			DateLevelLogParser dateLevelParser = new DateLevelLogParser();
-			MessageLogParser logParser = new MessageLogParser();
+			
+			ILogSender logSender = ListenerManager.getInstance().getLogSender(); 
+			
 			String line = "";
 			while(fileReader.hasNext()) {
 				line = fileReader.readLine();
@@ -76,15 +59,13 @@ public class MessageLogParserLab {
 				ParserMessage message = new ParserMessage();
 				message.setName("archiveeAppTest");
 				message.setMessage(line);
-				
 				dateLevelParser.parseLog(message);
 				
-				logParser.parseLog(message);
+				logSender.sendLogMessage(message);
+				
 				System.out.println(line);
 				System.out.println(ArchiveePatternUtils.convertToSimpleRegex(line));
 			}
-			
-			logParser.showPatterns();
 			
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Generic error", this);

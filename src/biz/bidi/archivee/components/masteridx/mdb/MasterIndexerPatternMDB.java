@@ -32,12 +32,14 @@ import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 import biz.bidi.archivee.components.masteridx.commons.MasterIndexerManager;
 import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
 
-@MessageDriven( activationConfig = {
-		@ActivationConfigProperty(
-					propertyName="destinationName",
-					propertyValue="jms.archivee.patternTopic"
-				)
-})
+@MessageDriven( 
+		mappedName = "jms.archivee.connection.patternTopic",
+		name = "MasterIndexerBean",
+		activationConfig = {
+				@ActivationConfigProperty(
+						propertyName = "destinationType", 
+						propertyValue = "javax.jms.Queue")
+							})
 
 /**
  * @author Andrey Bidinotto

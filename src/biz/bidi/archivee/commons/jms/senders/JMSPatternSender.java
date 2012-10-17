@@ -41,10 +41,10 @@ public class JMSPatternSender extends ArchiveeJMSTopic implements IPatternSender
 	private String connectionName;
 	
 	public JMSPatternSender() {
+		super();
+		loadProperties(this.getClass().getSimpleName() + ".");
+
 		try {
-			connectionData = new ArchiveeJMSConnectionData();
-			loadProperties(this.getClass().getSimpleName() + ".");
-			
 			this.open();
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Error while connecting to topic", this);

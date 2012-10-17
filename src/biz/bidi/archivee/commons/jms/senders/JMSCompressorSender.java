@@ -21,8 +21,7 @@ package biz.bidi.archivee.commons.jms.senders;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ICompressorSender;
-import biz.bidi.archivee.commons.jms.ArchiveeJMSConnectionData;
-import biz.bidi.archivee.commons.jms.ArchiveeJMSTopic;
+import biz.bidi.archivee.commons.jms.ArchiveeJMSQueue;
 import biz.bidi.archivee.commons.model.xml.CompressorMessage;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
@@ -33,7 +32,7 @@ import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
  * @email andreymoser@bidi.biz
  * @since Oct 5, 2012
  */
-public class JMSCompressorSender extends ArchiveeJMSTopic implements ICompressorSender, IArchiveePropertiesLoader {
+public class JMSCompressorSender extends ArchiveeJMSQueue implements ICompressorSender, IArchiveePropertiesLoader {
 
 	/**
 	 * The connection name
@@ -41,13 +40,13 @@ public class JMSCompressorSender extends ArchiveeJMSTopic implements ICompressor
 	private String connectionName;
 	
 	public JMSCompressorSender() {
+		super();
+		loadProperties(this.getClass().getSimpleName() + ".");
+
 		try {
-			connectionData = new ArchiveeJMSConnectionData();
-			loadProperties(this.getClass().getSimpleName() + ".");
-			
 			this.open();
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Error while connecting to topic", this);
+			ArchiveeException.log(e, "Error while connecting to queue", this);
 		}
 	}
 	

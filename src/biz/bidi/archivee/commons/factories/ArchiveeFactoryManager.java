@@ -19,9 +19,6 @@
  */
 package biz.bidi.archivee.commons.factories;
 
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.Query;
-
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ICompressorSender;
@@ -40,6 +37,9 @@ import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.mongodb.Template;
 import biz.bidi.archivee.commons.model.mongodb.TemplateDictionary;
 
+import com.google.code.morphia.Key;
+import com.google.code.morphia.query.Query;
+
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
@@ -51,6 +51,15 @@ public abstract class ArchiveeFactoryManager implements IArchiveeFactoryManager 
 	
 	protected static IArchiveeFactoryManager daoFactoryManager;
 	protected static IArchiveeFactoryManager jmsFactoryManager;
+	
+	public ArchiveeFactoryManager(boolean hasDAO, boolean hasJMS) {
+		if(hasDAO) {
+			daoFactoryManager = new DaoFactoryManager(this);
+		}
+		if(hasJMS) {
+			jmsFactoryManager = new JMSFactoryManager(this);
+		}
+	}
 	
 	public ArchiveeFactoryManager() {
 		daoFactoryManager = new DaoFactoryManager(this);

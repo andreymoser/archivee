@@ -21,7 +21,6 @@ package biz.bidi.archivee.commons.jms.senders;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ILogSender;
-import biz.bidi.archivee.commons.jms.ArchiveeJMSConnectionData;
 import biz.bidi.archivee.commons.jms.ArchiveeJMSQueue;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
@@ -41,10 +40,10 @@ public class JMSLogParserSender extends ArchiveeJMSQueue implements ILogSender, 
 	private String connectionName;
 	
 	public JMSLogParserSender() {
+		super();
+		loadProperties(this.getClass().getSimpleName() + ".");
+
 		try {
-			connectionData = new ArchiveeJMSConnectionData();
-			loadProperties(this.getClass().getSimpleName() + ".");
-			
 			this.open();
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Error while connecting to queue", this);

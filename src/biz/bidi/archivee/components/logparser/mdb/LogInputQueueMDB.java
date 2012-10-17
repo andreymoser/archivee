@@ -32,12 +32,14 @@ import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 
-@MessageDriven( activationConfig = {
-		@ActivationConfigProperty(
-					propertyName="destinationName",
-					propertyValue="jms.archivee.inputQueue"
-				)
-})
+@MessageDriven( 
+		mappedName = "jms.archivee.connection.inputQueue",
+		name = "LogParserBean",
+		activationConfig = {
+				@ActivationConfigProperty(
+						propertyName = "destinationType", 
+						propertyValue = "javax.jms.Queue")
+							})
 
 /**
  * @author Andrey Bidinotto

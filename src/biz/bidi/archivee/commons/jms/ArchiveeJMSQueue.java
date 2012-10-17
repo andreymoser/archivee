@@ -29,11 +29,6 @@ import javax.jms.QueueSender;
 import javax.jms.QueueSession;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import javax.jms.Topic;
-import javax.jms.TopicConnection;
-import javax.jms.TopicConnectionFactory;
-import javax.jms.TopicPublisher;
-import javax.jms.TopicSession;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -45,12 +40,15 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
  * @email andreymoser@bidi.biz
  * @since Sep 9, 2012
  */
-@SuppressWarnings("unused")
 public abstract class ArchiveeJMSQueue extends ArchiveeJMSGeneric {
 
 	protected QueueSession queueSession;
 	protected QueueSender sender;
 	protected QueueConnection connection;
+	
+	public ArchiveeJMSQueue() {
+		super();
+	}
 	
 	/**
 	 * {@inheritDoc}

@@ -16,6 +16,13 @@
 				<include name="*.jar"/>
 			</fileset>
 		</path>
+		
+		<!-- project classpath -->
+		<path id="weblogic.classpath">
+			<fileset dir="${lib.dir}">
+				<include name="*weblogic*.jar"/>
+			</fileset>
+		</path>
 	</target>
 	
 	<!-- you should not call this target directly -->
@@ -49,7 +56,7 @@
 	
 	<target name="compile" depends="pre-compile">
 		<!-- compile java -->
-		<javac srcdir="${build.src.dir}" destdir="${build.bin.dir}" source="${build.level}" target="${build.level}" includeantruntime="false">
+		<javac srcdir="${build.src.dir}" destdir="${build.bin.dir}" source="${build.level}" target="${build.level}" includeantruntime="false" debug="true">
 			<classpath refid="compile.classpath"/>
 		</javac>
 	</target>
@@ -70,7 +77,7 @@
 			<format property="build.time" pattern="${build.timeformat}"/>
 		</tstamp>
 		
-		<jar destfile="${build.dir}/${build.core.file}.jar">
+		<jar destfile="${build.lib.dir}/${build.core.file}.jar">
 			<manifest>
 				<attribute name="Built-By" value="${user.name}"/>
 				<attribute name="Built-On" value="${build.time}"/>
@@ -107,8 +114,9 @@
 			</manifest>
 			
 			<fileset dir="${build.dir}">
-				<include name="${build.core.file}.jar"/>
 				<include name="${build.ejbs.file}.jar"/>
+				<exclude name="${lib.dir}/*weblogic*.jar"/>
+				<include name="${lib.dir}/*.jar"/>
 			</fileset>
 		</ear>
 		
@@ -186,6 +194,17 @@
 		&lt;classpathentry exported=&quot;true&quot; kind=&quot;con&quot; path=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot;&#47;&gt;
 		&lt;classpathentry kind=&quot;lib&quot; path=&quot;${eclipse.lib.entries}&quot;&#47;&gt;
 		&lt;classpathentry kind=&quot;output&quot; path=&quot;bin&quot;&#47;&gt;&lt;&#47;classpath&gt;</echo>
+	</target>
+	
+	<target name="deploy-weblogic" depends="download-libraries"> 
+		<taskdef name="wldeploy" classname="weblogic.ant.taskdefs.management.WLDeploy" classpathref="weblogic.classpath"/>
+		
+		<wldeploy
+		      action="deploy" verbose="true" debug="true"
+		      name="archivee" source="${basedir}/build/archivee-1.0.0.ear"
+		      user="system" password="weblogic12"
+			  upload="true"
+		      adminurl="t3://localhost:7001" targets="AdminServer" />
 	</target>
 	
 	<target name="clean-all" depends="clean">

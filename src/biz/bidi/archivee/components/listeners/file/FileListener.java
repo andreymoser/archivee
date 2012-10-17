@@ -35,7 +35,7 @@ import biz.bidi.archivee.commons.utils.ArchiveeFileUtils;
  * @email andreymoser@bidi.biz
  * @since Sep 4, 2012
  */
-public class FileListener implements IArchiveePropertiesLoader {
+public class FileListener implements IFileListener, IArchiveePropertiesLoader {
 
 	/**
 	 * The logs directory

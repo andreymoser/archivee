@@ -95,17 +95,17 @@ public class ArchiveeDateUtils implements IArchiveePropertiesLoader {
 	public static String convertSimpleDateFormatToRegex(String simpleDateFormat) {
 		String str = new String(simpleDateFormat);
 		
-		str = str.replaceAll("y", "0");
-		str = str.replaceAll("MMM", "a");
-		str = str.replaceAll("MM", "0");
-		str = str.replaceAll("d", "0");
+		str = str.replaceAll("y", "N");
+		str = str.replaceAll("MMM", "W");
+		str = str.replaceAll("MM", "N");
+		str = str.replaceAll("d", "N");
 		
-		str = str.replaceAll("h", "0");
-		str = str.replaceAll("m", "0");
-		str = str.replaceAll("s", "0");
-		str = str.replaceAll("S", "0");
+		str = str.replaceAll("h", "N");
+		str = str.replaceAll("m", "N");
+		str = str.replaceAll("s", "N");
+		str = str.replaceAll("S", "N");
 		
-		return ArchiveePatternUtils.convertSimpleRegexToRegex(ArchiveePatternUtils.convertToSimpleRegex(str));
+		return ArchiveePatternUtils.convertSimpleRegexToRegex(str);
 	}
 	
 	/**

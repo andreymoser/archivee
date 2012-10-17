@@ -17,20 +17,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.factories;
+package biz.bidi.archivee.components.listeners.commons;
+
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 28, 2012
+ * @since Sep 6, 2012
  */
-public abstract class ArchiveeSingletonFactory<I, O> implements IArchiveeFactory<I, O> {
-
-	protected Object instance;
+public class ListenerManager extends ListenerFactoryManager {
 	
-	@SuppressWarnings("unchecked")
-	public I getInstance() {
-		return (I) instance;
+	public ListenerManager() {
+		super();
+		instance = this;
+	}
+	
+	public static ListenerManager getInstance() {
+		if(instance == null) {
+			return new ListenerManager();
+		}
+		return (ListenerManager) instance;
 	}
 	
 }

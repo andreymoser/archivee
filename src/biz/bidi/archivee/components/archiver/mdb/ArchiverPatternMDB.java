@@ -32,12 +32,14 @@ import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 import biz.bidi.archivee.components.archiver.IArchiver;
 import biz.bidi.archivee.components.archiver.commons.ArchiverManager;
 
-@MessageDriven( activationConfig = {
-		@ActivationConfigProperty(
-					propertyName="destinationName",
-					propertyValue="jms.archivee.patternTopic"
-				)
-})
+@MessageDriven( 
+	mappedName = "jms.archivee.connection.patternTopic",
+	name = "ArchiverPatternBean",
+	activationConfig = {
+			@ActivationConfigProperty(
+					propertyName = "destinationType", 
+					propertyValue = "javax.jms.Topic")
+						})
 
 /**
  * @author Andrey Bidinotto

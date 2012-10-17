@@ -22,7 +22,7 @@ package biz.bidi.archivee.components.listeners.file;
 import java.io.File;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.components.listeners.commons.ListenersUtils;
+import biz.bidi.archivee.components.listeners.commons.ListenerManager;
 import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
 
 /**
@@ -61,7 +61,7 @@ public class FileListenerThread implements Runnable {
 	public void run() {
 		IFileLogReader logReader = null;
 		try {
-			logReader = ListenersUtils.getFileLogReader(this);
+			logReader = ListenerManager.getFileLogReader(this);
 			logReader.run();
 		} catch (ArchiveeException e) {
 			e.error("Error while processing log file thread", logReader, fileListener);

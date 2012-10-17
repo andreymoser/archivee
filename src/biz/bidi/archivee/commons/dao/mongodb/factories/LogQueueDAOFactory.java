@@ -20,6 +20,7 @@
 package biz.bidi.archivee.commons.dao.mongodb.factories;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
+import biz.bidi.archivee.commons.dao.mongodb.dao.LogQueueDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
@@ -42,7 +43,7 @@ public class LogQueueDAOFactory extends ArchiveeSingletonFactory<IArchiveeGeneri
 	@Override
 	public IArchiveeGenericDAO<LogQueue, Query<LogQueue>, Key<LogQueue>> createInstance(Object object) throws ArchiveeException {
 		if(instance == null) {
-			instance = new LogQueue();
+			instance = new LogQueueDAO();
 		}
 		return this.getInstance();
 	}

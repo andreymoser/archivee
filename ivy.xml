@@ -12,7 +12,6 @@
 	<dependencies>
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.6.1"/>
 		
-		<dependency org="javax" name="javaee-api" rev="6.0"/>
 		<dependency org="junit" name="junit" rev="4.0"/>
 		<dependency org="com.sun.jna" name="jna" rev="3.0.9"/>
 		<dependency org="net.java.dev.jna" name="platform" rev="3.4.0"/>
@@ -22,6 +21,8 @@
 		<dependency org="weblogic" name="weblogic" rev="12g"/>
 		
 		<dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.3"/>
+		
+		<dependency org="javax" name="javaee-api" rev="6.0"/>
 		<!-- 		
 		<dependency org="dom4j" name="dom4j" rev="1.6.1"/>
 		<dependency org="jdom" name="jdom" rev="1.1"/>

@@ -17,20 +17,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.factories;
+package biz.bidi.archivee.components.listeners.commons;
+
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
+import biz.bidi.archivee.components.listeners.file.FileListener;
+import biz.bidi.archivee.components.listeners.file.IFileListener;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 28, 2012
+ * @since Oct 14, 2012
  */
-public abstract class ArchiveeSingletonFactory<I, O> implements IArchiveeFactory<I, O> {
+public class ListenerFactory extends ArchiveeSingletonFactory<IFileListener, Object> {
 
-	protected Object instance;
-	
-	@SuppressWarnings("unchecked")
-	public I getInstance() {
-		return (I) instance;
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
+	 */
+	@Override
+	public IFileListener createInstance(Object object) throws ArchiveeException {
+		if(instance == null) {
+			instance = new FileListener(); 
+		}
+		return this.getInstance();
 	}
-	
+
 }

@@ -22,7 +22,10 @@ package biz.bidi.archivee.components.listeners.commons;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
+import biz.bidi.archivee.commons.factories.IArchiveeFactoryManager;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
+import biz.bidi.archivee.components.listeners.file.FileListenerThread;
+import biz.bidi.archivee.components.listeners.file.IFileListener;
 import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
 import biz.bidi.archivee.components.listeners.file.logreader.LogReaderFactory;
 import biz.bidi.archivee.components.listeners.parser.LogParserFactory;
@@ -33,27 +36,34 @@ import biz.bidi.archivee.components.listeners.parser.LogParserFactory;
  * @since Sep 6, 2012
  */
 @SuppressWarnings("rawtypes")
-public class ListenerFactoryManager extends ArchiveeFactoryManager {
+public abstract class ListenerFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
 
+	protected static IArchiveeFactory listenerFactory;
 	protected static IArchiveeFactory fileLogReaderFactory;
 	protected static IArchiveeFactory logParserFactory;
 	
-	static {
-		instance = new ListenerFactoryManager();
-		
-		fileLogReaderFactory = new LogReaderFactory(); 
+	/**
+	 * @param instance
+	 */
+	public ListenerFactoryManager() {
+		super(false,true);
+		listenerFactory = new ListenerFactory(); 
+		fileLogReaderFactory = new LogReaderFactory();
 		logParserFactory = new LogParserFactory();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactoryManager#getFactoryInstance(java.lang.Class, java.lang.Class)
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactoryManager#getFactoryInstance(java.lang.Class, java.lang.Object)
 	 */
 	@Override
 	public IArchiveeFactory getFactoryInstance(Class interfaceClass, Class classObject) throws ArchiveeException {
-		IArchiveeFactory factory = super.getFactoryInstance(interfaceClass, classObject);
+		IArchiveeFactory factory = super.getFactoryInstance(interfaceClass,classObject); 
 		
+		if(interfaceClass == IFileListener.class) {
+			factory = listenerFactory; 
+		}
 		if(classObject == IFileLogReader.class) {
 			factory = fileLogReaderFactory; 
 		}
@@ -61,9 +71,32 @@ public class ListenerFactoryManager extends ArchiveeFactoryManager {
 			factory = logParserFactory; 
 		}
 		
-		validateFactory(factory, classObject);
+		validateFactory(factory, interfaceClass);
 		
 		return factory;
 	}
+
+	@SuppressWarnings("unchecked")
+	public static IFileLogReader getFileLogReader(FileListenerThread fileListenerThread) throws ArchiveeException {
+		IFileLogReader fileLogReader = null;
+		IArchiveeFactory<IFileLogReader, FileListenerThread> factory = instance.getFactoryInstance(IFileLogReader.class);
+		fileLogReader = factory.createInstance(fileListenerThread);
+		return fileLogReader;
+	}
 	
+	@SuppressWarnings("unchecked")
+	public static ILogParser getDateLevelLogParser() throws ArchiveeException {
+		ILogParser logSender = null;
+		IArchiveeFactory<ILogParser, Object> factory = instance.getFactoryInstance(ILogParser.class);
+		logSender = factory.createInstance(null);
+		return logSender;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public IFileListener getFileListener() throws ArchiveeException {
+		IFileListener fileListener = null;
+		IArchiveeFactory<IFileListener, Object> factory = instance.getFactoryInstance(IFileListener.class);
+		fileListener = factory.createInstance(null);
+		return fileListener;
+	}
 }
