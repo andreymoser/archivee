@@ -27,6 +27,7 @@
 	
 	<!-- you should not call this target directly -->
 	<target name="pre-compile" depends="download-libraries">
+		<delete dir="${build.dir}" failonerror="false"/>
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${build.src.dir}"/>
 		<mkdir dir="${build.bin.dir}"/>
@@ -59,6 +60,8 @@
 		<javac srcdir="${build.src.dir}" destdir="${build.bin.dir}" source="${build.level}" target="${build.level}" includeantruntime="false" debug="true">
 			<classpath refid="compile.classpath"/>
 		</javac>
+		
+		<delete dir="${build.src.dir}"/>
 	</target>
 	
 	<target name="build" depends="compile">

@@ -17,48 +17,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
+package biz.bidi.archivee.commons.dao.mongodb.factories;
 
-import org.bson.types.ObjectId;
+import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
+import biz.bidi.archivee.commons.dao.mongodb.dao.AppDAO;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
+import biz.bidi.archivee.commons.model.mongodb.App;
+
+import com.google.code.morphia.Key;
+import com.google.code.morphia.query.Query;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 26, 2012
- * @deprecated
+ * @since Oct 20, 2012
  */
-public class PatternKey {
+public class AppDAOFactory extends ArchiveeSingletonFactory<IArchiveeGenericDAO<App, Query<App>, Key<App>>, Object> {
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
+	 */
+	@Override
+	public IArchiveeGenericDAO<App, Query<App>, Key<App>> createInstance(Object object) throws ArchiveeException {
+		if(instance == null) {
+			instance = new AppDAO();
+		}
+		return this.getInstance();
+	}
 	
-	private ObjectId appId;
-	
-	private String value;
-
-	/**
-	 * @return the value
-	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * @param value the value to set
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	/**
-	 * @return the appId
-	 */
-	public ObjectId getAppId() {
-		return appId;
-	}
-
-	/**
-	 * @param appId the appId to set
-	 */
-	public void setAppId(ObjectId appId) {
-		this.appId = appId;
-	}
-
 }

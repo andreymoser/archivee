@@ -1,0 +1,20 @@
+use archivee
+
+# clean up data
+db.app.drop()
+db.context.drop()
+db.context_index.drop()
+db.context_queue.drop()
+db.master_index.drop()
+db.dictionary.drop()
+db.dictionary_queue.drop()
+db.log_queue.drop()
+db.pattern.drop()
+db.template.drop()
+
+db.pattern.find()
+db.log_queue.find()
+
+iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27017 -j ACCEPT
+iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 28017 -j ACCEPT
+service iptables save

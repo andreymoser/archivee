@@ -143,7 +143,9 @@ public abstract class GenericLogReader implements IFileLogReader {
 		ILogParser parser = ListenerManager.getDateLevelLogParser(); 
 		parser.parseLog(message);
 		
-		this.logSender.sendLogMessage(message);
+		if(message.getDate() != null && !message.getDate().isEmpty()) {
+			this.logSender.sendLogMessage(message);
+		}
 	}
 	
 	/**

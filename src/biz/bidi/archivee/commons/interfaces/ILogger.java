@@ -17,48 +17,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
-
-import org.bson.types.ObjectId;
+package biz.bidi.archivee.commons.interfaces;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 26, 2012
- * @deprecated
+ * @since Oct 18, 2012
  */
-public class PatternKey {
+public interface ILogger {
+
+	public void warn(Object instance, String message);
 	
-	private ObjectId appId;
+	public void info(Object instance, String message);
 	
-	private String value;
-
-	/**
-	 * @return the value
-	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * @param value the value to set
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	/**
-	 * @return the appId
-	 */
-	public ObjectId getAppId() {
-		return appId;
-	}
-
-	/**
-	 * @param appId the appId to set
-	 */
-	public void setAppId(ObjectId appId) {
-		this.appId = appId;
-	}
-
+	public void error(Object instance, String message);
+	
 }

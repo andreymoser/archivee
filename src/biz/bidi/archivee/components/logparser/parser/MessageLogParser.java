@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import org.bson.types.ObjectId;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
@@ -33,7 +34,6 @@ import biz.bidi.archivee.commons.model.mongodb.IPattern;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.mongodb.PatternChild;
-import biz.bidi.archivee.commons.model.mongodb.PatternKey;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
@@ -65,8 +65,8 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 			patternSender = LogParserManager.getInstance().getPatternSender();
 			
 			patternDAO = LogParserManager.getInstance().getPatternDAO();
-			logQueueDAO = LogParserManager.getInstance().getLoqQueue();
-			appDAO = LogParserManager.getInstance().getApp();
+			logQueueDAO = LogParserManager.getInstance().getLoqQueueDAO();
+			appDAO = LogParserManager.getInstance().getAppDAO();
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Unable to init LogParser sucessfully",
 					this);
@@ -81,6 +81,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 	@Override
 	public void parseLog(ParserMessage message) throws ArchiveeException {
 		LogQueue logQueue = new LogQueue();
+		logQueue.setAppId(findAndSaveAppId(message.getName()));
 		logQueue.setMessage(message.getMessage());
 		logQueue.setLevel(message.getLevel());
 		logQueue.setDate(ArchiveeDateUtils.convertToDate(message.getDate()));
@@ -248,11 +249,23 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 		
 		Pattern newPattern = null;
 		
-		ArrayList<LogQueue> logQueueList = (ArrayList<LogQueue>) logQueueDAO.find(new LogQueue()).asList();
-		
-		if(logQueueList.size() < 10) {
-			return null;
+		LogQueue logQueueQuery = new LogQueue();
+		logQueueQuery.setAppId(findAndSaveAppId(message.getName()));
+		ArrayList<LogQueue> logQueueList = null;
+		String query = null;
+		if(isRoot) {
+			query = ArchiveeConstants.LOG_QUEUE_APP_QUERY;
+		} else {
+			query = ArchiveeConstants.LOG_QUEUE_PATTERN_QUERY;
+			logQueueQuery.setSimpleRegex(simpleRegexLogLine.substring(0,offset + 1));
 		}
+		logQueueList = (ArrayList<LogQueue>) logQueueDAO.find(logQueueQuery,query).asList();
+		
+		if(isRoot) {
+			if(logQueueList.size() < 10) {
+				return null;
+			}
+		}		
 		
 		int l = 0;
 		int lMax = simpleRegexLogLine.length();
@@ -295,23 +308,26 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 			
 			if(isRoot) {
 				if(!hasInAll) {
-					PatternKey key = new PatternKey();
-					key.setValue(simpleRegexLogLine.substring(offset, offset + l));
-					key.setAppId(findAndSaveAppId(message.getName()));
-					
 					newPattern = new Pattern();
 					newPattern.setOffset(offset);
+					newPattern.setValue(simpleRegexLogLine.substring(offset, offset + l));
+					newPattern.setAppId(findAndSaveAppId(message.getName()));
 					break;
 				}
 			} else {
-				if(found > 0) {
-					int size = simpleRegexLogLine.substring(offset, offset + l).length();
+				if(l > 0) {
+					int offsetFinal = ((offset + l) < simpleRegexLogLine.length())?offset + l:simpleRegexLogLine.length();
+					int size = simpleRegexLogLine.substring(offset, offsetFinal).length();
 					int sizeTail = simpleRegexLogLine.length() - offset;
 					
-					if((found > (logQueueList.size()/4) && size > 6) || (found > 0 && sizeTail <= 6)) {
+					if((found > (logQueueList.size()/4) && size > 6) || 
+							(found > 0 && sizeTail <= 6) || 
+							(found < logQueueList.size() && offsetFinal == simpleRegexLogLine.length())) {
+						
 						newPattern = new Pattern();
 						newPattern.setValue(simpleRegexLogLine.substring(offset, offset + l));
 						newPattern.setOffset(offset);
+						
 						break;
 					}
 					
@@ -323,6 +339,22 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 			
 			if(l >= lMax) {
 				break;
+			}
+		}
+		
+		if(!isRoot && newPattern != null && logQueueList.size() >= 1) {
+			
+			int newOffset = newPattern.getOffset() + newPattern.getValue().length(); 
+			
+			if(newOffset < simpleRegexLogLine.length()) {
+				Pattern newPatternChild = findCommonRootPattern(simpleRegexLogLine, message, newOffset, newPattern, false);
+				
+				if(newPatternChild != null) {
+					System.out.println("\tAdded : " + newPatternChild.getValue() + " - parent: " + newPattern.getValue());
+					
+					PatternChild patternChild = convertToPatternChild(newPatternChild); 
+					newPattern.getPatterns().add(patternChild);
+				}
 			}
 		}
 		
@@ -380,7 +412,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 		Pattern patternFound = null;
 		
 		for(Pattern pattern : patternDAO.find(new Pattern())) {
-			if(ArchiveePatternUtils.matchRegex(logLine, ArchiveePatternUtils.convertSimpleRegexToRegex(pattern.getValue()))) {
+			if(pattern != null && ArchiveePatternUtils.matchRegex(logLine, ArchiveePatternUtils.convertSimpleRegexToRegex(pattern.getValue()))) {
 				patternFound = pattern;
 				break;
 			}

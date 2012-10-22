@@ -70,7 +70,7 @@ public class LogInputQueueMDB implements MessageListener {
 			} catch (JMSException e) {
 				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);
 			} catch (ArchiveeException e) {
-				ArchiveeException.log(this,"Unable to parse log line",xml,logParser);
+				ArchiveeException.log(e,"Unable to parse log line",xml,logParser);
 			}
 		} else {
 			ArchiveeException.log(this,"Invalid mdb message, expected TextMessage",message);

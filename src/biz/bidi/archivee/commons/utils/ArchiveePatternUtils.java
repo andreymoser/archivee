@@ -382,4 +382,26 @@ public class ArchiveePatternUtils {
 		return found;
 	}
 
+	/**
+	 * @param message
+	 * @return
+	 */
+	public static String convertToRegex(String message) {
+		String regex = "";
+		
+		char currentChar = '\0';
+		
+		for(int i = 0; i < message.length(); i++) {
+			currentChar = message.charAt(i);
+			
+			if("\\.^$|?*+[]{}()-".indexOf(currentChar) != -1) {
+				regex += "\\" + Character.toString(currentChar);
+			} else {
+				regex += Character.toString(currentChar);
+			}
+		}
+		
+		return regex;
+	}
+
 }

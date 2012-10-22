@@ -64,17 +64,17 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 	
 	public Compressor() {
 		try {
-			templateDAO = ArchiverManager.getInstance().getTemplate();
+			templateDAO = ArchiverManager.getInstance().getTemplateDAO();
 			patternDAO = ArchiverManager.getInstance().getPatternDAO();
 			
-			dictionaryQueueDAO = ArchiverManager.getInstance().getDictionaryQueue();
-			dictionaryDAO = ArchiverManager.getInstance().getDictionary();
+			dictionaryQueueDAO = ArchiverManager.getInstance().getDictionaryQueueDAO();
+			dictionaryDAO = ArchiverManager.getInstance().getDictionaryDAO();
 			
-			contextQueueDAO = ArchiverManager.getInstance().getContextQueue();
-			contextIndexDAO = ArchiverManager.getInstance().getContextIndex();
-			contextDAO = ArchiverManager.getInstance().getContext();
+			contextQueueDAO = ArchiverManager.getInstance().getContextQueueDAO();
+			contextIndexDAO = ArchiverManager.getInstance().getContextIndexDAO();
+			contextDAO = ArchiverManager.getInstance().getContextDAO();
 
-			templateDictionaryDAO = ArchiverManager.getInstance().getTemplateDictionary();
+			templateDictionaryDAO = ArchiverManager.getInstance().getTemplateDictionaryDAO();
 			
 			compressorSender = LogParserManager.getInstance().getCompressorSender();
 		} catch (ArchiveeException e) {

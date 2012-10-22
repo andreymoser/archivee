@@ -19,6 +19,7 @@
  */
 package biz.bidi.archivee.commons.dao.mongodb.dao;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
@@ -43,8 +44,11 @@ public class LogQueueDAO extends ArchiveeMongodbDAO<LogQueue> {
 	public Query<LogQueue> find(LogQueue entity, String customSearchId)
 			throws ArchiveeException {
 		
-		if(customSearchId.equals("all.starts.with.regex")) {
-			return find(entity).field("line").startsWith(entity.getMessage());
+		if(customSearchId.equals(ArchiveeConstants.LOG_QUEUE_APP_QUERY)) {
+			return find(entity).field("appId").equal(entity.getAppId());
+		}
+		if(customSearchId.equals(ArchiveeConstants.LOG_QUEUE_PATTERN_QUERY)) {
+			return find(entity).field("appId").equal(entity.getAppId()).field("simpleRegex").startsWith(ArchiveePatternUtils.convertToRegex(entity.getSimpleRegex()));
 		}
 		
 		return null;

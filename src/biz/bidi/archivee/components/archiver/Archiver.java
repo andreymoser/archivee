@@ -54,9 +54,9 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 	public Archiver() {
 		try {
 			patternDAO = ArchiverManager.getInstance().getPatternDAO();
-			templateDAO = ArchiverManager.getInstance().getTemplate();
-			dictionaryQueueDAO = ArchiverManager.getInstance().getDictionaryQueue();
-			contextQueueDAO = ArchiverManager.getInstance().getContextQueue();
+			templateDAO = ArchiverManager.getInstance().getTemplateDAO();
+			dictionaryQueueDAO = ArchiverManager.getInstance().getDictionaryQueueDAO();
+			contextQueueDAO = ArchiverManager.getInstance().getContextQueueDAO();
 			
 			compressorSender = LogParserManager.getInstance().getCompressorSender();
 		} catch (ArchiveeException e) {

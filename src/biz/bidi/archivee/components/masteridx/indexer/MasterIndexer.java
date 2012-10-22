@@ -41,7 +41,7 @@ public class MasterIndexer extends ArchiveeManagedComponent implements IMasterIn
 	public MasterIndexer() {
 		try {
 			patternDAO = LogParserManager.getInstance().getPatternDAO();
-			masterIndexDAO = LogParserManager.getInstance().getMasterIndex();
+			masterIndexDAO = LogParserManager.getInstance().getMasterIndexDAO();
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Unable to init MasterIndexer sucessfully",this);
 		}

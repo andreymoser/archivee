@@ -20,6 +20,7 @@
 package biz.bidi.archivee.commons.factories;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
+import biz.bidi.archivee.commons.dao.mongodb.factories.AppDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.ContextDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.ContextIndexDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.ContextQueueDAOFactory;
@@ -30,6 +31,7 @@ import biz.bidi.archivee.commons.dao.mongodb.factories.MasterIndexDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.PatternDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.TemplateDAOFactory;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.mongodb.App;
 import biz.bidi.archivee.commons.model.mongodb.Context;
 import biz.bidi.archivee.commons.model.mongodb.ContextIndex;
 import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
@@ -68,7 +70,7 @@ public class DaoFactoryManager implements IArchiveeFactoryManager {
 		
 		patternDAOFactory = new PatternDAOFactory(); 
 		logQueueDAOFactory = new LogQueueDAOFactory(); 
-		appDAOFactory = new LogQueueDAOFactory(); 
+		appDAOFactory = new AppDAOFactory(); 
 		contextDAOFactory = new ContextDAOFactory(); 
 		contextQueueDAOFactory = new ContextQueueDAOFactory(); 
 		contextIndexDAOFactory = new ContextIndexDAOFactory(); 
@@ -103,6 +105,9 @@ public class DaoFactoryManager implements IArchiveeFactoryManager {
 			}
 			if(classObject == LogQueue.class) {
 				factory = logQueueDAOFactory;
+			}
+			if(classObject == App.class) {
+				factory = appDAOFactory;
 			}
 			if(classObject == Context.class) {
 				factory = contextDAOFactory;

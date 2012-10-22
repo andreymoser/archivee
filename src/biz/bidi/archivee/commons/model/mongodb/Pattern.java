@@ -39,7 +39,9 @@ public class Pattern implements IEntity, IPattern {
 	private ObjectId id;
 	
 	@Indexed(unique=true)
-	private PatternKey key;
+	private ObjectId appId;
+	
+	private String value;
 	
 	private int offset;
 	
@@ -48,7 +50,6 @@ public class Pattern implements IEntity, IPattern {
 	public Pattern() {
 		super();
 		
-		this.key = new PatternKey();
 		this.patterns = new ArrayList<PatternChild>(); 
 	}
 
@@ -56,28 +57,28 @@ public class Pattern implements IEntity, IPattern {
 	 * @return the id
 	 */
 	public String getValue() {
-		return this.key.getValue();
+		return value;
 	}
 
 	/**
 	 * @param value the id to set
 	 */
 	public void setValue(String value) {
-		this.key.setValue(value);
+		this.value = value;
 	}
 	
 	/**
 	 * @return the appId
 	 */
 	public ObjectId getAppId() {
-		return this.key.getAppId();
+		return appId;
 	}
 	
 	/**
 	 * @param value the appId to set
 	 */
 	public void setAppId(ObjectId appId) {
-		this.key.setAppId(appId);
+		this.appId = appId;
 	}
 
 	/**
@@ -171,6 +172,5 @@ public class Pattern implements IEntity, IPattern {
 	public void setId(ObjectId id) {
 		this.id = id;
 	}
-
 
 }

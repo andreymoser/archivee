@@ -22,6 +22,8 @@ package biz.bidi.archivee.commons.exceptions;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import biz.bidi.archivee.commons.utils.ArchiveeLogger;
+
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
@@ -70,13 +72,13 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 		
 	}
 	
-	private void error(Object... objects) {
+	private String error(Object... objects) {
 			
 			if(this.objects == null || this.objects.length == 0) {
 				this.objects = objects;
 				
 				if(this.objects == null || this.objects.length == 0) {
-					return;
+					return "";
 				}
 			}
 			
@@ -120,7 +122,9 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 				}
 				objectMessage+="}\t";
 			}
-			System.out.println(objectMessage);
+//			System.out.println(objectMessage);
+			
+			return objectMessage;
 	}
 
 	/**
@@ -133,12 +137,18 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 		if(this.message == null || this.message == "") {
 			this.message = message;
 		}
-		System.out.println(this.getClass().getName()+":"+this.message);
+		
+//		System.out.println(this.getClass().getName()+":"+this.message);
+		ArchiveeLogger.instance.error(this, message);
 		if(e !=  null) {
-			System.out.println(e.getClass().getName()+":"+e.getMessage());
+//			System.out.println(e.getClass().getName()+":"+e.getMessage());
+			ArchiveeLogger.instance.error(e, e.getMessage());
 		}
 		
-		error(objects);
+		String objectsString = error(objects);
+		if(objectsString != null || !objectsString.isEmpty()) {
+			ArchiveeLogger.instance.error(this, objectsString);
+		}
 		
 		if(e !=  null) {
 			e.printStackTrace();

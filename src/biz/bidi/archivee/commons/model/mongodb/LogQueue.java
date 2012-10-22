@@ -39,6 +39,9 @@ public class LogQueue implements IEntity {
 	@Id
 	private ObjectId id;
 	
+	@Indexed
+	private ObjectId appId;
+	
 	private Date date;
 	
 	private String level;
@@ -117,6 +120,20 @@ public class LogQueue implements IEntity {
 	 */
 	public void setLevel(String level) {
 		this.level = level;
+	}
+
+	/**
+	 * @return the appId
+	 */
+	public ObjectId getAppId() {
+		return appId;
+	}
+
+	/**
+	 * @param appId the appId to set
+	 */
+	public void setAppId(ObjectId appId) {
+		this.appId = appId;
 	}
 
 }
