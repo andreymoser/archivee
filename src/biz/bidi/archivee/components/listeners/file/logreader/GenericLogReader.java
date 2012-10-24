@@ -140,7 +140,7 @@ public abstract class GenericLogReader implements IFileLogReader {
 		ParserMessage message = new ParserMessage();
 		message.setMessage(line);
 		
-		ILogParser parser = ListenerManager.getDateLevelLogParser(); 
+		ILogParser parser = ListenerManager.getInstance().getDateLevelLogParser(); 
 		parser.parseLog(message);
 		
 		if(message.getDate() != null && !message.getDate().isEmpty()) {

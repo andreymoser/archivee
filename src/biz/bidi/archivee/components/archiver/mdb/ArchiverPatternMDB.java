@@ -38,8 +38,11 @@ import biz.bidi.archivee.components.archiver.commons.ArchiverManager;
 	activationConfig = {
 			@ActivationConfigProperty(
 					propertyName = "destinationType", 
-					propertyValue = "javax.jms.Topic")
-						})
+					propertyValue = "javax.jms.Topic"),
+			@ActivationConfigProperty(
+					propertyName = "subscriptionDurability", 
+					propertyValue = "Durable"),
+			})
 
 /**
  * @author Andrey Bidinotto
@@ -65,12 +68,12 @@ public class ArchiverPatternMDB implements MessageListener {
 			String xml = "";
 			try {
 				xml = textMessage.getText();
-				archiver = ArchiverManager.getArchiver();
+				archiver = ArchiverManager.getInstance().getArchiver();
 				archiver.archiveData((PatternMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
 				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);
 			} catch (ArchiveeException e) {
-				ArchiveeException.log(this,"Unable to parse log line",xml,archiver);
+				ArchiveeException.log(e,"Unable to parse log line",xml,archiver);
 			}
 		} else {
 			ArchiveeException.log(this,"Invalid mdb message, expected TextMessage",message);

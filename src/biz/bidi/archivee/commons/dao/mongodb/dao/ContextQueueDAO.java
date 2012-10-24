@@ -21,6 +21,7 @@ package biz.bidi.archivee.commons.dao.mongodb.dao;
 
 import com.google.code.morphia.query.Query;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
@@ -38,9 +39,22 @@ public class ContextQueueDAO extends ArchiveeMongodbDAO<ContextQueue> {
 	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public Query<ContextQueue> find(ContextQueue entity, String customSearchId)
-			throws ArchiveeException {
-		// TODO Auto-generated method stub
+	public Query<ContextQueue> find(ContextQueue entity, String customSearchId) throws ArchiveeException {
+		
+		if(customSearchId.equals(ArchiveeConstants.CONTEXT_QUEUE_KEY_QUERY)){
+			return find(entity).
+			field("key.patternId").equal(entity.getKey().getPatternId()).
+			field("key.sequence").equal(entity.getKey().getSequence()).
+			field("key.isAtQueue").equal(entity.getKey().isAtQueue());
+		}
+		
+		if(customSearchId.equals(ArchiveeConstants.CONTEXT_QUEUE_NEXT_KEY_QUERY)){
+			return find(entity).
+			field("key.patternId").equal(entity.getKey().getPatternId()).
+			field("key.isAtQueue").equal(entity.getKey().isAtQueue()).
+			order("-key.sequence");
+		}
+		
 		return null;
 	}
 

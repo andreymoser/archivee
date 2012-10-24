@@ -28,14 +28,14 @@ public class ArchiverManager extends ArchiverFactoryManager {
 	
 	public ArchiverManager() {
 		super();
-		instance = this;
+		factoryManager = this;
 	}
 	
 	public static ArchiverManager getInstance() {
-		if(instance == null) {
+		if(factoryManager == null) {
 			return new ArchiverManager();
 		}
-		return (ArchiverManager) instance;
+		return (ArchiverManager) factoryManager;
 	}
 	
 }

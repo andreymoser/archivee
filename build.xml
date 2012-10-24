@@ -214,4 +214,6 @@
 		<ivy:cleancache/>
 	</target>
 	
+	<target name="build-deploy-weblogic" depends="build, deploy-weblogic" />
+	
 </project>

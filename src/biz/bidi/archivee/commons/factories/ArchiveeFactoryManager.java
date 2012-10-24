@@ -47,7 +47,7 @@ import com.google.code.morphia.query.Query;
  */
 public abstract class ArchiveeFactoryManager implements IArchiveeFactoryManager {
 
-	protected static IArchiveeFactoryManager instance;
+	protected IArchiveeFactoryManager instance;
 	
 	protected static IArchiveeFactoryManager daoFactoryManager;
 	protected static IArchiveeFactoryManager jmsFactoryManager;
@@ -62,6 +62,7 @@ public abstract class ArchiveeFactoryManager implements IArchiveeFactoryManager 
 	}
 	
 	public ArchiveeFactoryManager() {
+		instance = this;
 		daoFactoryManager = new DaoFactoryManager(this);
 		jmsFactoryManager = new JMSFactoryManager(this);
 	}

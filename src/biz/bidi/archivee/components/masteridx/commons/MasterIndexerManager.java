@@ -28,14 +28,14 @@ public class MasterIndexerManager extends MasterIndexerFactoryManager {
 	
 	public MasterIndexerManager() {
 		super();
-		instance = this;
+		factoryManager = this;
 	}
 	
 	public static MasterIndexerManager getInstance() {
-		if(instance == null) {
+		if(factoryManager == null) {
 			return new MasterIndexerManager();
 		}
-		return (MasterIndexerManager) instance;
+		return (MasterIndexerManager) factoryManager;
 	}
 	
 }

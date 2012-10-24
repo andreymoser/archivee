@@ -65,7 +65,7 @@ public class CompressorMDB implements MessageListener {
 			String xml = "";
 			try {
 				xml = textMessage.getText();
-				compressor = CompressorManager.getCompressor();
+				compressor = CompressorManager.getInstance().getCompressor();
 				compressor.compressData((CompressorMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
 				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);

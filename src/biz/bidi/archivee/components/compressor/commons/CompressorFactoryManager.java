@@ -32,6 +32,8 @@ import biz.bidi.archivee.components.compressor.ICompressor;
  */
 @SuppressWarnings("rawtypes")
 public abstract class CompressorFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
+	
+	protected static IArchiveeFactoryManager factoryManager;
 
 	protected static IArchiveeFactory compressorFactory;
 	
@@ -63,9 +65,9 @@ public abstract class CompressorFactoryManager extends ArchiveeFactoryManager im
 	 * @throws ArchiveeException 
 	 */
 	@SuppressWarnings("unchecked")
-	public static ICompressor getCompressor() throws ArchiveeException {
+	public ICompressor getCompressor() throws ArchiveeException {
 		ICompressor compressor = null;
-		IArchiveeFactory<ICompressor, Object> factory = instance.getFactoryInstance(ICompressor.class);
+		IArchiveeFactory<ICompressor, Object> factory = factoryManager.getFactoryInstance(ICompressor.class);
 		compressor = factory.createInstance(null);
 		return compressor;
 	}

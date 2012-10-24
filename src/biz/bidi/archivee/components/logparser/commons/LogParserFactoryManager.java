@@ -34,14 +34,13 @@ import biz.bidi.archivee.components.logparser.parser.LogParserFactory;
 @SuppressWarnings("rawtypes")
 public abstract class LogParserFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
 
+	protected static IArchiveeFactoryManager factoryManager;
+
 	protected static IArchiveeFactory logParserFactory;
 	
-	/**
-	 * @param instance
-	 */
 	public LogParserFactoryManager() {
 		super();
-		logParserFactory = new LogParserFactory(); 
+		logParserFactory = new LogParserFactory();
 	}
 
 	/**
@@ -65,7 +64,7 @@ public abstract class LogParserFactoryManager extends ArchiveeFactoryManager imp
 	@SuppressWarnings("unchecked")
 	public ILogParser getLogParser() throws ArchiveeException {
 		ILogParser logParser = null;
-		IArchiveeFactory<ILogParser, Object> factory = instance.getFactoryInstance(ILogParser.class);
+		IArchiveeFactory<ILogParser, Object> factory = factoryManager.getFactoryInstance(ILogParser.class);
 		logParser = factory.createInstance(null);
 		return logParser;
 	}

@@ -20,6 +20,7 @@
 package biz.bidi.archivee.commons.dao.mongodb.factories;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
+import biz.bidi.archivee.commons.dao.mongodb.dao.ContextDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
 import biz.bidi.archivee.commons.model.mongodb.Context;
@@ -42,7 +43,7 @@ public class ContextDAOFactory extends ArchiveeSingletonFactory<IArchiveeGeneric
 	@Override
 	public IArchiveeGenericDAO<Context, Query<Context>, Key<Context>> createInstance(Object object) throws ArchiveeException {
 		if(instance == null) {
-			instance = new ContextDAOFactory(); 
+			instance = new ContextDAO(); 
 		}
 		return this.getInstance();
 	}

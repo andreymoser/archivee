@@ -61,7 +61,7 @@ public class FileListenerThread implements Runnable {
 	public void run() {
 		IFileLogReader logReader = null;
 		try {
-			logReader = ListenerManager.getFileLogReader(this);
+			logReader = ListenerManager.getInstance().getFileLogReader(this);
 			logReader.run();
 		} catch (ArchiveeException e) {
 			e.error("Error while processing log file thread", logReader, fileListener);

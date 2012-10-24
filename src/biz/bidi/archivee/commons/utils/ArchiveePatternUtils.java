@@ -344,17 +344,17 @@ public class ArchiveePatternUtils {
 		
 		int i = 0;
 		for(PatternChild p : pattern.getPatterns()) {
-			if(findPatternPath(simpleRegex,p,patternPath)) {
+			if(simpleRegex.startsWith(p.getValue(), p.getOffset())) {
 				PatternPathEntry value = new PatternPathEntry();
 				value.setIndex(i);
 				value.setWords(getPatternValues(p.getValue()).size());
 				patternPath.getValues().add(value);
+				
+				findPatternPath(simpleRegex,p,patternPath);
 				break;
 			}
 			i++;
 		}
-		
-		Collections.reverse(patternPath.getValues());
 		
 		return patternPath;
 	}
@@ -365,13 +365,13 @@ public class ArchiveePatternUtils {
 		int i = 0;
 		for(PatternChild p : patternChild.getPatterns()) {
 			if(simpleRegex.startsWith(p.getValue(), p.getOffset())) {
-				if(findPatternPath(simpleRegex,p,patternPath)) {
-					PatternPathEntry value = new PatternPathEntry();
-					value.setIndex(i);
-					value.setWords(getPatternValues(p.getValue()).size());
-					patternPath.getValues().add(value);
-					break;
-				}
+				PatternPathEntry value = new PatternPathEntry();
+				value.setIndex(i);
+				value.setWords(getPatternValues(p.getValue()).size());
+				patternPath.getValues().add(value);
+				
+				findPatternPath(simpleRegex,p,patternPath);
+				break;
 			}
 			i++;
 		}

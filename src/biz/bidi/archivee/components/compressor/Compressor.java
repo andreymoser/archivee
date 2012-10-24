@@ -95,7 +95,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 
 		ContextQueue contextQueue = new ContextQueue();
 		contextQueue.setId(message.getContextQueueId());
-		for(ContextQueue cq : contextQueueDAO.find(contextQueue)) {
+		for(ContextQueue cq : contextQueueDAO.find(contextQueue, ArchiveeConstants.CONTEXT_QUEUE_KEY_QUERY)) {
 			contextQueue = cq;
 			break;
 		}
@@ -112,7 +112,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 				dictionaryQueue.getKey().setAtQueue(false);
 				dictionaryQueue.getKey().setSequence(contextQueue.getKey().getSequence());
 				
-				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue)) {
+				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue, ArchiveeConstants.DICTIONARY_QUEUE_KEY_QUERY)) {
 					createDictionary(template, dq);
 					
 					dictionaryQueueDAO.delete(dq,null);
@@ -183,7 +183,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 					dictionary.getKey().setTemplateId(template.getId());
 					dictionary.getKey().setSequence(contextQueue.getKey().getSequence());
 					
-					for(Dictionary dq : dictionaryDAO.find(dictionary)) {
+					for(Dictionary dq : dictionaryDAO.find(dictionary, ArchiveeConstants.DICTIONARY_KEY_QUERY)) {
 						dictionary = dq;
 						break;
 					}
@@ -305,7 +305,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 		Template template = new Template();
 		template.getKey().setPatternId(contextQueue.getKey().getPatternId());
 		
-		for(Template t : templateDAO.find(template)) {
+		for(Template t : templateDAO.find(template, ArchiveeConstants.TEMPLATE_KEY_QUERY)) {
 			templates.add(t);
 		}
 		
@@ -323,7 +323,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 		template.getKey().setPatternId(pattern.getId());
 		template.getKey().setPatternPath(patternPath);
 		
-		for(Template t : templateDAO.find(template)) {
+		for(Template t : templateDAO.find(template, ArchiveeConstants.TEMPLATE_KEY_QUERY)) {
 			template = t;
 			break;
 		}

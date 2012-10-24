@@ -29,14 +29,14 @@ public class ListenerManager extends ListenerFactoryManager {
 	
 	public ListenerManager() {
 		super();
-		instance = this;
+		factoryManager = this;
 	}
 	
 	public static ListenerManager getInstance() {
-		if(instance == null) {
+		if(factoryManager == null) {
 			return new ListenerManager();
 		}
-		return (ListenerManager) instance;
+		return (ListenerManager) factoryManager;
 	}
 	
 }

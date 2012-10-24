@@ -21,7 +21,6 @@ package biz.bidi.archivee.commons.jms.senders;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.IPatternSender;
-import biz.bidi.archivee.commons.jms.ArchiveeJMSConnectionData;
 import biz.bidi.archivee.commons.jms.ArchiveeJMSTopic;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;

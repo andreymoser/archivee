@@ -19,6 +19,7 @@
  */
 package biz.bidi.archivee.commons.dao.mongodb.dao;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.App;
@@ -38,8 +39,12 @@ public class AppDAO extends ArchiveeMongodbDAO<App> {
 	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public Query<App> find(App entity, String customSearchId)
-			throws ArchiveeException {
+	public Query<App> find(App entity, String customSearchId) throws ArchiveeException {
+		
+		if(customSearchId.equals(ArchiveeConstants.APP_NAME_QUERY)){
+			return find(entity).
+			field("name").equal(entity.getName());
+		}
 		
 		return null;
 	}

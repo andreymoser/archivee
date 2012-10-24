@@ -61,18 +61,7 @@ public class ContextQueue implements IEntity {
 	public ContextQueue() {
 		key = new ContextQueueKey();
 		
-		messages = new TreeSet<PatternMessage>(new Comparator<PatternMessage>() {
-			@Override
-			public int compare(PatternMessage p1, PatternMessage p2) {
-				try {
-					return ArchiveeDateUtils.convertToDate(p1.getDate()).compareTo(ArchiveeDateUtils.convertToDate(p2.getDate()));
-				} catch (ArchiveeException e) {
-					ArchiveeException.log(e, "Error in comparator - ContextQueue", this, p1, p2);
-				}
-				return 0;
-			}
-		});
-		
+		messages = new TreeSet<PatternMessage>();
 		templateCounts = new HashMap<ObjectId, Integer>();
 	}
 

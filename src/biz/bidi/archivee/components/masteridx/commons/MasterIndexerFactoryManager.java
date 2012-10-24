@@ -33,6 +33,8 @@ import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
 @SuppressWarnings("rawtypes")
 public abstract class MasterIndexerFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
 
+	protected static IArchiveeFactoryManager factoryManager;
+
 	protected static IArchiveeFactory masterIndexerFactory;
 	
 	public MasterIndexerFactoryManager() {
@@ -63,9 +65,9 @@ public abstract class MasterIndexerFactoryManager extends ArchiveeFactoryManager
 	 * @throws ArchiveeException 
 	 */
 	@SuppressWarnings("unchecked")
-	public static IMasterIndexer getMasterIndexer() throws ArchiveeException {
+	public IMasterIndexer getMasterIndexer() throws ArchiveeException {
 		IMasterIndexer masterIndexer = null;
-		IArchiveeFactory<IMasterIndexer, Object> factory = instance.getFactoryInstance(IMasterIndexer.class);
+		IArchiveeFactory<IMasterIndexer, Object> factory = factoryManager.getFactoryInstance(IMasterIndexer.class);
 		masterIndexer = factory.createInstance(null);
 		return masterIndexer;
 	}

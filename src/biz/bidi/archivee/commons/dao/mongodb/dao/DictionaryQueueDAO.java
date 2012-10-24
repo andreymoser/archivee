@@ -19,6 +19,7 @@
  */
 package biz.bidi.archivee.commons.dao.mongodb.dao;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.DictionaryQueue;
@@ -38,9 +39,16 @@ public class DictionaryQueueDAO extends ArchiveeMongodbDAO<DictionaryQueue> {
 	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public Query<DictionaryQueue> find(DictionaryQueue entity,
-			String customSearchId) throws ArchiveeException {
-		// TODO Auto-generated method stub
+	public Query<DictionaryQueue> find(DictionaryQueue entity, String customSearchId) throws ArchiveeException {
+		
+		if(customSearchId.equals(ArchiveeConstants.DICTIONARY_QUEUE_KEY_QUERY)){
+			return find(entity).
+			field("key.templateId").equal(entity.getKey().getTemplateId()).
+			field("key.sequence").equal(entity.getKey().getSequence()).
+			field("key.elementIndex").equal(entity.getKey().getElementIndex()).
+			field("key.subElementIndex").equal(entity.getKey().getSubElementIndex());
+		}
+		
 		return null;
 	}
 

@@ -19,7 +19,6 @@
  */
 package biz.bidi.archivee.components.logparser.commons;
 
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
@@ -29,14 +28,14 @@ public class LogParserManager extends LogParserFactoryManager {
 	
 	public LogParserManager() {
 		super();
-		instance = this;
+		factoryManager = this;
 	}
 	
 	public static LogParserManager getInstance() {
-		if(instance == null) {
+		if(factoryManager == null) {
 			return new LogParserManager();
 		}
-		return (LogParserManager) instance;
+		return (LogParserManager) factoryManager;
 	}
 	
 }

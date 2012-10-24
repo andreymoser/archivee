@@ -83,5 +83,32 @@ public class ArchiveeConstants {
 	 * The log queue entries for a given app 
 	 */
 	public static final String LOG_QUEUE_APP_QUERY = "log.queue.app.query";
-
+	/**
+	 * The Master Index word query
+	 */
+	public static final String MASTER_INDEX_WORD_QUERY = "master.index.word.query";
+	/**
+	 * The Dictionary Queue Key Query
+	 */
+	public static final String DICTIONARY_QUEUE_KEY_QUERY = "dictionary.queue.key.query";
+	/**
+	 * The Context Queue Key Query
+	 */
+	public static final String CONTEXT_QUEUE_KEY_QUERY = "context.queue.key.query";
+	/**
+	 * The Context Queue Next Key Query
+	 */
+	public static final String CONTEXT_QUEUE_NEXT_KEY_QUERY = "context.queue.next.key.query";
+	/**
+	 * The Template Queue Key Query
+	 */
+	public static final String TEMPLATE_KEY_QUERY = "template.key.query";
+	/**
+	 * The Dictionary Key Query
+	 */
+	public static final String DICTIONARY_KEY_QUERY = "dictionary.key.query";
+	/**
+	 * The application name query
+	 */
+	public static final String APP_NAME_QUERY = "app.name.query";
 }

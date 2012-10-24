@@ -21,6 +21,9 @@ package biz.bidi.archivee.commons.model.xml;
 
 import org.bson.types.ObjectId;
 
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
+
 
 /**
  * Message sent from listener to log parser
@@ -28,7 +31,7 @@ import org.bson.types.ObjectId;
  * @email andreymoser@bidi.biz
  * @since Sep 28, 2012
  */
-public class PatternMessage implements IXmlObject {
+public class PatternMessage implements IXmlObject, Comparable<PatternMessage> {
 	
 	/**
 	 * The pattern id
@@ -120,6 +123,95 @@ public class PatternMessage implements IXmlObject {
 	 */
 	public void setAppId(ObjectId appId) {
 		this.appId = appId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((appId == null) ? 0 : appId.hashCode());
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((level == null) ? 0 : level.hashCode());
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result
+				+ ((patternId == null) ? 0 : patternId.hashCode());
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PatternMessage other = (PatternMessage) obj;
+		if (appId == null) {
+			if (other.appId != null)
+				return false;
+		} else if (!appId.equals(other.appId))
+			return false;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
+		if (level == null) {
+			if (other.level != null)
+				return false;
+		} else if (!level.equals(other.level))
+			return false;
+		if (message == null) {
+			if (other.message != null)
+				return false;
+		} else if (!message.equals(other.message))
+			return false;
+		if (patternId == null) {
+			if (other.patternId != null)
+				return false;
+		} else if (!patternId.equals(other.patternId))
+			return false;
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(PatternMessage o) {
+		try {
+			int compare = ArchiveeDateUtils.convertToDate(this.getDate()).compareTo(ArchiveeDateUtils.convertToDate(o.getDate()));
+
+			if(compare == 0) {
+				if(this.hashCode() > o.hashCode()) {
+					compare = 1;
+				} else if(this.hashCode() == o.hashCode()) {
+					if(!this.equals(o)) {
+						compare = 1;
+					}
+				} else {
+					compare = -1;
+				}
+			}
+			
+			return compare;
+		} catch (ArchiveeException e) {
+			ArchiveeException.log(e, "Error in comparator - PatternMessage", this, this, o);
+		}
+		return 0;
 	}
 
 }

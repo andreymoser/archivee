@@ -28,14 +28,14 @@ public class CompressorManager extends CompressorFactoryManager {
 	
 	public CompressorManager() {
 		super();
-		instance = this;
+		factoryManager = this;
 	}
 	
 	public static CompressorManager getInstance() {
-		if(instance == null) {
+		if(factoryManager == null) {
 			return new CompressorManager();
 		}
-		return (CompressorManager) instance;
+		return (CompressorManager) factoryManager;
 	}
 	
 }

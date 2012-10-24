@@ -372,7 +372,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 		App app = new App();
 		app.setName(name);
 		
-		for(App app2 : appDAO.find(app)) {
+		for(App app2 : appDAO.find(app, ArchiveeConstants.APP_NAME_QUERY)) {
 			appId = app2.getId();
 			break;
 		}
@@ -411,6 +411,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 	private Pattern findRootPattern(String logLine) throws ArchiveeException {
 		Pattern patternFound = null;
 		
+		//TODO optimize this query
 		for(Pattern pattern : patternDAO.find(new Pattern())) {
 			if(pattern != null && ArchiveePatternUtils.matchRegex(logLine, ArchiveePatternUtils.convertSimpleRegexToRegex(pattern.getValue()))) {
 				patternFound = pattern;

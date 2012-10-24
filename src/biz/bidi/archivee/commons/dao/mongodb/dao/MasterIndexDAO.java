@@ -19,6 +19,7 @@
  */
 package biz.bidi.archivee.commons.dao.mongodb.dao;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
@@ -38,9 +39,12 @@ public class MasterIndexDAO extends ArchiveeMongodbDAO<MasterIndex> {
 	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public Query<MasterIndex> find(MasterIndex entity, String customSearchId)
-			throws ArchiveeException {
-		// TODO Auto-generated method stub
+	public Query<MasterIndex> find(MasterIndex entity, String customSearchId) throws ArchiveeException {
+		
+		if(customSearchId.equals(ArchiveeConstants.MASTER_INDEX_WORD_QUERY)) {
+			return find(entity).field("word").equal(entity.getWord());
+		}
+		
 		return null;
 	}
 

@@ -33,6 +33,8 @@ import biz.bidi.archivee.components.archiver.IArchiver;
 @SuppressWarnings("rawtypes")
 public abstract class ArchiverFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
 
+	protected static IArchiveeFactoryManager factoryManager;
+	
 	protected static IArchiveeFactory archiverFactory;
 	
 	public ArchiverFactoryManager() {
@@ -63,9 +65,9 @@ public abstract class ArchiverFactoryManager extends ArchiveeFactoryManager impl
 	 * @throws ArchiveeException 
 	 */
 	@SuppressWarnings("unchecked")
-	public static IArchiver getArchiver() throws ArchiveeException {
+	public IArchiver getArchiver() throws ArchiveeException {
 		IArchiver archiver = null;
-		IArchiveeFactory<IArchiver, Object> factory = instance.getFactoryInstance(IArchiver.class);
+		IArchiveeFactory<IArchiver, Object> factory = factoryManager.getFactoryInstance(IArchiver.class);
 		archiver = factory.createInstance(null);
 		return archiver;
 	}

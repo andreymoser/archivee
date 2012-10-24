@@ -19,6 +19,7 @@
  */
 package biz.bidi.archivee.commons.dao.mongodb.dao;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.Template;
@@ -38,9 +39,15 @@ public class TemplateDAO extends ArchiveeMongodbDAO<Template> {
 	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public Query<Template> find(Template entity, String customSearchId)
-			throws ArchiveeException {
-		// TODO Auto-generated method stub
+	public Query<Template> find(Template entity, String customSearchId) throws ArchiveeException {
+		
+		if(customSearchId.equals(ArchiveeConstants.TEMPLATE_KEY_QUERY)){
+			return find(entity).
+			field("key.patternId").equal(entity.getKey().getPatternId()).
+			field("key.sequence").equal(entity.getKey().getSequence()).
+			field("key.patternPath").equal(entity.getKey().getPatternPath());
+		}
+		
 		return null;
 	}
 

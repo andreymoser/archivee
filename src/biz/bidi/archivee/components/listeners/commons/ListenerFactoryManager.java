@@ -38,6 +38,8 @@ import biz.bidi.archivee.components.listeners.parser.LogParserFactory;
 @SuppressWarnings("rawtypes")
 public abstract class ListenerFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
 
+	protected static IArchiveeFactoryManager factoryManager;
+
 	protected static IArchiveeFactory listenerFactory;
 	protected static IArchiveeFactory fileLogReaderFactory;
 	protected static IArchiveeFactory logParserFactory;
@@ -50,6 +52,8 @@ public abstract class ListenerFactoryManager extends ArchiveeFactoryManager impl
 		listenerFactory = new ListenerFactory(); 
 		fileLogReaderFactory = new LogReaderFactory();
 		logParserFactory = new LogParserFactory();
+		
+		instance = this;
 	}
 
 	/**
@@ -77,17 +81,17 @@ public abstract class ListenerFactoryManager extends ArchiveeFactoryManager impl
 	}
 
 	@SuppressWarnings("unchecked")
-	public static IFileLogReader getFileLogReader(FileListenerThread fileListenerThread) throws ArchiveeException {
+	public IFileLogReader getFileLogReader(FileListenerThread fileListenerThread) throws ArchiveeException {
 		IFileLogReader fileLogReader = null;
-		IArchiveeFactory<IFileLogReader, FileListenerThread> factory = instance.getFactoryInstance(IFileLogReader.class);
+		IArchiveeFactory<IFileLogReader, FileListenerThread> factory = factoryManager.getFactoryInstance(IFileLogReader.class);
 		fileLogReader = factory.createInstance(fileListenerThread);
 		return fileLogReader;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static ILogParser getDateLevelLogParser() throws ArchiveeException {
+	public ILogParser getDateLevelLogParser() throws ArchiveeException {
 		ILogParser logSender = null;
-		IArchiveeFactory<ILogParser, Object> factory = instance.getFactoryInstance(ILogParser.class);
+		IArchiveeFactory<ILogParser, Object> factory = factoryManager.getFactoryInstance(ILogParser.class);
 		logSender = factory.createInstance(null);
 		return logSender;
 	}
@@ -95,7 +99,7 @@ public abstract class ListenerFactoryManager extends ArchiveeFactoryManager impl
 	@SuppressWarnings("unchecked")
 	public IFileListener getFileListener() throws ArchiveeException {
 		IFileListener fileListener = null;
-		IArchiveeFactory<IFileListener, Object> factory = instance.getFactoryInstance(IFileListener.class);
+		IArchiveeFactory<IFileListener, Object> factory = factoryManager.getFactoryInstance(IFileListener.class);
 		fileListener = factory.createInstance(null);
 		return fileListener;
 	}

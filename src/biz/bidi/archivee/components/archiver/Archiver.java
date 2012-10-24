@@ -120,7 +120,7 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 		contextQueue.getKey().setPatternId(message.getPatternId());
 		contextQueue.getKey().setAtQueue(true);
 		
-		for(ContextQueue cq : contextQueueDAO.find(contextQueue)) {
+		for(ContextQueue cq : contextQueueDAO.find(contextQueue, ArchiveeConstants.CONTEXT_QUEUE_NEXT_KEY_QUERY)) {
 			contextQueue = cq;
 			break;
 		}
@@ -129,10 +129,10 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 			contextQueue.getKey().setSequence(new Date().getTime());
 		}
 		
-		if(contextQueue.getStartDate() == null || contextQueue.getStartDate().compareTo(messageDate) == -1) {
+		if(contextQueue.getStartDate() == null || contextQueue.getStartDate().compareTo(messageDate) == 1) {
 			contextQueue.setStartDate(messageDate);
 		}
-		if(contextQueue.getEndDate() == null || contextQueue.getEndDate().compareTo(messageDate) == 1) {
+		if(contextQueue.getEndDate() == null || contextQueue.getEndDate().compareTo(messageDate) == -1) {
 			contextQueue.setEndDate(messageDate);
 		}
 		
@@ -153,7 +153,7 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 		template.getKey().setPatternId(message.getPatternId());
 		template.getKey().setPatternPath(patternPath);
 		
-		for(Template t : templateDAO.find(template)) {
+		for(Template t : templateDAO.find(template,ArchiveeConstants.TEMPLATE_KEY_QUERY)) {
 			template = t;
 			break;
 		}
@@ -199,13 +199,13 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 			Template templateAux = new Template();
 			templateAux.getKey().setPatternId(pattern.getId());
 			
-			for(Template t : templateDAO.find(templateAux)) {
+			for(Template t : templateDAO.find(templateAux, ArchiveeConstants.TEMPLATE_KEY_QUERY)) {
 				DictionaryQueue dictionaryQueue = new DictionaryQueue();
 				dictionaryQueue.getKey().setAtQueue(!isAtQueue);
 				dictionaryQueue.getKey().setTemplateId(t.getId());
 				dictionaryQueue.getKey().setSequence(contextQueue.getKey().getSequence());
 				
-				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue)) {
+				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue, ArchiveeConstants.CONTEXT_QUEUE_KEY_QUERY)) {
 					dq.getKey().setAtQueue(isAtQueue);
 					dictionaryQueueDAO.save(dq);
 				}
@@ -214,25 +214,23 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 		
 		ArrayList<String> words = ArchiveePatternUtils.getPatternValues(message.getMessage());		
 		
-		for(int i = 0; i < words.size(); i++) {
-			String word = words.get(i);
-			
-			PatternPath patternPath2 = new PatternPath();
-			patternPath2.getValues().addAll(patternPath.getValues());
-			for(int j=i+1; j < patternPath.getValues().size(); j++) {
-				patternPath2.getValues().remove(j);
-			}
+		String word = "";
+		int index = 0;
+		int i = 0;
+		while(i < words.size()) {
 			
 			int j=0;
-			for(j=0; j < patternPath2.getValues().get(i).getWords(); j++) {
+			for(j=0; j < patternPath.getValues().get(index).getWords(); j++) {
+				word = words.get(i+j);
+				
 				DictionaryQueue dictionaryQueue = new DictionaryQueue();
-				dictionaryQueue.getKey().setElementIndex(i);
+				dictionaryQueue.getKey().setElementIndex(index);
 				dictionaryQueue.getKey().setSubElementIndex(j);
 				dictionaryQueue.getKey().setTemplateId(template.getId());
 				dictionaryQueue.getKey().setSequence(contextQueue.getKey().getSequence());
 				dictionaryQueue.getKey().setAtQueue(isAtQueue);
 				
-				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue)) {
+				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue,ArchiveeConstants.DICTIONARY_QUEUE_KEY_QUERY)) {
 					dictionaryQueue = dq;
 					break;
 				}
@@ -245,13 +243,10 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 				dictionaryQueue.getCounts().put(word, count);
 				
 				dictionaryQueueDAO.save(dictionaryQueue);
-				
-				i++;
-				if(i >= words.size()) {
-					break;
-				}
-				word = words.get(i);
 			}
+			
+			i = i + j;
+			index++;
 		}
 		
 		return isAtQueue;

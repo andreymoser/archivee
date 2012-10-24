@@ -33,13 +33,16 @@ import biz.bidi.archivee.components.masteridx.commons.MasterIndexerManager;
 import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
 
 @MessageDriven( 
-		mappedName = "jms.archivee.connection.patternTopic",
-		name = "MasterIndexerBean",
-		activationConfig = {
-				@ActivationConfigProperty(
-						propertyName = "destinationType", 
-						propertyValue = "javax.jms.Queue")
-							})
+	mappedName = "jms.archivee.connection.patternTopic",
+	name = "MasterIndexerBean",
+	activationConfig = {
+			@ActivationConfigProperty(
+					propertyName = "destinationType", 
+					propertyValue = "javax.jms.Topic"),
+			@ActivationConfigProperty(
+					propertyName = "subscriptionDurability", 
+					propertyValue = "Durable"),
+			})
 
 /**
  * @author Andrey Bidinotto
@@ -65,7 +68,7 @@ public class MasterIndexerPatternMDB implements MessageListener {
 			String xml = "";
 			try {
 				xml = textMessage.getText();
-				masterIndexer = MasterIndexerManager.getMasterIndexer();
+				masterIndexer = MasterIndexerManager.getInstance().getMasterIndexer();
 				masterIndexer.indexMasterData((PatternMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
 				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);

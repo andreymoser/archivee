@@ -21,14 +21,13 @@ package biz.bidi.archivee.test.sandbox.jms;
 
 import java.io.File;
 
-import biz.bidi.archivee.commons.dao.mongodb.dao.PatternDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.mongodb.Pattern;
+import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
+import biz.bidi.archivee.components.listeners.commons.ListenerManager;
 import biz.bidi.archivee.components.listeners.parser.DateLevelLogParser;
-import biz.bidi.archivee.components.logparser.parser.MessageLogParser;
 import biz.bidi.archivee.test.commons.FileReaderUtilsTest;
 
 /**
@@ -50,10 +49,10 @@ public class MessageLogParserLab {
 			FileReaderUtilsTest fileReader = new FileReaderUtilsTest(new File(logFile));
 			
 			DateLevelLogParser dateLevelParser = new DateLevelLogParser();
-			MessageLogParser messageLogParser = new MessageLogParser();
-			PatternDAO patternDAO = new PatternDAO();
+//			MessageLogParser messageLogParser = new MessageLogParser();
+//			PatternDAO patternDAO = new PatternDAO();
 			
-//			ILogSender logSender = ListenerManager.getInstance().getLogSender(); 
+			ILogSender logSender = ListenerManager.getInstance().getLogSender(); 
 			
 			Long currentTime = System.currentTimeMillis();
 			
@@ -71,18 +70,18 @@ public class MessageLogParserLab {
 					dateLevelParser.parseLog(message);
 					
 					if(message.getDate() != null && !message.getDate().isEmpty()) {
-						//logSender.sendLogMessage(message);
-						messageLogParser.parseLog(message);
+						logSender.sendLogMessage(message);
+//						messageLogParser.parseLog(message);
 						
 						messages++;
 						System.out.println(("#" + messages + " - " +(System.currentTimeMillis() - currentTime)/1000) + "secs - " + line);
 						System.out.println(ArchiveePatternUtils.convertToSimpleRegex(line));
 						
-//						try {
-//							Thread.sleep(500);
-//						} catch (InterruptedException e) {
-//							e.printStackTrace();
-//						}
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 						
 						if(messages > 300) {
 							break;
@@ -98,9 +97,9 @@ public class MessageLogParserLab {
 			System.out.println("Elapssed time: " + ((System.currentTimeMillis() - currentTime)/1000) + "secs.");
 			
 			
-			for(Pattern pattern : patternDAO.find(new Pattern())) {
-				System.out.println("Pattern Tree data:\n" + pattern.getTreeStringData());
-			}
+//			for(Pattern pattern : patternDAO.find(new Pattern())) {
+//				System.out.println("Pattern Tree data:\n" + pattern.getTreeStringData());
+//			}
 		} catch (ArchiveeException e) {
 			ArchiveeException.log(e, "Generic error", this);
 		}

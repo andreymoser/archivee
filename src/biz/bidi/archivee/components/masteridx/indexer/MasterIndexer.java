@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import org.bson.types.ObjectId;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
@@ -71,7 +72,7 @@ public class MasterIndexer extends ArchiveeManagedComponent implements IMasterIn
 			masterIndex.setWord(word);
 			
 			boolean found = false;
-			for(MasterIndex idx : masterIndexDAO.find(masterIndex)) {
+			for(MasterIndex idx : masterIndexDAO.find(masterIndex,ArchiveeConstants.MASTER_INDEX_WORD_QUERY)) {
 				updateMasterIndex(idx, pattern);
 				masterIndex = idx;
 				
