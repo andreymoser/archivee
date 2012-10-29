@@ -17,47 +17,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
+package biz.bidi.archivee.commons.interfaces;
 
-import org.bson.types.ObjectId;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.model.xml.PatternMessage;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 26, 2012
+ * @since Oct 28, 2012
  */
-public class PatternKey {
+public interface IArchiverSender {
+
+	/**
+	 * Sends the pattern message containing the log data to be archived
+	 * @param line
+	 * @throws ArchiveeException
+	 */
+	public void sendPatternMessage(PatternMessage message) throws ArchiveeException;
 	
-	private ObjectId appId;
-	
-	private long threadId;
-
-	/**
-	 * @return the appId
-	 */
-	public ObjectId getAppId() {
-		return appId;
-	}
-
-	/**
-	 * @param appId the appId to set
-	 */
-	public void setAppId(ObjectId appId) {
-		this.appId = appId;
-	}
-
-	/**
-	 * @return the threadId
-	 */
-	public long getThreadId() {
-		return threadId;
-	}
-
-	/**
-	 * @param threadId the threadId to set
-	 */
-	public void setThreadId(long threadId) {
-		this.threadId = threadId;
-	}
-
 }

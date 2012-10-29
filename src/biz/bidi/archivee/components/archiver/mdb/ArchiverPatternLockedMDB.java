@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.logparser.mdb;
+package biz.bidi.archivee.components.archiver.mdb;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
@@ -27,31 +27,31 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.interfaces.ILogParser;
-import biz.bidi.archivee.commons.model.xml.ParserMessage;
+import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
-import biz.bidi.archivee.components.logparser.commons.LogParserManager;
+import biz.bidi.archivee.components.archiver.IArchiver;
+import biz.bidi.archivee.components.archiver.commons.ArchiverManager;
 
 @MessageDriven( 
-		mappedName = "jms.archivee.connection.inputQueue",
-		name = "LogParserBean",
-		activationConfig = {
-				@ActivationConfigProperty(
-						propertyName = "destinationType", 
-						propertyValue = "javax.jms.Queue")
-							})
+	mappedName = "jms.archivee.connection.archiverQueue",
+	name = "ArchiverPatternLockedBean",
+	activationConfig = {
+			@ActivationConfigProperty(
+					propertyName = "destinationType", 
+					propertyValue = "javax.jms.Queue")
+			})
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 11, 2012
+ * @since Sep 29, 2012
  */
-public class LogInputQueueMDB implements MessageListener {
+public class ArchiverPatternLockedMDB implements MessageListener {
 
 	/**
-	 * The logParser instance
+	 * The archiver instance
 	 */
-	private ILogParser logParser;
+	private IArchiver archiver;
 	
 	/**
 	 * {@inheritDoc}
@@ -65,12 +65,12 @@ public class LogInputQueueMDB implements MessageListener {
 			String xml = "";
 			try {
 				xml = textMessage.getText();
-				logParser = LogParserManager.getInstance().getLogParser();
-				logParser.parseLog((ParserMessage) ArchiveeXmlParser.convertoToObject(xml));
+				archiver = ArchiverManager.getInstance().getArchiver();
+				archiver.archiveData((PatternMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
 				ArchiveeException.error(e,"Unable to read mdb text message",this,textMessage);
 			} catch (ArchiveeException e) {
-				ArchiveeException.error(e,"Unable to parse log line",xml,logParser);
+				ArchiveeException.error(e,"Unable to parse log line",this,xml,archiver);
 			}
 		} else {
 			ArchiveeException.logError("Invalid mdb message, expected TextMessage",this,message);

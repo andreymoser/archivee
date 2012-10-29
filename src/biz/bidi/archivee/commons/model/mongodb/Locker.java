@@ -19,67 +19,93 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.bson.types.ObjectId;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 27, 2012
  */
-@Entity(value="master_index", noClassnameStored=true)
-public class MasterIndex implements IEntity {
+@Entity(value="locker", noClassnameStored=true)
+public class Locker implements IEntity {
 
 	@Id
-	private Object id;
+	private ObjectId id;
 	
-	private MasterIndexKey key;
+	@Indexed(unique=true)
+	private LockerKey key;
 	
-	private HashMap<ObjectId, ArrayList<ObjectId>> patternsByAppId;
-
 	/**
-	 * @param word
-	 * @param patternsByAppId
+	 * The local thread
 	 */
-	public MasterIndex() {
-		super();
-		this.key = new MasterIndexKey();
-		this.patternsByAppId = new HashMap<ObjectId, ArrayList<ObjectId>>();
+	@Indexed
+	private long localThreadId;
+
+	@Indexed
+	private boolean isLocked;
+
+	public Locker() {
+		key = new LockerKey();
+	}
+	
+	/**
+	 * @return the id
+	 */
+	public ObjectId getId() {
+		return id;
 	}
 
 	/**
-	 * @return the patternsByAppId
+	 * @param id the id to set
 	 */
-	public HashMap<ObjectId, ArrayList<ObjectId>> getPatternsByAppId() {
-		return patternsByAppId;
-	}
-
-	/**
-	 * @param patternsByAppId the patternsByAppId to set
-	 */
-	public void setPatternsByAppId(
-			HashMap<ObjectId, ArrayList<ObjectId>> patternsByAppId) {
-		this.patternsByAppId = patternsByAppId;
+	public void setId(ObjectId id) {
+		this.id = id;
 	}
 
 	/**
 	 * @return the key
 	 */
-	public MasterIndexKey getKey() {
+	public LockerKey getKey() {
 		return key;
 	}
 
 	/**
 	 * @param key the key to set
 	 */
-	public void setKey(MasterIndexKey key) {
+	public void setKey(LockerKey key) {
 		this.key = key;
 	}
 
-	
+	/**
+	 * @return the localThreadId
+	 */
+	public long getLocalThreadId() {
+		return localThreadId;
+	}
+
+	/**
+	 * @param localThreadId the localThreadId to set
+	 */
+	public void setLocalThreadId(long localThreadId) {
+		this.localThreadId = localThreadId;
+	}
+
+	/**
+	 * @return the isLocked
+	 */
+	public boolean isLocked() {
+		return isLocked;
+	}
+
+	/**
+	 * @param isLocked the isLocked to set
+	 */
+	public void setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
+	}
+
 }

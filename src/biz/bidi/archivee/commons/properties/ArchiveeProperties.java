@@ -129,11 +129,11 @@ public class ArchiveeProperties {
 				try {
 					method.invoke(object, param);
 				} catch (IllegalArgumentException e) {
-					throw new ArchiveeException(e,"Error while trying to load properties for " + object.getClass().getName() + "IllegalArgumentException",object,prefixKey);
+					throw new ArchiveeException(e,"Error while trying to load properties for " + object.getClass().getName() + "IllegalArgumentException",ArchiveeProperties.class,object,prefixKey);
 				} catch (IllegalAccessException e) {
-					throw new ArchiveeException(e,"Error while trying to load properties for " + object.getClass().getName() + "IllegalAccessException",object,prefixKey);
+					throw new ArchiveeException(e,"Error while trying to load properties for " + object.getClass().getName() + "IllegalAccessException",ArchiveeProperties.class,object,prefixKey);
 				} catch (InvocationTargetException e) {
-					throw new ArchiveeException(e,"Error while trying to load properties for " + object.getClass().getName() + "InvocationTargetException",object,prefixKey);
+					throw new ArchiveeException(e,"Error while trying to load properties for " + object.getClass().getName() + "InvocationTargetException",ArchiveeProperties.class,object,prefixKey);
 				}
 			}
 		}

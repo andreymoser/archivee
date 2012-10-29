@@ -25,11 +25,21 @@ package biz.bidi.archivee.commons.interfaces;
  * @since Oct 18, 2012
  */
 public interface ILogger {
+	
+	public void debug(Object instance, String message, Object... objects);
 
+	public void debug(Object instance, String message);
+	
+	public void warn(Object instance, String message, Object... objects);
+	
 	public void warn(Object instance, String message);
+	
+	public void info(Object instance, String message, Object... objects);
 	
 	public void info(Object instance, String message);
 	
 	public void error(Object instance, String message);
+	
+	public String getInstancesAttributesValue(Object... objects);
 	
 }

@@ -48,7 +48,8 @@ public class LogQueueDAO extends ArchiveeMongodbDAO<LogQueue> {
 			return find(entity).field("appId").equal(entity.getAppId());
 		}
 		if(customSearchId.equals(ArchiveeConstants.LOG_QUEUE_PATTERN_QUERY)) {
-			return find(entity).field("appId").equal(entity.getAppId()).field("simpleRegex").startsWith(ArchiveePatternUtils.convertToRegex(entity.getSimpleRegex()));
+			return find(entity).field("appId").equal(entity.getAppId()).
+					field("simpleRegex").startsWith(ArchiveePatternUtils.convertToRegex(entity.getSimpleRegex()));
 		}
 		
 		return null;

@@ -68,8 +68,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 			logQueueDAO = LogParserManager.getInstance().getLoqQueueDAO();
 			appDAO = LogParserManager.getInstance().getAppDAO();
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Unable to init LogParser sucessfully",
-					this);
+			ArchiveeException.error(e, "Unable to init LogParser sucessfully",this);
 		}
 	}
 
@@ -88,14 +87,16 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 		
 		Pattern pattern = findPattern(message);
 		if(pattern == null) { //pattern not found
-			processForNewPatterns(message); //find new patterns and stores if successful
-			
-			pattern = findPattern(message);
-			
-			if(pattern == null) { //pattern not found
-				logQueueDAO.save(logQueue); // stores into log queue
-			} else {
-				sendPatternMessage(message, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
+			if(processForNewPatterns(message)) { //find new patterns and stores if successful
+				pattern = findPattern(message);
+				
+				if(pattern == null) { //pattern not found
+					logQueueDAO.save(logQueue); // stores into log queue
+				} else {
+					sendPatternMessage(message, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
+				}
+			} else { //tried to save duplicated pattern
+				logParserSender.sendLogMessage(message); //retry sending same message to same queue
 			}
 		} else { //pattern found
 			LogQueue nextLogQueue = getNextLogQueue();
@@ -107,7 +108,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 				oldMessage.setLevel(logQueue.getLevel());
 				oldMessage.setMessage(logQueue.getMessage());
 				
-				logParserSender.sendLogMessage(oldMessage);
+				logParserSender.sendLogMessage(oldMessage); //re-process message deleted in log queue
 			}
 			
 			sendPatternMessage(message, pattern); // send log + pattern to ArchiveeIndex and ArchiveeContext
@@ -127,26 +128,42 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 	 * @throws ArchiveeException 
 	 * 
 	 */
-	private void processForNewPatterns(ParserMessage message) throws ArchiveeException {
-		
-		Pattern rootPattern = findRootPattern(message.getMessage());
+	private boolean processForNewPatterns(ParserMessage message) throws ArchiveeException {
+		Pattern rootPattern = findRootPattern(message);
 		
 		if(rootPattern == null) { // root pattern not found 
 			rootPattern = findCommonRootPattern(message);
 			
 			if(rootPattern == null) {
-				return;
+				return true;
 			}
 			
-			patternDAO.save(rootPattern);
+			try {
+				patternDAO.save(rootPattern);				
+			} catch (ArchiveeException e) {
+				if(e.isMongodbDuplicateKey()) {
+					return false;
+				}
+				throw e;
+			}	
+			
 		} else { // root pattern found
 			
 			//if found new patterns
 			if(processForNewPatterns(message,rootPattern)) {
-				patternDAO.save(rootPattern);
+				
+				try {
+					patternDAO.save(rootPattern);				
+				} catch (ArchiveeException e) {
+					if(e.isMongodbDuplicateKey()) {
+						return false;
+					}
+					throw e;
+				}	
 			}
 		}
 		
+		return true;
 	}
 
 	/**
@@ -312,6 +329,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 					newPattern.setOffset(offset);
 					newPattern.setValue(simpleRegexLogLine.substring(offset, offset + l));
 					newPattern.setAppId(findAndSaveAppId(message.getName()));
+					newPattern.setThreadId(Thread.currentThread().getId());
 					break;
 				}
 			} else {
@@ -390,7 +408,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 	 * @throws ArchiveeException 
 	 */
 	private Pattern findPattern(ParserMessage message) throws ArchiveeException {
-		Pattern patternFound = findRootPattern(message.getMessage());
+		Pattern patternFound = findRootPattern(message);
 		
 		if(patternFound == null) {
 			return patternFound;
@@ -408,13 +426,16 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 	 * @return
 	 * @throws ArchiveeException 
 	 */
-	private Pattern findRootPattern(String logLine) throws ArchiveeException {
+	private Pattern findRootPattern(ParserMessage message) throws ArchiveeException {
 		Pattern patternFound = null;
 		
-		//TODO optimize this query
-		for(Pattern pattern : patternDAO.find(new Pattern())) {
-			if(pattern != null && ArchiveePatternUtils.matchRegex(logLine, ArchiveePatternUtils.convertSimpleRegexToRegex(pattern.getValue()))) {
-				patternFound = pattern;
+		Pattern pattern = new Pattern();
+		pattern.setAppId(findAndSaveAppId(message.getName()));
+		pattern.setThreadId(Thread.currentThread().getId());
+		
+		for(Pattern p : patternDAO.find(pattern,ArchiveeConstants.PATTERN_APP_QUERY)) {
+			if(p != null && ArchiveePatternUtils.matchRegex(message.getMessage(), ArchiveePatternUtils.convertSimpleRegexToRegex(p.getValue()))) {
+				patternFound = p;
 				break;
 			}
 		}
@@ -430,10 +451,11 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 			patternMessage.setDate(message.getDate());
 			patternMessage.setLevel(message.getLevel());
 			patternMessage.setMessage(message.getMessage());
+			patternMessage.setThreadId(Thread.currentThread().getId());
 			
 			patternSender.sendPatternMessage(patternMessage);
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Error while sending pattern message", patternMessage, message, pattern);
+			ArchiveeException.error(e, "Error while sending pattern message", patternMessage, message, pattern);
 		}
 	}
 	

@@ -76,9 +76,11 @@ public abstract class ArchiveeJMSTopic extends ArchiveeJMSGeneric {
 			
 			connection.start();
 		} catch (JMSException e) {
-			throw new ArchiveeException(e,"Unable to start JMS Topic connection",connectionData,this,connection);
+			throw new ArchiveeException(e,"Unable to start JMS Topic connection",this,connectionData,connection);
 		} catch (NamingException e) {
-			throw new ArchiveeException(e,"Unable to start JMS Topic connection by invalid connection data or unresolved application server",connectionData,this,connection);
+			throw new ArchiveeException(e,"Unable to start JMS Topic connection by invalid connection data or unresolved application server",this,connectionData,connection);
+		} catch (Exception e) {
+			throw new ArchiveeException(e,"Unable to start JMS Topic connection",this,connectionData,connection);
 		}
 	}
 
@@ -95,7 +97,7 @@ public abstract class ArchiveeJMSTopic extends ArchiveeJMSGeneric {
 			textMessage.setText(message);
 			publisher.publish(textMessage);
 		} catch (JMSException e) {
-			throw new ArchiveeException(e,"Unable to send message to JMS topic",connectionData,textMessage,this);			
+			throw new ArchiveeException(e,"Unable to send message to JMS topic",this,connectionData,textMessage);			
 		}
 	}
 
@@ -109,7 +111,7 @@ public abstract class ArchiveeJMSTopic extends ArchiveeJMSGeneric {
 		try {
 			connection.close();
 		} catch (JMSException e) {
-			throw new ArchiveeException(e,"Unable to close JMS topic connection",connectionData,this);			
+			throw new ArchiveeException(e,"Unable to close JMS topic connection",this,connectionData);			
 		}
 	}
 

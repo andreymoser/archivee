@@ -73,17 +73,19 @@ public class MessageLogParserLab {
 						logSender.sendLogMessage(message);
 //						messageLogParser.parseLog(message);
 						
+						long seconds = ((System.currentTimeMillis() - currentTime)/1000);
 						messages++;
-						System.out.println(("#" + messages + " - " +(System.currentTimeMillis() - currentTime)/1000) + "secs - " + line);
+						
+						System.out.println("#" + messages + " - " + seconds + "secs - " + "TPS: " + (messages/(seconds<1?1:seconds)) + " - " + line);
 						System.out.println(ArchiveePatternUtils.convertToSimpleRegex(line));
 						
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+//						try {
+//							Thread.sleep(150);
+//						} catch (InterruptedException e) {
+//							e.printStackTrace();
+//						}
 						
-						if(messages > 300) {
+						if(messages > 80000) {
 							break;
 						}
 					} else {
@@ -94,14 +96,16 @@ public class MessageLogParserLab {
 				}
 			}
 
-			System.out.println("Elapssed time: " + ((System.currentTimeMillis() - currentTime)/1000) + "secs.");
+			long seconds = ((System.currentTimeMillis() - currentTime)/1000);
+			
+			System.out.println("Elapssed time: " + seconds + "secs.");
 			
 			
 //			for(Pattern pattern : patternDAO.find(new Pattern())) {
 //				System.out.println("Pattern Tree data:\n" + pattern.getTreeStringData());
 //			}
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Generic error", this);
+			ArchiveeException.error(e, "Generic error", this);
 		}
 		
 	}

@@ -20,6 +20,7 @@
 package biz.bidi.archivee.commons.factories;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.IArchiverSender;
 import biz.bidi.archivee.commons.interfaces.ICompressorSender;
 import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.commons.interfaces.IPatternSender;
@@ -41,6 +42,7 @@ public class JMSFactoryManager implements IArchiveeFactoryManager {
 	protected IArchiveeFactory logSenderFactory;
 	protected IArchiveeFactory patternSenderFactory;
 	protected IArchiveeFactory compressorSenderFactory;
+	protected IArchiveeFactory archiverSenderFactory;
 	
 	public JMSFactoryManager(IArchiveeFactoryManager archiveeFactoryManager) {
 		this.archiveeFactoryManager = archiveeFactoryManager;
@@ -48,6 +50,7 @@ public class JMSFactoryManager implements IArchiveeFactoryManager {
 		logSenderFactory = new LogSenderFactory();
 		patternSenderFactory = new PatternSenderFactory();
 		compressorSenderFactory = new CompressorSenderFactory();
+		archiverSenderFactory = new ArchiverSenderFactory();
 	}
 
 	/**
@@ -78,6 +81,9 @@ public class JMSFactoryManager implements IArchiveeFactoryManager {
 			}
 			if(classObject == ICompressorSender.class) {
 				factory = compressorSenderFactory;
+			}
+			if(classObject == IArchiverSender.class) {
+				factory = archiverSenderFactory;
 			}
 		}
 		

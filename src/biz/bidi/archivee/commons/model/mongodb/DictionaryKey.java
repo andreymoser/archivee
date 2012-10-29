@@ -111,5 +111,5 @@ public class DictionaryKey {
 	public void setSubElementIndex(int subElementIndex) {
 		this.subElementIndex = subElementIndex;
 	}
-	
+
 }

@@ -70,7 +70,7 @@ public class ArchiveeMongoDBTests {
 			
 			
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Generic error", this);
+			ArchiveeException.error(e, "Generic error", this);
 		}
 	}
 	

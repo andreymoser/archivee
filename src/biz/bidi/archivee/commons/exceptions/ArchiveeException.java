@@ -19,10 +19,14 @@
  */
 package biz.bidi.archivee.commons.exceptions;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import biz.bidi.archivee.commons.utils.ArchiveeLogger;
+
+import com.mongodb.MongoException;
 
 /**
  * @author Andrey Bidinotto
@@ -33,20 +37,24 @@ import biz.bidi.archivee.commons.utils.ArchiveeLogger;
 public class ArchiveeException extends Exception implements IArchiveeException {
 
 	protected String message;
+	protected Object instanceError;
 	protected Object[] objects;
 	protected Exception e;
-	
-	public ArchiveeException(Exception e) {
-		this.e = e;
-	}
+	protected ArchiveeError error;
 	
 	public ArchiveeException(Exception e, Object... objects) {
 		this.e = e;
+		if(objects.length > 0 && objects[0] != null) {
+			instanceError = objects[0];
+		}
 		this.objects = objects;
 	}
 	
 	public ArchiveeException(String message, Object... objects) {
 		this.message = message;
+		if(objects.length > 0 && objects[0] != null) {
+			instanceError = objects[0];
+		}
 		this.objects = objects;
 	}
 	
@@ -54,77 +62,38 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 		this.e = e;
 		this.message = message;
 		this.objects = objects;
+		if(objects.length > 0 && objects[0] != null) {
+			instanceError = objects[0];
+		}
 	}
 	
-	public static void log(Object instanceLog, String message, Object... objects) {
+	public static void logError(String message, Object... objects) {
 		ArchiveeException exception = new ArchiveeException(null,message,objects);
 		exception.error(null,null);
 	}
 	
-	public static void log(Exception e, String message, Object... objects) {
+	public static void error(Exception e, String message, Object... objects) {
 		ArchiveeException exception = null;
 		if(e instanceof ArchiveeException) {
-			exception  = (ArchiveeException) e;
+			exception = (ArchiveeException) e;
+			exception.error(null,null);
+			exception = new ArchiveeException(message,objects);
 		} else {
 			exception  = new ArchiveeException(e,message,objects);
 		}
 		exception.error(null,null);
-		
 	}
 	
 	private String error(Object... objects) {
+		if(this.objects == null || this.objects.length == 0) {
+			this.objects = objects;
 			
 			if(this.objects == null || this.objects.length == 0) {
-				this.objects = objects;
-				
-				if(this.objects == null || this.objects.length == 0) {
-					return "";
-				}
+				return "";
 			}
-			
-			String objectMessage = "";
-			for(Object object : this.objects) {
-				if(object == null) {
-					continue;
-				}
-				
-				objectMessage+="{ObjectName="+object.getClass().getName() + ";";
-				for(Method method : object.getClass().getMethods()) {
-					if(!(method.getName().startsWith("get") && method.getName().length() > 3 || 
-					   method.getName().startsWith("is"))) {
-						continue;
-					}
-					Class c = method.getReturnType();
-					
-					try {
-						if(c.equals(String.class)) {
-							objectMessage+=method.getName().substring(3) + "=\"" + method.invoke(object, null) + "\";";
-						} else if(c.equals(Integer.class)) {
-							objectMessage+=method.getName().substring(3) + "(int)=" + method.invoke(object, null) + ";";						
-						} else if(c.equals(Double.class)) {
-							objectMessage+=method.getName().substring(3) + "(double)=" + method.invoke(object, null) + ";";						
-						} else if(c.equals(Long.class)) {
-							objectMessage+=method.getName().substring(3) + "(long)=" + method.invoke(object, null) + ";";						
-						} else if(c.equals(Float.class)) {
-							objectMessage+=method.getName().substring(3) + "(float)=" + method.invoke(object, null) + ";";						
-						} else if(c.equals(Boolean.class)) {
-							objectMessage+=method.getName() + "(boolean)=" + method.invoke(object, null) + ";";						
-						} else {
-							objectMessage+=method.getName().substring(3) + "(" + c.getSimpleName() + ")=" + method.invoke(object, null) + ";";						
-						}
-					} catch (IllegalArgumentException e) {
-						//ignore
-					} catch (IllegalAccessException e) {
-						//ignore
-					} catch (InvocationTargetException e) {
-						//ignore
-					}
-				}
-				objectMessage+="}\t";
-			}
-//			System.out.println(objectMessage);
-			
-			return objectMessage;
+		}
+		
+		return ArchiveeLogger.instance.getInstancesAttributesValue(this.objects);
 	}
 
 	/**
@@ -137,24 +106,65 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 		if(this.message == null || this.message == "") {
 			this.message = message;
 		}
-		
-//		System.out.println(this.getClass().getName()+":"+this.message);
-		ArchiveeLogger.instance.error(this, message);
-		if(e !=  null) {
-//			System.out.println(e.getClass().getName()+":"+e.getMessage());
-			ArchiveeLogger.instance.error(e, e.getMessage());
+		if(this.objects == null || this.objects.length == 0) {
+			this.objects = objects;
+		}
+		if(instanceError == null) {
+			if(this.objects == null && this.objects.length > 0) {
+				instanceError = this.objects[0];
+			}
+		}
+		if(instanceError == null) {
+			instanceError = this;
 		}
 		
 		String objectsString = error(objects);
-		if(objectsString != null || !objectsString.isEmpty()) {
-			ArchiveeLogger.instance.error(this, objectsString);
+		
+		if(e != null) {
+			if(e instanceof ArchiveeException) {
+				ArchiveeException ae = (ArchiveeException) e; 
+				ae.error(null, null);
+			} else {
+				ArchiveeLogger.instance.error(e, e.getMessage() + " - " + getStackTrace(e));
+			}
+		}
+		ArchiveeLogger.instance.error(instanceError, this.message + " " + objectsString + " - " + getStackTrace(this));
+	}
+	
+	private static String getStackTrace(Exception e) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		return sw.toString();
+	}
+	
+	public boolean isMongodbDuplicateKey() {
+		if(e == null) {
+			return false;
 		}
 		
-		if(e !=  null) {
-			e.printStackTrace();
-		} else {
-			this.printStackTrace();
+		if(e instanceof MongoException) {
+			MongoException me = (MongoException) e; 
+			if(me.getCode() == 11000) {
+				return true;
+			}
 		}
+		
+		return false;
+	}
+
+	/**
+	 * @return the error
+	 */
+	public ArchiveeError getError() {
+		return error;
+	}
+
+	/**
+	 * @param error the error to set
+	 */
+	public void setError(ArchiveeError error) {
+		this.error = error;
 	}
 	
 }

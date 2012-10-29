@@ -19,6 +19,7 @@
  */
 package biz.bidi.archivee.commons.dao.mongodb.dao;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
@@ -39,7 +40,13 @@ public class PatternDAO extends ArchiveeMongodbDAO<Pattern> {
 	 */
 	@Override
 	public Query<Pattern> find(Pattern entity, String customSearchId) throws ArchiveeException {
-		//TODO custom find
+		
+		if(customSearchId.equals(ArchiveeConstants.PATTERN_APP_QUERY)){
+			return find(entity).
+			field("key.appId").equal(entity.getKey().getAppId()).
+			field("key.threadId").equal(entity.getKey().getThreadId());
+		}
+		
 		return null;
 	}
 

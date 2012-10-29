@@ -52,7 +52,7 @@ public class ArchiveeDateUtils implements IArchiveePropertiesLoader {
 		try {
 			loadProperties("");
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Unable to load common date properties", this);
+			ArchiveeException.error(e, "Unable to load common date properties", this);
 		}
 	}
 	
@@ -67,7 +67,7 @@ public class ArchiveeDateUtils implements IArchiveePropertiesLoader {
 			DateFormat dateFormat = new SimpleDateFormat(instance.getSimpleDateFormat(),new Locale(instance.getDateLocale()));
 			date = dateFormat.parse(dateString);
 		} catch (ParseException e) {
-			ArchiveeException.log(e, "Error on string to date conversion: " + dateString, dateString,instance);
+			ArchiveeException.error(e, "Error on string to date conversion: " + dateString,ArchiveeDateUtils.class, dateString,instance);
 		}
 		
 		return date;

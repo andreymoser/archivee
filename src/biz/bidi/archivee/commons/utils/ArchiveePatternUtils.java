@@ -343,9 +343,15 @@ public class ArchiveePatternUtils {
 		String simpleRegex = convertToSimpleRegex(message);
 		
 		int i = 0;
+		
+		PatternPathEntry value = new PatternPathEntry();
+		value.setIndex(0);
+		value.setWords(getPatternValues(pattern.getValue()).size());
+		patternPath.getValues().add(value);
+		
 		for(PatternChild p : pattern.getPatterns()) {
 			if(simpleRegex.startsWith(p.getValue(), p.getOffset())) {
-				PatternPathEntry value = new PatternPathEntry();
+				value = new PatternPathEntry();
 				value.setIndex(i);
 				value.setWords(getPatternValues(p.getValue()).size());
 				patternPath.getValues().add(value);

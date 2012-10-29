@@ -46,7 +46,7 @@ public class JMSLogParserSender extends ArchiveeJMSQueue implements ILogSender, 
 		try {
 			this.open();
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Error while connecting to queue", this);
+			ArchiveeException.error(e, "Error while connecting to queue", this);
 		}
 	}
 	

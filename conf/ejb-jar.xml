@@ -15,6 +15,10 @@
   		<ejb-class>biz.bidi.archivee.components.archiver.mdb.ArchiverPatternMDB</ejb-class>
   	</message-driven>
   	<message-driven>
+  		<ejb-name>ArchiverPatternLockedBean</ejb-name>
+  		<ejb-class>biz.bidi.archivee.components.archiver.mdb.ArchiverPatternLockedMDB</ejb-class>
+  	</message-driven>
+  	<message-driven>
   		<ejb-name>CompressorBean</ejb-name>
   		<ejb-class>biz.bidi.archivee.components.compressor.mdb.CompressorMDB</ejb-class>
   	</message-driven>

@@ -19,32 +19,22 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-import org.bson.types.ObjectId;
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 26, 2012
+ * @since Oct 26, 2012
  */
-public class PatternKey {
-	
-	private ObjectId appId;
-	
+public class LockerKey {
+
+	/**
+	 * The threadId dataslot
+	 */
 	private long threadId;
 
 	/**
-	 * @return the appId
+	 * The component id
 	 */
-	public ObjectId getAppId() {
-		return appId;
-	}
-
-	/**
-	 * @param appId the appId to set
-	 */
-	public void setAppId(ObjectId appId) {
-		this.appId = appId;
-	}
+	private int componentId;
 
 	/**
 	 * @return the threadId
@@ -60,4 +50,18 @@ public class PatternKey {
 		this.threadId = threadId;
 	}
 
+	/**
+	 * @return the componentId
+	 */
+	public int getComponentId() {
+		return componentId;
+	}
+
+	/**
+	 * @param componentId the componentId to set
+	 */
+	public void setComponentId(int componentId) {
+		this.componentId = componentId;
+	}
+	
 }

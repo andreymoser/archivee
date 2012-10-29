@@ -21,6 +21,10 @@ package biz.bidi.archivee.commons.model.mongodb;
 
 import org.bson.types.ObjectId;
 
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+
+import com.google.code.morphia.annotations.Transient;
+
 
 /**
  * @author Andrey Bidinotto
@@ -31,9 +35,12 @@ public class TemplateKey {
 
 	private ObjectId patternId;
 	
+	@Transient
 	private PatternPath patternPath;
 	
-	private int sequence; 
+	private String path;
+	
+	private int sequence;
 
 	public TemplateKey() {
 		patternPath = new PatternPath();
@@ -57,7 +64,27 @@ public class TemplateKey {
 	 * @return the patternPath
 	 */
 	public PatternPath getPatternPath() {
-		return patternPath;
+		
+		this.patternPath = new PatternPath();
+		
+		for(String values : path.split("|")) {
+			PatternPathEntry entry = new PatternPathEntry();
+			int i = 0;
+			for(String value : values.split(";")) {
+				if(i == 0) {
+					entry.setIndex(Integer.parseInt(value));
+				} else if(i == 1) {
+					entry.setWords(Integer.parseInt(value));
+				} else {
+					ArchiveeException.logError("Warning: Invalid element on path -> TemplateKey.getPatternPath()",path,values,value);
+					break;
+				}
+				i++;
+			}
+			this.patternPath.getValues().add(entry);
+		}
+		
+		return this.patternPath;
 	}
 
 	/**
@@ -65,6 +92,15 @@ public class TemplateKey {
 	 */
 	public void setPatternPath(PatternPath patternPath) {
 		this.patternPath = patternPath;
+		
+		String path = "";
+		int i = 0;
+		for(PatternPathEntry entry : patternPath.getValues()) {
+			i++;
+			path = path + entry.getIndex() + ";" +  entry.getWords() + (i==patternPath.getValues().size()?"":"|");
+		}
+		
+		setPath(path);
 	}
 
 	/**
@@ -80,5 +116,19 @@ public class TemplateKey {
 	public void setSequence(int sequence) {
 		this.sequence = sequence;
 	}
-	
+
+	/**
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
+	}
+
+	/**
+	 * @param path the path to set
+	 */
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 }

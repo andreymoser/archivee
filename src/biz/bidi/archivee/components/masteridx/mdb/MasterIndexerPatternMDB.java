@@ -20,14 +20,17 @@
 package biz.bidi.archivee.components.masteridx.mdb;
 
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJBException;
 import javax.ejb.MessageDriven;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import biz.bidi.archivee.commons.exceptions.ArchiveeError;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
+import biz.bidi.archivee.commons.utils.ArchiveeLogger;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 import biz.bidi.archivee.components.masteridx.commons.MasterIndexerManager;
 import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
@@ -69,14 +72,14 @@ public class MasterIndexerPatternMDB implements MessageListener {
 			try {
 				xml = textMessage.getText();
 				masterIndexer = MasterIndexerManager.getInstance().getMasterIndexer();
-				masterIndexer.indexMasterData((PatternMessage) ArchiveeXmlParser.convertoToObject(xml));
+//				masterIndexer.indexMasterData((PatternMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
-				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);
+				ArchiveeException.error(e,"Unable to read mdb text message",this,textMessage);
 			} catch (ArchiveeException e) {
-				ArchiveeException.log(this,"Unable to parse log line",xml,masterIndexer);
+				ArchiveeException.error(e,"Unable to process master indexes",this,xml,masterIndexer);
 			}
 		} else {
-			ArchiveeException.log(this,"Invalid mdb message, expected TextMessage",message);
+			ArchiveeException.logError("Invalid mdb message, expected TextMessage",this,message);
 		}
 	}
 

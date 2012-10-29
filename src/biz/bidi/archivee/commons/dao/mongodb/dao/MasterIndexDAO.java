@@ -41,8 +41,10 @@ public class MasterIndexDAO extends ArchiveeMongodbDAO<MasterIndex> {
 	@Override
 	public Query<MasterIndex> find(MasterIndex entity, String customSearchId) throws ArchiveeException {
 		
-		if(customSearchId.equals(ArchiveeConstants.MASTER_INDEX_WORD_QUERY)) {
-			return find(entity).field("word").equal(entity.getWord());
+		if(customSearchId.equals(ArchiveeConstants.MASTER_INDEX_KEY_QUERY)) {
+			return find(entity).
+				   field("key.word").equal(entity.getKey().getWord()).
+				   field("key.threadId").equal(entity.getKey().getThreadId());
 		}
 		
 		return null;

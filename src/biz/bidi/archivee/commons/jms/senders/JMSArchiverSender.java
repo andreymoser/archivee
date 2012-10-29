@@ -20,9 +20,9 @@
 package biz.bidi.archivee.commons.jms.senders;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.interfaces.ICompressorSender;
+import biz.bidi.archivee.commons.interfaces.IArchiverSender;
 import biz.bidi.archivee.commons.jms.ArchiveeJMSQueue;
-import biz.bidi.archivee.commons.model.xml.CompressorMessage;
+import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.properties.ArchiveeProperties;
 import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
@@ -30,16 +30,16 @@ import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Oct 5, 2012
+ * @since Oct 28, 2012
  */
-public class JMSCompressorSender extends ArchiveeJMSQueue implements ICompressorSender, IArchiveePropertiesLoader {
+public class JMSArchiverSender extends ArchiveeJMSQueue implements IArchiverSender, IArchiveePropertiesLoader {
 
 	/**
 	 * The connection name
 	 */
 	private String connectionName;
 	
-	public JMSCompressorSender() {
+	public JMSArchiverSender() {
 		super();
 		loadProperties(this.getClass().getSimpleName() + ".");
 
@@ -53,10 +53,10 @@ public class JMSCompressorSender extends ArchiveeJMSQueue implements ICompressor
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.interfaces.ICompressorSender#sendCompressorMessage(biz.bidi.archivee.commons.model.xml.CompressorMessage)
+	 * @see biz.bidi.archivee.commons.interfaces.IPatternSender#sendPatternMessage(biz.bidi.archivee.commons.model.xml.PatternMessage)
 	 */
 	@Override
-	public void sendCompressorMessage(CompressorMessage message) throws ArchiveeException {
+	public void sendPatternMessage(PatternMessage message) throws ArchiveeException {
 		send(ArchiveeXmlParser.convertoToXml(message));
 	}
 

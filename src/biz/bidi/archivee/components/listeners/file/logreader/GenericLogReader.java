@@ -126,7 +126,7 @@ public abstract class GenericLogReader implements IFileLogReader {
 					break;
 			}
 		} catch (Exception e) {
-			throw new ArchiveeException("File attribute error",this,logFile,lastModifiedTime);
+			throw new ArchiveeException(e,"File attribute error",this,logFile,lastModifiedTime);
 		}
 	}
 	

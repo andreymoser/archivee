@@ -17,47 +17,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.model.mongodb;
-
-import org.bson.types.ObjectId;
+package biz.bidi.archivee.commons.components;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 26, 2012
+ * @since Oct 27, 2012
  */
-public class PatternKey {
+public enum Component {
 	
-	private ObjectId appId;
+	LOG_PARSER(0),
+	ARCHIVER(1),
+	MASTER_INDEXER(2),
+	COMPRESSOR(3);
+
+	Component(int value) {
+		this.value = value;
+	}
 	
-	private long threadId;
+	private final int value;
 
 	/**
-	 * @return the appId
+	 * @return the value
 	 */
-	public ObjectId getAppId() {
-		return appId;
+	public int getValue() {
+		return value;
 	}
-
-	/**
-	 * @param appId the appId to set
-	 */
-	public void setAppId(ObjectId appId) {
-		this.appId = appId;
-	}
-
-	/**
-	 * @return the threadId
-	 */
-	public long getThreadId() {
-		return threadId;
-	}
-
-	/**
-	 * @param threadId the threadId to set
-	 */
-	public void setThreadId(long threadId) {
-		this.threadId = threadId;
-	}
-
 }

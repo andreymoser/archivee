@@ -78,7 +78,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 			
 			compressorSender = LogParserManager.getInstance().getCompressorSender();
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Error in init Compressor component.", this);
+			ArchiveeException.error(e, "Error in init Compressor component.", this);
 		}
 	}
 
@@ -90,7 +90,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 	@Override
 	public void compressData(CompressorMessage message) throws ArchiveeException {
 		if(message.getContextQueueId() == null) {
-			throw new ArchiveeException("Invalid compressor message: context queue is null!",message);
+			throw new ArchiveeException("Invalid compressor message: context queue is null!",this,message);
 		}
 
 		ContextQueue contextQueue = new ContextQueue();
@@ -249,7 +249,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 			HuffmanWordNode node = huffmanWordTree.getNode(word);
 			
 			if(node == null) {
-				throw new ArchiveeException("Not found huffman node for dictionary creation: " + word, huffmanWordTree, dictQueue, dictionary);
+				throw new ArchiveeException("Not found huffman node for dictionary creation: " + word,this,huffmanWordTree, dictQueue, dictionary);
 			}
 				
 			DictionaryEntry dictionaryEntry = new DictionaryEntry();
@@ -278,7 +278,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 			HuffmanObjectIdNode node = huffmanObjectIdTree.getNode(templateId);
 			
 			if(node == null) {
-				throw new ArchiveeException("Not found huffman node for template dictionary creation: " + templateId, huffmanObjectIdTree, contextQueue, templateDictionary);
+				throw new ArchiveeException("Not found huffman node for template dictionary creation: " + templateId,this, huffmanObjectIdTree, contextQueue, templateDictionary);
 			}
 				
 			DictionaryEntry dictionaryEntry = new DictionaryEntry();

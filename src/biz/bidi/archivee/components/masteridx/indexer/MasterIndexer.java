@@ -25,11 +25,14 @@ import org.bson.types.ObjectId;
 
 import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
+import biz.bidi.archivee.commons.components.Component;
+import biz.bidi.archivee.commons.exceptions.ArchiveeError;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
+import biz.bidi.archivee.components.archiver.commons.ArchiverManager;
 import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 
 /**
@@ -41,10 +44,11 @@ public class MasterIndexer extends ArchiveeManagedComponent implements IMasterIn
 	
 	public MasterIndexer() {
 		try {
+			lockerDAO = ArchiverManager.getInstance().getLockerDAO();
 			patternDAO = LogParserManager.getInstance().getPatternDAO();
 			masterIndexDAO = LogParserManager.getInstance().getMasterIndexDAO();
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Unable to init MasterIndexer sucessfully",this);
+			ArchiveeException.error(e, "Unable to init MasterIndexer sucessfully",this);
 		}
 	}
 	
@@ -56,36 +60,53 @@ public class MasterIndexer extends ArchiveeManagedComponent implements IMasterIn
 	@Override
 	public void indexMasterData(PatternMessage message) throws ArchiveeException {
 		if(message.getPatternId() == null) {
-			throw new ArchiveeException("Invalid message received: pattern id : null",message);
+			throw new ArchiveeException("Invalid message received: pattern id : null",this,message);
 		}
 		
-		Pattern pattern = new Pattern();
-		pattern.setId(message.getPatternId());
-		
-		for(Pattern p : patternDAO.find(pattern)) {
-			pattern = p;
-			break; // by pattern id is only one possible
-		}
-		
-		for(String word : ArchiveePatternUtils.getPatternValues(message.getMessage())) {
-			MasterIndex masterIndex = new MasterIndex();
-			masterIndex.setWord(word);
+//		if(!acquireLock(Component.MASTER_INDEXER.getValue(), message.getThreadId()))
+//		{
+//			//TODO
+//		}
+
+		try {
+			Pattern pattern = new Pattern();
+			pattern.setId(message.getPatternId());
 			
-			boolean found = false;
-			for(MasterIndex idx : masterIndexDAO.find(masterIndex,ArchiveeConstants.MASTER_INDEX_WORD_QUERY)) {
-				updateMasterIndex(idx, pattern);
-				masterIndex = idx;
+			for(Pattern p : patternDAO.find(pattern)) {
+				pattern = p;
+				break; // by pattern id is only one possible
+			}
+			
+			for(String word : ArchiveePatternUtils.getPatternValues(message.getMessage())) {
+				MasterIndex masterIndex = new MasterIndex();
+				masterIndex.getKey().setWord(word);
+				masterIndex.getKey().setThreadId(message.getThreadId());
 				
-				found = true;
-				break; //by word is only one
+				boolean found = false;
+				for(MasterIndex idx : masterIndexDAO.find(masterIndex,ArchiveeConstants.MASTER_INDEX_KEY_QUERY)) {
+					updateMasterIndex(idx, pattern);
+					masterIndex = idx;
+					
+					found = true;
+					break; //by word is only one
+				}
+				
+				if(!found) {
+					updateMasterIndex(masterIndex, pattern);
+				}
+				
+				masterIndexDAO.save(masterIndex);
 			}
 			
-			if(!found) {
-				updateMasterIndex(masterIndex, pattern);
-			}
-			
-			masterIndexDAO.save(masterIndex);
-		}		
+		} catch (ArchiveeException e) {
+//			release(Component.MASTER_INDEXER.getValue(), message.getThreadId());
+			throw e;
+		} catch (Exception e) {
+//			release(Component.MASTER_INDEXER.getValue(), message.getThreadId());
+			throw new ArchiveeException(e,this);
+		}
+		
+		release(Component.MASTER_INDEXER.getValue(), message.getThreadId());
 	}
 
 	/**

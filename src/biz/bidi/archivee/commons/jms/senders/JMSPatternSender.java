@@ -46,7 +46,7 @@ public class JMSPatternSender extends ArchiveeJMSTopic implements IPatternSender
 		try {
 			this.open();
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Error while connecting to topic", this);
+			ArchiveeException.error(e, "Error while connecting to topic", this);
 		}
 	}
 	

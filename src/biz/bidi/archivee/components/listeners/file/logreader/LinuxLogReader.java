@@ -58,7 +58,7 @@ public class LinuxLogReader extends GenericLogReader {
 			fis = new FileInputStream(logFile);
 			closedFile = false;
 		} catch (FileNotFoundException e) {
-			throw new ArchiveeException("Log file not found",e,logFile,this);
+			throw new ArchiveeException(e,"Log file not found",this,logFile);
 		}
 	}
 
@@ -81,9 +81,9 @@ public class LinuxLogReader extends GenericLogReader {
 				sendLine(logLine);
 			}
 		} catch (UnsupportedEncodingException e) {
-			throw new ArchiveeException("Unsupported encoding format for log file",e,logFile,this);					
+			throw new ArchiveeException(e,"Unsupported encoding format for log file",this,logFile);					
 		} catch (IOException e) {
-			throw new ArchiveeException("Error while reading and sending log file",e,logFile,this);
+			throw new ArchiveeException(e,"Error while reading and sending log file",this,logFile);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class LinuxLogReader extends GenericLogReader {
 			lastLength = 0;
 			fileMoved = false;
 		} catch (IOException e) {
-			throw new ArchiveeException("Error while closing log file",e,logFile,this);
+			throw new ArchiveeException(e,"Error while closing log file",this,logFile);
 		}
 	}
 	

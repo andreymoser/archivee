@@ -24,7 +24,6 @@ import org.bson.types.ObjectId;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
 
-
 /**
  * Message sent from listener to log parser
  * @author Andrey Bidinotto
@@ -54,6 +53,10 @@ public class PatternMessage implements IXmlObject, Comparable<PatternMessage> {
 	 * The message log content
 	 */
 	private String message;
+	/**
+	 * The thread id
+	 */
+	private long threadId;
 
 	/**
 	 * @return the date
@@ -123,6 +126,20 @@ public class PatternMessage implements IXmlObject, Comparable<PatternMessage> {
 	 */
 	public void setAppId(ObjectId appId) {
 		this.appId = appId;
+	}
+
+	/**
+	 * @return the threadId
+	 */
+	public long getThreadId() {
+		return threadId;
+	}
+
+	/**
+	 * @param threadId the threadId to set
+	 */
+	public void setThreadId(long threadId) {
+		this.threadId = threadId;
 	}
 
 	/**
@@ -197,19 +214,19 @@ public class PatternMessage implements IXmlObject, Comparable<PatternMessage> {
 
 			if(compare == 0) {
 				if(this.hashCode() > o.hashCode()) {
-					compare = 1;
+					compare = -1;
 				} else if(this.hashCode() == o.hashCode()) {
 					if(!this.equals(o)) {
-						compare = 1;
+						compare = -1;
 					}
 				} else {
-					compare = -1;
+					compare = 1;
 				}
 			}
 			
 			return compare;
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Error in comparator - PatternMessage", this, this, o);
+			ArchiveeException.error(e, "Error in comparator - PatternMessage", this, o);
 		}
 		return 0;
 	}

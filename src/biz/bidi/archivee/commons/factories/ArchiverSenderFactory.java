@@ -17,44 +17,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.commons.dao.mongodb.dao;
+package biz.bidi.archivee.commons.factories;
 
-import biz.bidi.archivee.commons.ArchiveeConstants;
-import biz.bidi.archivee.commons.dao.mongodb.ArchiveeMongodbDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.mongodb.Template;
-
-import com.google.code.morphia.query.Query;
+import biz.bidi.archivee.commons.interfaces.IArchiverSender;
+import biz.bidi.archivee.commons.jms.senders.JMSArchiverSender;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 28, 2012
+ * @since Oct 28, 2012
  */
-public class TemplateDAO extends ArchiveeMongodbDAO<Template> {
+public class ArchiverSenderFactory extends ArchiveeSingletonFactory<IArchiverSender,Object> {
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.commons.dao.IArchiveeGenericDAO#find(java.lang.Object, java.lang.String)
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public Query<Template> find(Template entity, String customSearchId) throws ArchiveeException {
-		
-		if(customSearchId.equals(ArchiveeConstants.TEMPLATE_KEY_QUERY)){
-			return find(entity).
-			field("key.patternId").equal(entity.getKey().getPatternId()).
-			field("key.sequence").equal(entity.getKey().getSequence()).
-			field("key.path").equal(entity.getKey().getPath());
+	public IArchiverSender createInstance(Object object) throws ArchiveeException {
+		if(instance == null) {
+			instance = new JMSArchiverSender(); 
 		}
-		
-		if(customSearchId.equals(ArchiveeConstants.TEMPLATE_KEY_PATTERN_QUERY)){
-			return find(entity).
-			field("key.patternId").equal(entity.getKey().getPatternId());
-		}
-		
-		return null;
+		return this.getInstance();
 	}
-
 
 }

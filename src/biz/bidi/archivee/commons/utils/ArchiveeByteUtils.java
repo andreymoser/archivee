@@ -189,9 +189,8 @@ public class ArchiveeByteUtils {
 			byteValue = new Byte((byte) 0);
 		}
 		
-		
 		if(dictionaryEntry == null) {
-			throw new ArchiveeException("Invalid object for dictionary ",value,dictionary);
+			throw new ArchiveeException("Invalid object for dictionary ",ArchiveeByteUtils.class,value,dictionary);
 		}
 		
 		boolean added = false;

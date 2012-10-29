@@ -21,6 +21,7 @@ package biz.bidi.archivee.commons.factories;
 
 import biz.bidi.archivee.commons.dao.IArchiveeGenericDAO;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.IArchiverSender;
 import biz.bidi.archivee.commons.interfaces.ICompressorSender;
 import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.commons.interfaces.IPatternSender;
@@ -31,6 +32,7 @@ import biz.bidi.archivee.commons.model.mongodb.ContextIndex;
 import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
 import biz.bidi.archivee.commons.model.mongodb.Dictionary;
 import biz.bidi.archivee.commons.model.mongodb.DictionaryQueue;
+import biz.bidi.archivee.commons.model.mongodb.Locker;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
@@ -111,7 +113,7 @@ public abstract class ArchiveeFactoryManager implements IArchiveeFactoryManager 
 	@SuppressWarnings("rawtypes")
 	protected void validateFactory(IArchiveeFactory factory, Class classObject) throws ArchiveeException {
 		if(factory == null) {
-			throw new ArchiveeException("Invalid factory: null",factory,classObject);
+			throw new ArchiveeException("Invalid factory: null",this,factory,classObject);
 		}
 	}
 	
@@ -209,6 +211,14 @@ public abstract class ArchiveeFactoryManager implements IArchiveeFactoryManager 
 		return daoInstance;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public IArchiveeGenericDAO<Locker, Query<Locker>, Key<Locker>> getLockerDAO() throws ArchiveeException {
+		IArchiveeGenericDAO daoInstance = null;
+		IArchiveeFactory<IArchiveeGenericDAO, Object> factory = instance.getFactoryInstance(IArchiveeGenericDAO.class,Locker.class);
+		daoInstance = factory.createInstance(null);
+		return daoInstance;
+	}
+	
 	/**
 	 *
 	 * JMS instances
@@ -242,4 +252,13 @@ public abstract class ArchiveeFactoryManager implements IArchiveeFactoryManager 
 		compressorSender = factory.createInstance(null);
 		return compressorSender;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public IArchiverSender getArchiverSender() throws ArchiveeException {
+		IArchiverSender archiverSender = null;
+		IArchiveeFactory<IArchiverSender, Object> factory = instance.getFactoryInstance(IArchiveeMessaging.class,IArchiverSender.class);
+		archiverSender = factory.createInstance(null);
+		return archiverSender;
+	}
+	
 }

@@ -19,31 +19,29 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-import org.bson.types.ObjectId;
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 26, 2012
+ * @since Oct 27, 2012
  */
-public class PatternKey {
-	
-	private ObjectId appId;
+public class MasterIndexKey {
+
+	private String word;
 	
 	private long threadId;
 
 	/**
-	 * @return the appId
+	 * @return the word
 	 */
-	public ObjectId getAppId() {
-		return appId;
+	public String getWord() {
+		return word;
 	}
 
 	/**
-	 * @param appId the appId to set
+	 * @param word the word to set
 	 */
-	public void setAppId(ObjectId appId) {
-		this.appId = appId;
+	public void setWord(String word) {
+		this.word = word;
 	}
 
 	/**
@@ -59,5 +57,5 @@ public class PatternKey {
 	public void setThreadId(long threadId) {
 		this.threadId = threadId;
 	}
-
+	
 }

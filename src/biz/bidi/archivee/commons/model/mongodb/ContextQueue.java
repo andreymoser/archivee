@@ -19,16 +19,13 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.bson.types.ObjectId;
 
-import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
-import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;

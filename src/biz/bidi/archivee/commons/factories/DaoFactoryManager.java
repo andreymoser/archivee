@@ -26,6 +26,7 @@ import biz.bidi.archivee.commons.dao.mongodb.factories.ContextIndexDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.ContextQueueDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.DictionaryDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.DictionaryQueueDAOFactory;
+import biz.bidi.archivee.commons.dao.mongodb.factories.LockerDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.LogQueueDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.MasterIndexDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.PatternDAOFactory;
@@ -37,6 +38,7 @@ import biz.bidi.archivee.commons.model.mongodb.ContextIndex;
 import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
 import biz.bidi.archivee.commons.model.mongodb.Dictionary;
 import biz.bidi.archivee.commons.model.mongodb.DictionaryQueue;
+import biz.bidi.archivee.commons.model.mongodb.Locker;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
@@ -64,6 +66,7 @@ public class DaoFactoryManager implements IArchiveeFactoryManager {
 	protected IArchiveeFactory masterIndexDAOFactory;
 	protected IArchiveeFactory templateDAOFactory;
 	protected IArchiveeFactory templateDictionaryDAOFactory;
+	protected IArchiveeFactory lockerDAOFactory;
 	
 	public DaoFactoryManager(IArchiveeFactoryManager archiveeFactoryManager) {
 		this.archiveeFactoryManager = archiveeFactoryManager;
@@ -77,7 +80,8 @@ public class DaoFactoryManager implements IArchiveeFactoryManager {
 		dictionaryDAOFactory = new DictionaryDAOFactory(); 
 		dictionaryQueueDAOFactory = new DictionaryQueueDAOFactory(); 
 		masterIndexDAOFactory = new MasterIndexDAOFactory(); 
-		templateDAOFactory = new TemplateDAOFactory(); 
+		templateDAOFactory = new TemplateDAOFactory();
+		lockerDAOFactory = new LockerDAOFactory();
 	}
 
 	/**
@@ -132,6 +136,9 @@ public class DaoFactoryManager implements IArchiveeFactoryManager {
 			}
 			if(classObject == TemplateDictionary.class) {
 				factory = templateDictionaryDAOFactory;
+			}
+			if(classObject == Locker.class) {
+				factory = lockerDAOFactory;
 			}
 		}
 		

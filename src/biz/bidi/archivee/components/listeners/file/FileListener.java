@@ -70,7 +70,7 @@ public class FileListener implements IFileListener, IArchiveePropertiesLoader {
 			}
 			System.out.println("Info: threads terminated!");
 		} catch (Exception e) {
-			ArchiveeException.log(e, "Error in main file listener thread",this,files,fileListeners);
+			ArchiveeException.error(e, "Error in main file listener thread",this,files,fileListeners);
 		}
 	}
 	

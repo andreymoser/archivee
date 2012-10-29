@@ -24,7 +24,9 @@ import java.util.Date;
 
 import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
+import biz.bidi.archivee.commons.components.Component;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.IArchiverSender;
 import biz.bidi.archivee.commons.interfaces.ICompressorSender;
 import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
 import biz.bidi.archivee.commons.model.mongodb.DictionaryQueue;
@@ -50,24 +52,31 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 	 * The compressor sender
 	 */
 	protected ICompressorSender compressorSender;
+	/**
+	 * The archiver sender
+	 */
+	protected IArchiverSender archiverSender;
 	
 	public Archiver() {
 		try {
+			lockerDAO = ArchiverManager.getInstance().getLockerDAO();
 			patternDAO = ArchiverManager.getInstance().getPatternDAO();
 			templateDAO = ArchiverManager.getInstance().getTemplateDAO();
 			dictionaryQueueDAO = ArchiverManager.getInstance().getDictionaryQueueDAO();
 			contextQueueDAO = ArchiverManager.getInstance().getContextQueueDAO();
 			
 			compressorSender = LogParserManager.getInstance().getCompressorSender();
+			archiverSender = LogParserManager.getInstance().getArchiverSender();
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Error in init Compressor component.", this);
+			ArchiveeException.error(e, "Error in init Compressor component.", this);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.archiver.IArchiver#archiveData(biz.bidi.archivee.commons.model.xml.PatternMessage)
+	 * @see 
+	 * biz.bidi.archivee.components.archiver.IArchiver#archiveData(biz.bidi.archivee.commons.model.xml.PatternMessage)
 	 */
 	@Override
 	public void archiveData(PatternMessage message) throws ArchiveeException {
@@ -76,37 +85,53 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 			throw new ArchiveeException("Invalid message received in archiver, discarding message.",this,message);
 		}
 		
-		Date messageDate = ArchiveeDateUtils.convertToDate(message.getDate());
-		
-		//Finds the pattern
-		Pattern pattern = new Pattern();
-		pattern.setId(message.getPatternId());
-		for(Pattern p : patternDAO.find(pattern)) {
-			pattern = p;
-			break;
-		}
-		if(pattern.getValue() == null || pattern.getValue().isEmpty()) {
-			throw new ArchiveeException("Invalid pattern found for message received in archiver, discarding message.",this,message,pattern);
+		if(!acquireLock(Component.ARCHIVER.getValue(), message.getThreadId()))
+		{
+			archiverSender.sendPatternMessage(message);
+			return;
 		}
 		
-		PatternPath patternPath = ArchiveePatternUtils.findPatternPath(message.getMessage(), pattern);
-		
-		Template template = findAndSaveTemplate(patternPath, message);
-		
-		if(template == null) {
-			throw new ArchiveeException("Invalid template found for message received in archiver, discarding message.",this,message,pattern,patternPath);
-		}
-		
-		ContextQueue contextQueue = getContextData(message, messageDate, template);
-		
-		if(!saveDictionaryDataAndIsAtQueue(message, patternPath, pattern, template, contextQueue)) {
-			CompressorMessage compressorMessage = new CompressorMessage();
+		try {
+			Date messageDate = ArchiveeDateUtils.convertToDate(message.getDate());
 			
-			compressorMessage.setContextQueueId(contextQueue.getId());
-			compressorMessage.setMessageType(CompressorMessageType.CREATE_DICTIONARY);
+			//Finds the pattern
+			Pattern pattern = new Pattern();
+			pattern.setId(message.getPatternId());
+			for(Pattern p : patternDAO.find(pattern)) {
+				pattern = p;
+				break;
+			}
+			if(pattern.getValue() == null || pattern.getValue().isEmpty()) {
+				throw new ArchiveeException("Invalid pattern found for message received in archiver, discarding message.",this,message,pattern);
+			}
 			
-			compressorSender.sendCompressorMessage(compressorMessage);
-		} 
+			PatternPath patternPath = ArchiveePatternUtils.findPatternPath(message.getMessage(), pattern);
+			
+			Template template = findAndSaveTemplate(patternPath, message);
+			
+			if(template == null) {
+				throw new ArchiveeException("Invalid template found for message received in archiver, discarding message.",this,message,pattern,patternPath);
+			}
+			
+			ContextQueue contextQueue = getContextData(message, messageDate, template);
+			
+			if(!saveDictionaryDataAndIsAtQueue(message, patternPath, pattern, template, contextQueue)) {
+				CompressorMessage compressorMessage = new CompressorMessage();
+				
+				compressorMessage.setContextQueueId(contextQueue.getId());
+				compressorMessage.setMessageType(CompressorMessageType.CREATE_DICTIONARY);
+				
+				compressorSender.sendCompressorMessage(compressorMessage);
+			}
+		} catch (ArchiveeException e) {
+			release(Component.ARCHIVER.getValue(), message.getThreadId());
+			throw e;
+		} catch (Exception e) {
+			release(Component.ARCHIVER.getValue(), message.getThreadId());
+			throw new ArchiveeException(e,this);
+		}
+		
+		release(Component.ARCHIVER.getValue(), message.getThreadId());
 	}
 
 
@@ -187,6 +212,7 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 		
 		contextQueue.getMessages().add(message);
 		contextQueue.getKey().setAtQueue(isAtQueue);
+		
 		contextQueueDAO.save(contextQueue);
 		
 		if(!isAtQueue) {
@@ -199,7 +225,7 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 			Template templateAux = new Template();
 			templateAux.getKey().setPatternId(pattern.getId());
 			
-			for(Template t : templateDAO.find(templateAux, ArchiveeConstants.TEMPLATE_KEY_QUERY)) {
+			for(Template t : templateDAO.find(templateAux, ArchiveeConstants.TEMPLATE_KEY_PATTERN_QUERY)) {
 				DictionaryQueue dictionaryQueue = new DictionaryQueue();
 				dictionaryQueue.getKey().setAtQueue(!isAtQueue);
 				dictionaryQueue.getKey().setTemplateId(t.getId());
@@ -217,11 +243,12 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 		String word = "";
 		int index = 0;
 		int i = 0;
-		while(i < words.size()) {
+		while(i < words.size() && index < patternPath.getValues().size()) {
 			
 			int j=0;
 			for(j=0; j < patternPath.getValues().get(index).getWords(); j++) {
-				word = words.get(i+j);
+				word = words.get(i);
+				i++;
 				
 				DictionaryQueue dictionaryQueue = new DictionaryQueue();
 				dictionaryQueue.getKey().setElementIndex(index);
@@ -244,8 +271,6 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 				
 				dictionaryQueueDAO.save(dictionaryQueue);
 			}
-			
-			i = i + j;
 			index++;
 		}
 		

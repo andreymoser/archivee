@@ -1,7 +1,7 @@
 use archivee
 
 # clean up data
-db.app.drop()
+#db.app.drop()
 db.context.drop()
 db.context_index.drop()
 db.context_queue.drop()
@@ -11,6 +11,7 @@ db.dictionary_queue.drop()
 db.log_queue.drop()
 db.pattern.drop()
 db.template.drop()
+db.locker.drop()
 
 db.pattern.find()
 db.log_queue.find()

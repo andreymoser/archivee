@@ -66,7 +66,8 @@ public class ArchiveeConstants {
 	/**
 	 * The context queue data max size 
 	 */
-	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = MAX_BYTE_ARRAY_SIZE;
+//	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = MAX_BYTE_ARRAY_SIZE;
+	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = 7000;
 	/**
 	 * The context queue status delay 
 	 */
@@ -86,7 +87,7 @@ public class ArchiveeConstants {
 	/**
 	 * The Master Index word query
 	 */
-	public static final String MASTER_INDEX_WORD_QUERY = "master.index.word.query";
+	public static final String MASTER_INDEX_KEY_QUERY = "master.index.word.query";
 	/**
 	 * The Dictionary Queue Key Query
 	 */
@@ -104,6 +105,10 @@ public class ArchiveeConstants {
 	 */
 	public static final String TEMPLATE_KEY_QUERY = "template.key.query";
 	/**
+	 * The Template Pattern Key Query
+	 */
+	public static final String TEMPLATE_KEY_PATTERN_QUERY = "template.key.pattern.query";
+	/**
 	 * The Dictionary Key Query
 	 */
 	public static final String DICTIONARY_KEY_QUERY = "dictionary.key.query";
@@ -111,4 +116,12 @@ public class ArchiveeConstants {
 	 * The application name query
 	 */
 	public static final String APP_NAME_QUERY = "app.name.query";
+	/**
+	 * The pattern app query
+	 */
+	public static final String PATTERN_APP_QUERY = "pattern.app.query";
+	/**
+	 * The locker key query
+	 */
+	public static final String LOCKER_KEY_QUERY = "locker.key.query";
 }

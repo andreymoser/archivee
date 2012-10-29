@@ -68,12 +68,12 @@ public class CompressorMDB implements MessageListener {
 				compressor = CompressorManager.getInstance().getCompressor();
 				compressor.compressData((CompressorMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
-				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);
+				ArchiveeException.error(e,"Unable to read mdb text message",this,textMessage);
 			} catch (ArchiveeException e) {
-				ArchiveeException.log(e,"Unable to parse log line",xml,compressor);
+				ArchiveeException.error(e,"Unable to parse log line",this,xml,compressor);
 			}
 		} else {
-			ArchiveeException.log(this,"Invalid mdb message, expected TextMessage",message);
+			ArchiveeException.logError("Invalid mdb message, expected TextMessage",this,message);
 		}
 	}
 

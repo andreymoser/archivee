@@ -49,7 +49,7 @@ public class ArchiveeXmlParser {
 		try {
 			xml = xstream.toXML(object);
 		} catch (Exception e) {
-			throw new ArchiveeException(e,"Error while trying to convert object to xml",object);
+			throw new ArchiveeException(e,"Error while trying to convert object to xml",ArchiveeXmlParser.class,object);
 		}
 		
 		return xml;
@@ -67,7 +67,7 @@ public class ArchiveeXmlParser {
 		try {
 			object = (IXmlObject) xstream.fromXML(xml);
 		} catch (Exception e) {
-			throw new ArchiveeException(e,"Error while trying to convert xml to object",xml,object);
+			throw new ArchiveeException(e,"Error while trying to convert xml to object",ArchiveeXmlParser.class,xml,object);
 		}
 		
 		return object;

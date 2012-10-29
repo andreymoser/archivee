@@ -28,6 +28,7 @@ import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
 import biz.bidi.archivee.commons.model.mongodb.Dictionary;
 import biz.bidi.archivee.commons.model.mongodb.DictionaryQueue;
 import biz.bidi.archivee.commons.model.mongodb.IEntity;
+import biz.bidi.archivee.commons.model.mongodb.Locker;
 import biz.bidi.archivee.commons.model.mongodb.LogQueue;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
@@ -85,14 +86,15 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 			morphia.map(TemplateDictionary.class);
 			morphia.map(App.class);
 			morphia.map(MasterIndex.class);
+			morphia.map(Locker.class);
 			
 			ds = morphia.createDatastore(mongo, database); 
 			ds.ensureIndexes();
 			ds.ensureCaps();
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Unable to load MongoDB properties succesfully", this);
+			ArchiveeException.error(e, "Unable to load MongoDB properties succesfully", this);
 		} catch (Exception e) {
-			ArchiveeException.log(e, "Unable to connect to MongoDB database", this);
+			ArchiveeException.error(e, "Unable to connect to MongoDB database", this);
 		}
 	}
 	
@@ -107,7 +109,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 		try {
 			return ds.save(entity);
 		} catch (Exception e) {
-			throw new ArchiveeException(e, "Error while saving in mongoDB", entity, this);
+			throw new ArchiveeException(e, "Error while saving in mongoDB", this, entity);
 		}
 	}
 
@@ -126,7 +128,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 				ds.delete(query);
 			}
 		} catch (Exception e) {
-			throw new ArchiveeException(e, "Error while deleting in mongoDB", entity, query, this);
+			throw new ArchiveeException(e, "Error while deleting in mongoDB", this, entity, query);
 		}
 	}
 	
@@ -141,7 +143,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 		try {
 			newEntity = ds.get(entity);
 		} catch (Exception e) {
-			throw new ArchiveeException(e, "Error while getting entity in mongoDB", entity, newEntity, this);
+			throw new ArchiveeException(e, "Error while getting entity in mongoDB", this, entity, newEntity);
 		}
 		return newEntity;
 	}
@@ -157,7 +159,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 		try {
 			query = ds.find((Class<E>)entity.getClass());
 		} catch (Exception e) {
-			throw new ArchiveeException(e, "Error while finding all entities in mongoDB", entity, query, this);
+			throw new ArchiveeException(e, "Error while finding all entities in mongoDB", this, entity, query);
 		}
 		return query;
 	}
@@ -173,7 +175,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 		try {
 			size = ds.getCount(entity);
 		} catch (Exception e) {
-			throw new ArchiveeException(e, "Error while getting entity size in mongoDB", entity, size, this);
+			throw new ArchiveeException(e, "Error while getting entity size in mongoDB", this, entity, size);
 		}
 		return size;
 	}
@@ -189,7 +191,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 		try {
 			size = ds.getCount(query);
 		} catch (Exception e) {
-			throw new ArchiveeException(e, "Error while getting query size in mongoDB", query, size, this);
+			throw new ArchiveeException(e, "Error while getting query size in mongoDB", this, query, size);
 		}
 		return size;
 	}

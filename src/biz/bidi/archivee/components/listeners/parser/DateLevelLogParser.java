@@ -64,9 +64,9 @@ public class DateLevelLogParser implements ILogParser, IArchiveePropertiesLoader
 			
 			loadLevelRegex();
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Unable to load properties for Date and Level parser.", this);
+			ArchiveeException.error(e, "Unable to load properties for Date and Level parser.", this);
 		} catch (Exception e) {
-			ArchiveeException.log(e, "Unable to define level regex.", this);
+			ArchiveeException.error(e, "Unable to define level regex.", this);
 		}
 	}
 	

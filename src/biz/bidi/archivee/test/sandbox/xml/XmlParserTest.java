@@ -49,7 +49,7 @@ public class XmlParserTest {
 			xml = ArchiveeXmlParser.convertoToXml(message);
 			System.out.println(xml);
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Error while converting to xml", message);
+			ArchiveeException.error(e, "Error while converting to xml",XmlParserTest.class, message);
 		}
 		
 		try {
@@ -59,7 +59,7 @@ public class XmlParserTest {
 			System.out.println("level : " + message2.getLevel());
 			System.out.println("message : " + message2.getMessage());
 		} catch (ArchiveeException e) {
-			ArchiveeException.log(e, "Error while converting to xml", message);
+			ArchiveeException.error(e, "Error while converting to xml", message);
 		}
 	}
 

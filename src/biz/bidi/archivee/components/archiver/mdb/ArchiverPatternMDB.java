@@ -71,12 +71,12 @@ public class ArchiverPatternMDB implements MessageListener {
 				archiver = ArchiverManager.getInstance().getArchiver();
 				archiver.archiveData((PatternMessage) ArchiveeXmlParser.convertoToObject(xml));
 			} catch (JMSException e) {
-				ArchiveeException.log(this,"Unable to read mdb text message",textMessage);
+				ArchiveeException.error(e,"Unable to read mdb text message",this,textMessage);
 			} catch (ArchiveeException e) {
-				ArchiveeException.log(e,"Unable to parse log line",xml,archiver);
+				ArchiveeException.error(e,"Unable to parse log line",this,xml,archiver);
 			}
 		} else {
-			ArchiveeException.log(this,"Invalid mdb message, expected TextMessage",message);
+			ArchiveeException.logError("Invalid mdb message, expected TextMessage",this,message);
 		}
 	}
 
