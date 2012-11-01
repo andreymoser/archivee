@@ -67,6 +67,7 @@ public class ArchiveeByteUtils {
 			val = val * 2;
 			
 			if(val >= value) {
+				length++;
 				break;
 			}
 		}

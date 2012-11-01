@@ -107,6 +107,8 @@
 				<include name="biz/bidi/archivee/components/archiver/**"/>
 				<include name="biz/bidi/archivee/components/masteridx/**"/>
 				<include name="biz/bidi/archivee/components/compressor/**"/>
+				<!-- Added for DateLevelLogParser dependency - TODO fix -->
+				<include name="biz/bidi/archivee/components/listeners/**"/>
 			</fileset>
 		</jar>
 		

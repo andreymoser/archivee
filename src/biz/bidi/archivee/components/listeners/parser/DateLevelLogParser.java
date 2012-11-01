@@ -179,8 +179,10 @@ public class DateLevelLogParser implements ILogParser, IArchiveePropertiesLoader
 	 * Returns the levels list "INFO,WARN,etc.."
 	 * @return
 	 * @throws ArchiveeException
+	 * @deprecated
 	 */
 	public static ArrayList<String> getLevelsList() throws ArchiveeException {
+		//TODO remove this method from this class, listener component not in EJB
 		ArrayList<String> levels = new ArrayList<String>();
 		
 		DateLevelLogParser dateLevelLogParser = new DateLevelLogParser();

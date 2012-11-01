@@ -20,8 +20,8 @@
 package biz.bidi.archivee.components.compressor;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
-import java.util.List;
 
 import org.bson.types.ObjectId;
 
