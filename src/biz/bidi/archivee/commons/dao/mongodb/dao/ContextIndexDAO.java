@@ -41,11 +41,11 @@ public class ContextIndexDAO extends ArchiveeMongodbDAO<ContextIndex> {
 	@Override
 	public Query<ContextIndex> find(ContextIndex entity, String customSearchId) throws ArchiveeException {
 		
-		if(customSearchId.equals(ArchiveeConstants.CONTEXT_INDEX_LATEST_QUERY)) {
+		if(customSearchId.equals(ArchiveeConstants.CONTEXT_INDEX_KEY_QUERY)) {
 			return find(entity).
 					field("key.appId").equal(entity.getKey().getAppId()).
-					field("key.word").equal(entity.getKey().getWord()).
-					field("key.sequence").lessThanOrEq(Long.MAX_VALUE);
+					field("key.word").equal(entity.getKey().getWord());
+//					field("key.sequence").lessThanOrEq(Long.MAX_VALUE);
 		}
 		
 		return null;

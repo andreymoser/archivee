@@ -79,13 +79,13 @@ public class MessageLogParserLab {
 						System.out.println("#" + messages + " - " + seconds + "secs - " + "TPS: " + (messages/(seconds<1?1:seconds)) + " - " + line);
 						System.out.println(ArchiveePatternUtils.convertToSimpleRegex(line));
 						
-//						try {
-//							Thread.sleep(150);
-//						} catch (InterruptedException e) {
-//							e.printStackTrace();
-//						}
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 						
-						if(messages > 80000) {
+						if(messages > 8000) {
 							break;
 						}
 					} else {

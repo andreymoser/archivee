@@ -45,6 +45,12 @@ public class Dictionary implements IEntity {
 	
 	private HashMap<Long, String> entriesIndex;
 
+	public Dictionary() {
+		key = new DictionaryKey();
+		entries = new HashMap<String, DictionaryEntry>();
+		entriesIndex = new HashMap<Long, String>();
+	}
+	
 	/**
 	 * @return the key
 	 */

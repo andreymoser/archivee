@@ -67,7 +67,7 @@ public class ArchiveeConstants {
 	 * The context queue data max size 
 	 */
 //	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = MAX_BYTE_ARRAY_SIZE;
-	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = 7000;
+	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = 3000;
 	/**
 	 * The context queue status delay 
 	 */
@@ -75,7 +75,7 @@ public class ArchiveeConstants {
 	/**
 	 * The latest context index query 
 	 */
-	public static final String CONTEXT_INDEX_LATEST_QUERY = "context.index.latest.query";
+	public static final String CONTEXT_INDEX_KEY_QUERY = "context.index.latest.query";
 	/**
 	 * The common log queue entries for a given pattern + app  
 	 */
@@ -92,6 +92,10 @@ public class ArchiveeConstants {
 	 * The Dictionary Queue Key Query
 	 */
 	public static final String DICTIONARY_QUEUE_KEY_QUERY = "dictionary.queue.key.query";
+	/**
+	 * The Dictionary Queue Key Template Query
+	 */
+	public static final String DICTIONARY_QUEUE_TEMPLATE_QUERY = "dictionary.queue.key.template.query";
 	/**
 	 * The Context Queue Key Query
 	 */

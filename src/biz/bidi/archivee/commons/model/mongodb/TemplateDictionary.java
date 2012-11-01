@@ -41,6 +41,11 @@ public class TemplateDictionary implements IEntity {
 	
 	private HashMap<Long, ObjectId> templateEntriesIndex;
 	
+	public TemplateDictionary() {
+		templateEntries = new HashMap<ObjectId, DictionaryEntry>();
+		templateEntriesIndex = new HashMap<Long, ObjectId>();
+	}	
+	
 	/**
 	 * @return the contextId
 	 */

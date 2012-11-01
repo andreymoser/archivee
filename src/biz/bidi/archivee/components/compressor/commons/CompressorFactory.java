@@ -23,13 +23,15 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
 import biz.bidi.archivee.components.archiver.Archiver;
 import biz.bidi.archivee.components.archiver.IArchiver;
+import biz.bidi.archivee.components.compressor.Compressor;
+import biz.bidi.archivee.components.compressor.ICompressor;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 29, 2012
  */
-public class CompressorFactory extends ArchiveeSingletonFactory<IArchiver, Object> {
+public class CompressorFactory extends ArchiveeSingletonFactory<ICompressor, Object> {
 
 	/**
 	 * {@inheritDoc}
@@ -37,9 +39,9 @@ public class CompressorFactory extends ArchiveeSingletonFactory<IArchiver, Objec
 	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
 	@Override
-	public IArchiver createInstance(Object object) throws ArchiveeException {
+	public ICompressor createInstance(Object object) throws ArchiveeException {
 		if(instance == null) {
-			instance = new Archiver();
+			instance = new Compressor();
 		}
 		return this.getInstance();
 	}

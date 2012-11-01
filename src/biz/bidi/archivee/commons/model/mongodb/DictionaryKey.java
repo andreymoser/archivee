@@ -37,12 +37,6 @@ public class DictionaryKey {
 	private long sequence;
 	
 	/**
-	 * Used only in queue
-	 */
-	//TODO fix by creating DictionaryQueueKey
-	private boolean isAtQueue;
-	
-	/**
 	 * @return the elementIndex
 	 */
 	public int getElementIndex() {
@@ -82,20 +76,6 @@ public class DictionaryKey {
 	 */
 	public void setSequence(long sequence) {
 		this.sequence = sequence;
-	}
-
-	/**
-	 * @return the isAtQueue
-	 */
-	public boolean isAtQueue() {
-		return isAtQueue;
-	}
-
-	/**
-	 * @param isAtQueue the isAtQueue to set
-	 */
-	public void setAtQueue(boolean isAtQueue) {
-		this.isAtQueue = isAtQueue;
 	}
 	
 	/**

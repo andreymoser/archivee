@@ -41,6 +41,10 @@ public class CompressorMessage implements IXmlObject {
 	 * The context id
 	 */
 	private ObjectId contextQueueId;
+	/**
+	 * The thread id
+	 */
+	private long threadId;
 
 	/**
 	 * @return the contextQueueId
@@ -68,5 +72,19 @@ public class CompressorMessage implements IXmlObject {
 	 */
 	public void setMessageType(CompressorMessageType messageType) {
 		this.messageType = messageType;
+	}
+
+	/**
+	 * @return the threadId
+	 */
+	public long getThreadId() {
+		return threadId;
+	}
+
+	/**
+	 * @param threadId the threadId to set
+	 */
+	public void setThreadId(long threadId) {
+		this.threadId = threadId;
 	}
 }

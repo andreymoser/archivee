@@ -31,6 +31,7 @@ import biz.bidi.archivee.commons.dao.mongodb.factories.LogQueueDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.MasterIndexDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.PatternDAOFactory;
 import biz.bidi.archivee.commons.dao.mongodb.factories.TemplateDAOFactory;
+import biz.bidi.archivee.commons.dao.mongodb.factories.TemplateDictionaryDAOFactory;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.mongodb.App;
 import biz.bidi.archivee.commons.model.mongodb.Context;
@@ -81,6 +82,7 @@ public class DaoFactoryManager implements IArchiveeFactoryManager {
 		dictionaryQueueDAOFactory = new DictionaryQueueDAOFactory(); 
 		masterIndexDAOFactory = new MasterIndexDAOFactory(); 
 		templateDAOFactory = new TemplateDAOFactory();
+		templateDictionaryDAOFactory = new TemplateDictionaryDAOFactory();
 		lockerDAOFactory = new LockerDAOFactory();
 	}
 

@@ -19,6 +19,7 @@
  */
 package biz.bidi.archivee.components.listeners.parser;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
@@ -172,6 +173,26 @@ public class DateLevelLogParser implements ILogParser, IArchiveePropertiesLoader
 	 */
 	public void setLevelValues(String levelValues) {
 		this.levelValues = levelValues;
+	}
+	
+	/**
+	 * Returns the levels list "INFO,WARN,etc.."
+	 * @return
+	 * @throws ArchiveeException
+	 */
+	public static ArrayList<String> getLevelsList() throws ArchiveeException {
+		ArrayList<String> levels = new ArrayList<String>();
+		
+		DateLevelLogParser dateLevelLogParser = new DateLevelLogParser();
+		dateLevelLogParser.loadProperties(null);
+		
+		if(dateLevelLogParser.getLevelValues() != null) {
+			for(String level : dateLevelLogParser.getLevelValues().split(dateLevelLogParser.getLevelDelimiter())) {
+				levels.add(level);
+			}
+		}
+		
+		return levels;
 	}
 
 }

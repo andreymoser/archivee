@@ -20,6 +20,7 @@
 package biz.bidi.archivee.commons.model.mongodb;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import org.bson.types.ObjectId;
 
@@ -45,6 +46,8 @@ public class Context implements IEntity {
 	
 	@Indexed
 	private Date startDate;
+	
+	private int dateBitsLenght;
 	
 	/**
 	 * The compacted data
@@ -115,6 +118,20 @@ public class Context implements IEntity {
 	 */
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+
+	/**
+	 * @return the dateBitsLenght
+	 */
+	public int getDateBitsLenght() {
+		return dateBitsLenght;
+	}
+
+	/**
+	 * @param dateBitsLenght the dateBitsLenght to set
+	 */
+	public void setDateBitsLenght(int dateBitsLenght) {
+		this.dateBitsLenght = dateBitsLenght;
 	}
 
 }

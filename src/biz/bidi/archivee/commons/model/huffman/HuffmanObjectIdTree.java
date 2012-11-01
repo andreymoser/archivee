@@ -128,7 +128,13 @@ public class HuffmanObjectIdTree {
 		
 		root = treeSet.pollFirst();
 		
-		generateCodes(root,0,0);
+		if(entries.size() == 1) {
+			root.setLevel(1);
+			nodes.add(root);
+		} else {
+			generateCodes(root,0,0);
+		}
+		
 	}
 
 	public HuffmanObjectIdNode getNode(ObjectId value) {

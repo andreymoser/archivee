@@ -51,12 +51,27 @@ public class ArchiveeByteUtils {
 				bitstr += "0";
 			}
 			
-//			bitstr += " " + (value & val) + " ";
-			
 			val = val * 2;
 		}
 		
 		return bitstr;
+	}
+	
+	public static int getMaxBitsLength(long value) {
+		int length = 0;
+		
+		long val = 1;
+		
+		for(int i=0; i<64; i++) {
+			length = i;
+			val = val * 2;
+			
+			if(val >= value) {
+				break;
+			}
+		}
+		
+		return length;
 	}
 
 	public static ArrayList<Long> getUniqueBytes(long seed) {
@@ -181,6 +196,16 @@ public class ArchiveeByteUtils {
 
 		DictionaryEntry dictionaryEntry = dictionary.get(value);
 		
+		if(dictionaryEntry == null) {
+			throw new ArchiveeException("Invalid object for dictionary ",ArchiveeByteUtils.class,value,dictionary);
+		}
+		
+		return append(buffer, offset, dictionaryEntry.getBytes(), dictionaryEntry.getBitsLength());
+	}
+
+	public static int append(ArrayList<Byte> buffer, int offset, long code, int length) throws ArchiveeException {
+		int index = buffer.size() - 1;
+
 		Byte byteValue = null;
 		if(index >= 0 && offset != 0) {
 			byteValue = buffer.get(index);
@@ -189,13 +214,9 @@ public class ArchiveeByteUtils {
 			byteValue = new Byte((byte) 0);
 		}
 		
-		if(dictionaryEntry == null) {
-			throw new ArchiveeException("Invalid object for dictionary ",ArchiveeByteUtils.class,value,dictionary);
-		}
-		
 		boolean added = false;
 		
-		int bits = dictionaryEntry.getBitsLength();
+		int bits = length;
 		int bitsHeader = 0;
 		
 		while(bits > 0) {
@@ -207,7 +228,7 @@ public class ArchiveeByteUtils {
 				bitsAdded = bits; 
 			} 
 			
-			byteValue = (byte) ((byteValue | ((dictionaryEntry.getBytes() >> bitsHeader) & 0xFF) << offset) & 0xFF) ;
+			byteValue = (byte) ((byteValue | ((code >> bitsHeader) & 0xFF) << offset) & 0xFF) ;
 			
 			if((offset + bitsAdded) >= 8) {
 				offset = (offset + bitsAdded) - 8;
@@ -228,7 +249,6 @@ public class ArchiveeByteUtils {
 		
 		return offset;
 	}
-
 	
 	public static Object decode(ArrayList<Byte> buffer, int index, int offset, HashMap<Object,DictionaryEntry> dictionary) {
 		Object object = null;
@@ -293,11 +313,6 @@ public class ArchiveeByteUtils {
 		}
 		
 		return object;
-	}
-	
-	public long getBitLength(long value) {
-		//TODO
-		return 0;
 	}
 	
 	public static String convertToBitsString(Byte[] bytes) {

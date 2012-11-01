@@ -49,6 +49,12 @@ public class DictionaryQueueDAO extends ArchiveeMongodbDAO<DictionaryQueue> {
 			field("key.subElementIndex").equal(entity.getKey().getSubElementIndex());
 		}
 		
+		if(customSearchId.equals(ArchiveeConstants.DICTIONARY_QUEUE_TEMPLATE_QUERY)){
+			return find(entity).
+			field("key.templateId").equal(entity.getKey().getTemplateId()).
+			field("key.sequence").equal(entity.getKey().getSequence());
+		}
+		
 		return null;
 	}
 

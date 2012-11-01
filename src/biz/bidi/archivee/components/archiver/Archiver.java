@@ -39,7 +39,6 @@ import biz.bidi.archivee.commons.model.xml.enums.CompressorMessageType;
 import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
 import biz.bidi.archivee.components.archiver.commons.ArchiverManager;
-import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 
 /**
  * @author Andrey Bidinotto
@@ -65,8 +64,8 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 			dictionaryQueueDAO = ArchiverManager.getInstance().getDictionaryQueueDAO();
 			contextQueueDAO = ArchiverManager.getInstance().getContextQueueDAO();
 			
-			compressorSender = LogParserManager.getInstance().getCompressorSender();
-			archiverSender = LogParserManager.getInstance().getArchiverSender();
+			compressorSender = ArchiverManager.getInstance().getCompressorSender();
+			archiverSender = ArchiverManager.getInstance().getArchiverSender();
 		} catch (ArchiveeException e) {
 			ArchiveeException.error(e, "Error in init Compressor component.", this);
 		}
@@ -120,6 +119,7 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 				
 				compressorMessage.setContextQueueId(contextQueue.getId());
 				compressorMessage.setMessageType(CompressorMessageType.CREATE_DICTIONARY);
+				compressorMessage.setThreadId(message.getThreadId());
 				
 				compressorSender.sendCompressorMessage(compressorMessage);
 			}
@@ -163,6 +163,13 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 		
 		contextQueue.getMessages().add(message);
 		contextQueue.setDataLength(contextQueue.getDataLength() + message.getMessage().length());
+		
+		int templateCounts = 0;
+		if(contextQueue.getTemplateCounts().containsKey(template.getId())) {
+			templateCounts = contextQueue.getTemplateCounts().get(template.getId());
+		}
+		templateCounts++;
+		contextQueue.getTemplateCounts().put(template.getId(), templateCounts);
 		
 		return contextQueue;
 	}
@@ -215,29 +222,6 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 		
 		contextQueueDAO.save(contextQueue);
 		
-		if(!isAtQueue) {
-			try {
-				Thread.sleep(ArchiveeConstants.CONTEXT_QUEUE_STATUS_DELAY);
-			} catch (InterruptedException e) {
-				throw new ArchiveeException(e, "Unable to sleep Archiver for " + ArchiveeConstants.CONTEXT_QUEUE_STATUS_DELAY +" miliseconds at save dictionary data!",this,message,pattern,template,contextQueue);
-			}
-			
-			Template templateAux = new Template();
-			templateAux.getKey().setPatternId(pattern.getId());
-			
-			for(Template t : templateDAO.find(templateAux, ArchiveeConstants.TEMPLATE_KEY_PATTERN_QUERY)) {
-				DictionaryQueue dictionaryQueue = new DictionaryQueue();
-				dictionaryQueue.getKey().setAtQueue(!isAtQueue);
-				dictionaryQueue.getKey().setTemplateId(t.getId());
-				dictionaryQueue.getKey().setSequence(contextQueue.getKey().getSequence());
-				
-				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue, ArchiveeConstants.CONTEXT_QUEUE_KEY_QUERY)) {
-					dq.getKey().setAtQueue(isAtQueue);
-					dictionaryQueueDAO.save(dq);
-				}
-			}			
-		}
-		
 		ArrayList<String> words = ArchiveePatternUtils.getPatternValues(message.getMessage());		
 		
 		String word = "";
@@ -255,7 +239,6 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 				dictionaryQueue.getKey().setSubElementIndex(j);
 				dictionaryQueue.getKey().setTemplateId(template.getId());
 				dictionaryQueue.getKey().setSequence(contextQueue.getKey().getSequence());
-				dictionaryQueue.getKey().setAtQueue(isAtQueue);
 				
 				for(DictionaryQueue dq : dictionaryQueueDAO.find(dictionaryQueue,ArchiveeConstants.DICTIONARY_QUEUE_KEY_QUERY)) {
 					dictionaryQueue = dq;

@@ -16,6 +16,15 @@ db.locker.drop()
 db.pattern.find()
 db.log_queue.find()
 
+db.dictionary_queue.find({ "key.templateId" : ObjectId("5090559b7101b0e423ee6eb4") }).count()
+
+
+db.dictionary_queue.find({ "key.templateId" : ObjectId("5090643a7101b0e48b694f3b") }).count()
+
+db.template.find({ "key.templateId" : ObjectId("5090559b7101b0e423ee6eb4") }).count()
+
+
+
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27017 -j ACCEPT
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 28017 -j ACCEPT
 service iptables save
