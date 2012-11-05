@@ -26,7 +26,7 @@ import org.bson.types.ObjectId;
  * @email andreymoser@bidi.biz
  * @since Oct 2, 2012
  */
-public class HuffmanObjectIdNode {
+public class HuffmanObjectIdNode implements Comparable<HuffmanObjectIdNode> {
 	
 	private HuffmanObjectIdNode parent;
 	
@@ -148,6 +148,35 @@ public class HuffmanObjectIdNode {
 	@Override
 	public String toString() {
 		return value.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(HuffmanObjectIdNode o) {
+		
+		if(this.getWeight() != o.getWeight()) {
+			return this.getWeight() > o.getWeight() ? -1 : 1;
+		}
+		
+		if(this.getValue() != null || o.getValue() != null) {
+			if(this.getValue() != null && o.getValue() == null) {
+				return 1;
+			}
+			
+			if(this.getValue() == null && o.getValue() != null) {
+				return -1;
+			}
+			
+			if(this.getValue() != null && o.getValue() != null) {
+				return this.getValue().compareTo(o.getValue());
+			}
+		}
+		
+		return this.hashCode() > o.hashCode() ? -1 : 1;
 	}
 	
 }

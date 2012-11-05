@@ -20,7 +20,6 @@
 package biz.bidi.archivee.commons.model.mongodb;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import org.bson.types.ObjectId;
 
@@ -35,6 +34,7 @@ import com.google.code.morphia.annotations.Indexed;
  * @email andreymoser@bidi.biz
  * @since Sep 27, 2012
  */
+@SuppressWarnings("rawtypes")
 @Entity(value="context", noClassnameStored=true)
 public class Context implements IEntity {
 

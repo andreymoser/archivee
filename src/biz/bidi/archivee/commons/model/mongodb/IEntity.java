@@ -19,15 +19,13 @@
  */
 package biz.bidi.archivee.commons.model.mongodb;
 
-
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
  * @since Sep 12, 2012
  */
-public interface IEntity {
+public interface IEntity<I> {
 
-	//TODO
+	public I getId();
 	
 }

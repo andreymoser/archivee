@@ -44,7 +44,6 @@ public class TemplateDAO extends ArchiveeMongodbDAO<Template> {
 		if(customSearchId.equals(ArchiveeConstants.TEMPLATE_KEY_QUERY)){
 			return find(entity).
 			field("key.patternId").equal(entity.getKey().getPatternId()).
-//			field("key.sequence").equal(entity.getKey().getSequence()).
 			field("key.path").equal(entity.getKey().getPath());
 		}
 		

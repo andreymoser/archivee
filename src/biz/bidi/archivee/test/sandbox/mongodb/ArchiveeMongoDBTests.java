@@ -46,11 +46,17 @@ public class ArchiveeMongoDBTests {
 			Pattern pattern = new Pattern();
 //			pattern.setId(new ObjectId("5068a0069f03f2cce1d9c0db"));
 			pattern.setValue("teste 2");
+			pattern = patternDAO.get(pattern);
 			
-			for(Pattern p : patternDAO.find(pattern)) {
-				System.out.println(p.getId());
-				System.out.println(p.getValue());
+			if(pattern != null) {
+				System.out.println(pattern.getId());
+				System.out.println(pattern.getValue());
 			}
+			
+//			for(Pattern p : patternDAO.find(pattern)) {
+//				System.out.println(p.getId());
+//				System.out.println(p.getValue());
+//			}
 			
 //			patternDAO.save(pattern);
 //			System.out.println(pattern.getId());

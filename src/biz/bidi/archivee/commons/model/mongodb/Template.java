@@ -30,6 +30,7 @@ import com.google.code.morphia.annotations.Indexed;
  * @email andreymoser@bidi.biz
  * @since Sep 25, 2012
  */
+@SuppressWarnings("rawtypes")
 @Entity(value="template", noClassnameStored=true)
 public class Template implements IEntity {
 

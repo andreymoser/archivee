@@ -37,6 +37,7 @@ import biz.bidi.archivee.commons.model.xml.CompressorMessage;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.model.xml.enums.CompressorMessageType;
 import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
+import biz.bidi.archivee.commons.utils.ArchiveeLogger;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
 import biz.bidi.archivee.components.archiver.commons.ArchiverManager;
 
@@ -96,11 +97,11 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 			//Finds the pattern
 			Pattern pattern = new Pattern();
 			pattern.setId(message.getPatternId());
-			for(Pattern p : patternDAO.find(pattern)) {
-				pattern = p;
-				break;
-			}
-			if(pattern.getValue() == null || pattern.getValue().isEmpty()) {
+			pattern = patternDAO.get(pattern);			
+
+			if(pattern == null || 
+				pattern.getValue() == null || 
+				pattern.getValue().isEmpty()) {
 				throw new ArchiveeException("Invalid pattern found for message received in archiver, discarding message.",this,message,pattern);
 			}
 			
@@ -123,6 +124,8 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 				
 				compressorSender.sendCompressorMessage(compressorMessage);
 			}
+			
+			ArchiveeLogger.instance.debug(this,"Archived message in context queue.",message,template,pattern,patternPath,contextQueue);
 		} catch (ArchiveeException e) {
 			release(Component.ARCHIVER.getValue(), message.getThreadId());
 			throw e;

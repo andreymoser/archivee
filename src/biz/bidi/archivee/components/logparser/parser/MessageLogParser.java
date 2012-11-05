@@ -385,21 +385,41 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 	 * @throws ArchiveeException 
 	 */
 	private ObjectId findAndSaveAppId(String name) throws ArchiveeException {
-		ObjectId appId = null;
 		
-		App app = new App();
-		app.setName(name);
+		App app = null;
+		int count=10;
 		
-		for(App app2 : appDAO.find(app, ArchiveeConstants.APP_NAME_QUERY)) {
-			appId = app2.getId();
-			break;
+		if(name == null || name.isEmpty()) {
+			throw new ArchiveeException("Invalid name for app: null or empty",this,name);
 		}
 		
-		if(appId == null) {
-			appId = (ObjectId) appDAO.save(app).getId();
+		while(count > 0) {
+			app = new App();
+			app.setName(name);
+			for(App app2 : appDAO.find(app, ArchiveeConstants.APP_NAME_QUERY)) {
+				app = app2;
+				break;
+			}
+			
+			if(app.getId() == null && app.getName() != null && !app.getName().isEmpty()) {
+				try {
+					appDAO.save(app).getId();
+					break;
+				} catch (ArchiveeException e) {
+					if(e.isMongodbDuplicateKey()) {
+						continue;
+					}
+					throw e;
+				}
+			}
+			count--;
 		}
 		
-		return appId;
+		if(app == null || app.getName() == null || app.getName().isEmpty()) {
+			throw new ArchiveeException("Application not found",this,name,app);
+		}
+		
+		return app.getId();
 	}
 
 	/**

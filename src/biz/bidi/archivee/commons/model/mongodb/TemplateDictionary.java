@@ -31,6 +31,7 @@ import com.google.code.morphia.annotations.Id;
  * @email andreymoser@bidi.biz
  * @since Oct 8, 2012
  */
+@SuppressWarnings("rawtypes")
 @Entity(value="template_dictionary", noClassnameStored=true)
 public class TemplateDictionary implements IEntity {
 
@@ -86,6 +87,16 @@ public class TemplateDictionary implements IEntity {
 	 */
 	public void setTemplateEntriesIndex(HashMap<Long, ObjectId> templateEntriesIndex) {
 		this.templateEntriesIndex = templateEntriesIndex;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.model.mongodb.IEntity#getId()
+	 */
+	@Override
+	public Object getId() {
+		return contextId;
 	}
 
 }

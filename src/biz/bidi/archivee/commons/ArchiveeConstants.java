@@ -72,6 +72,16 @@ public class ArchiveeConstants {
 	 * The context queue status delay 
 	 */
 	public static final int CONTEXT_QUEUE_STATUS_DELAY = 1000;
+	
+	/**
+	 * The dot replacement value (☯ - Yin Yang) - used for mongodb fields which aren't allowed dot values - specifically in Map keys
+	 */
+	public static final String DOT_REPLACE_VALUE = "\u262F";	
+	
+	/**********************************************************************************
+	 * DAO queries
+	 */
+	
 	/**
 	 * The latest context index query 
 	 */

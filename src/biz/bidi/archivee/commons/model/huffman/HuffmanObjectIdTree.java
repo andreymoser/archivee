@@ -20,7 +20,6 @@
 package biz.bidi.archivee.commons.model.huffman;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -59,40 +58,10 @@ public class HuffmanObjectIdTree {
 	}
 	
 	public void buildTree(HashMap<ObjectId, Integer> entries) {
-		nodes = new TreeSet<HuffmanObjectIdNode>(new Comparator<HuffmanObjectIdNode>() {
-			@Override
-			public int compare(HuffmanObjectIdNode o1, HuffmanObjectIdNode o2) {
-				return o1.getWeight()==o2.getWeight()?o2.getValue().compareTo(o1.getValue()):(o1.getWeight()>o2.getWeight()?-1:1);
-			}
-		});
+		nodes = new TreeSet<HuffmanObjectIdNode>();
 		
 		// builds priority queue
-		treeSet = new TreeSet<HuffmanObjectIdNode>(new Comparator<HuffmanObjectIdNode>() {
-			@Override
-			public int compare(HuffmanObjectIdNode o1, HuffmanObjectIdNode o2) {
-				if(o1.getWeight()!=o2.getWeight()) {
-					return o1.getWeight()>o2.getWeight()?1:-1;
-				}
-				
-				if(o1.getValue()==null && o2.getValue()==null) {
-					return o1.hashCode() > o2.hashCode() ? 1 : -1;
-				}
-				
-				if(o1.getValue()!=null && o2.getValue()==null) {
-					return 1;
-				}
-				
-				if(o1.getValue()==null && o2.getValue()!=null) {
-					return -1;
-				}
-
-				if(o1.getValue()!=null && o2.getValue()!=null) {
-					return o1.getValue().compareTo(o2.getValue());
-				}
-				
-				return o1.hashCode() > o2.hashCode() ? 1 : -1;
-			}
-		});
+		treeSet = new TreeSet<HuffmanObjectIdNode>();
 		
 		for(ObjectId value : entries.keySet()) {
 			int weight = entries.get(value);
@@ -103,8 +72,6 @@ public class HuffmanObjectIdTree {
 			
 			treeSet.add(node);
 		}
-		
-		System.out.println();
 		
 		// generates the huffman tree
 		while(treeSet.size() > 1) {

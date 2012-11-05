@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.bson.types.ObjectId;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.interfaces.ILogger;
@@ -192,6 +193,13 @@ public class ArchiveeLogger implements ILogger, IArchiveePropertiesLoader {
 							objectMessage+=method.getName().substring(3) + "(float)=" + method.invoke(object, null) + ";";						
 						} else if(c.equals(Boolean.class)) {
 							objectMessage+=method.getName() + "(boolean)=" + method.invoke(object, null) + ";";						
+						} else if(c.equals(ObjectId.class)) {
+							ObjectId objectId = (ObjectId) method.invoke(object, null);
+							if(objectId != null) {
+								objectMessage+=method.getName().substring(3) + "(ObjectId)=" + objectId.toStringMongod() + ";";						
+							} else {
+								objectMessage+=method.getName().substring(3) + "(" + c.getSimpleName() + ")=" + method.invoke(object, null) + ";";						
+							}
 						} else if(c.equals(Class.class)) {
 							//ignore						
 						} else {

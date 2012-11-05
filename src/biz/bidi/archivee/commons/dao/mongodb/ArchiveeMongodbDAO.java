@@ -141,7 +141,7 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 	public E get(E entity) throws ArchiveeException {
 		E newEntity = null;
 		try {
-			newEntity = ds.get(entity);
+			newEntity = ds.get((Class<E>)entity.getClass(),entity.getId());
 		} catch (Exception e) {
 			throw new ArchiveeException(e, "Error while getting entity in mongoDB", this, entity, newEntity);
 		}
@@ -157,9 +157,9 @@ public abstract class ArchiveeMongodbDAO<E extends IEntity>
 	public Query<E> find(E entity) throws ArchiveeException {
 		Query<E> query = null;
 		try {
-			query = ds.find((Class<E>)entity.getClass());
+			query = ds.find((Class <E>) entity.getClass());
 		} catch (Exception e) {
-			throw new ArchiveeException(e, "Error while finding all entities in mongoDB", this, entity, query);
+			throw new ArchiveeException(e, "Error while finding entity in mongoDB", this, entity, query);
 		}
 		return query;
 	}

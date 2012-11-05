@@ -32,6 +32,7 @@ import com.google.code.morphia.annotations.Indexed;
  * @email andreymoser@bidi.biz
  * @since Sep 27, 2012
  */
+@SuppressWarnings("rawtypes")
 @Entity(value="dictionary_queue", noClassnameStored=true)
 public class DictionaryQueue implements IEntity {
 

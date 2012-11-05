@@ -32,11 +32,12 @@ import com.google.code.morphia.annotations.Id;
  * @email andreymoser@bidi.biz
  * @since Sep 27, 2012
  */
+@SuppressWarnings("rawtypes")
 @Entity(value="master_index", noClassnameStored=true)
 public class MasterIndex implements IEntity {
 
 	@Id
-	private Object id;
+	private ObjectId id;
 	
 	private MasterIndexKey key;
 	
@@ -81,5 +82,18 @@ public class MasterIndex implements IEntity {
 		this.key = key;
 	}
 
+	/**
+	 * @return the id
+	 */
+	public ObjectId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
 	
 }

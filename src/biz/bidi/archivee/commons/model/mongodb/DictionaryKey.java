@@ -92,4 +92,16 @@ public class DictionaryKey {
 		this.subElementIndex = subElementIndex;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DictionaryKey [templateId=" + templateId + ", elementIndex="
+				+ elementIndex + ", subElementIndex=" + subElementIndex
+				+ ", sequence=" + sequence + "]";
+	}
+
 }

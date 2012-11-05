@@ -1,7 +1,8 @@
+mongo archivee
 use archivee
 
 # clean up data
-#db.app.drop()
+db.app.drop()
 db.context.drop()
 db.context_index.drop()
 db.context_queue.drop()
@@ -11,7 +12,9 @@ db.dictionary_queue.drop()
 db.log_queue.drop()
 db.pattern.drop()
 db.template.drop()
+db.template_dictionary.drop()
 db.locker.drop()
+show collections
 
 db.pattern.find()
 db.log_queue.find()
@@ -21,10 +24,45 @@ db.dictionary_queue.find({ "key.templateId" : ObjectId("5090559b7101b0e423ee6eb4
 
 db.dictionary_queue.find({ "key.templateId" : ObjectId("5090643a7101b0e48b694f3b") }).count()
 
+db.dictionary.find({"key.templateId" : ObjectId("5095a171a7bcb0e40782dfc3"), "key.elementIndex" : 0, "key.subElementIndex" : 1})
+
 db.template.find({ "key.templateId" : ObjectId("5090559b7101b0e423ee6eb4") }).count()
 
+db.context_queue.find({ "_id" : ObjectId("5095a171a7bcb0e40982dfc3") })
 
+db.template.find({ "key.patternId" : ObjectId("5095a166a7bcb0e41880dfc3") })
+
+db.pattern.find({ "_id" : ObjectId("50966904a7bcb0e466a5d514") })
+
+db.template.find({"key.patternId" : ObjectId("50966904a7bcb0e466a5d514")})
+
+db.template.find({"key.path" : "0;11|0;4|0;5|0;36"})
+
+db.template.find({ "key.patternId" : ObjectId("50967183a7bcb0e40af01409") , "key.path" : "0;11|0;4|0;5|0;36"})
+
+db.context_queue.find({ "dataLength" : { $gt : NumberLong(2900)}})
+
+db.context_queue.find({ "_id" : ObjectId("5097014aafd5b0e4c5ed1341") })
+
+db.context_queue.find({ "_id" : ObjectId("5096d956afd5b0e4b7df57d8") })
 
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27017 -j ACCEPT
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 28017 -j ACCEPT
 service iptables save
+
+cp archivee.log /home/archivee/archivee.log
+rm -f archivee.log
+cat /dev/null > archivee.log
+tail -f archivee.log
+
+sudo su -l
+cd /app/oracle/user_projects/domains/archiveeDomain
+sh startWebLogic.sh &
+
+ps -ef | grep java
+
+shutdown -h now
+
+ssh -p 7022 archivee@localhost
+
+scp -P 7022 archivee@localhost:/home/archivee/archivee.log ./archivee.log

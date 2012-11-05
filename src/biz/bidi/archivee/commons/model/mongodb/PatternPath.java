@@ -21,6 +21,8 @@ package biz.bidi.archivee.commons.model.mongodb;
 
 import java.util.ArrayList;
 
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+
 
 /**
  * @author Andrey Bidinotto
@@ -53,4 +55,53 @@ public class PatternPath {
 		this.values = values;
 	}
 
+	public static PatternPath getPatternPath(String path) {
+		PatternPath patternPath = new PatternPath();
+		
+		for(String values : path.split("|")) {
+			PatternPathEntry entry = new PatternPathEntry();
+			int i = 0;
+			for(String value : values.split(";")) {
+				if(i == 0) {
+					entry.setIndex(Integer.parseInt(value));
+				} else if(i == 1) {
+					entry.setWords(Integer.parseInt(value));
+				} else {
+					ArchiveeException.logError("Warning: Invalid element on path -> PatternPath.getPatternPath()",path,values,value);
+					break;
+				}
+				i++;
+			}
+			patternPath.getValues().add(entry);
+		}
+		
+		return patternPath;
+	}
+	
+	public static String getPatternPathString(PatternPath patternPath) {
+		String path = "";
+		
+		int i = 0;
+		for(PatternPathEntry entry : patternPath.getValues()) {
+			i++;
+			path = path + entry.getIndex() + ";" +  entry.getWords() + (i==patternPath.getValues().size()?"":"|");
+		}
+		
+		return path;
+	}
+
+	public String getPath() {
+		return PatternPath.getPatternPathString(this);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return PatternPath.getPatternPathString(this);
+	}
+	
 }

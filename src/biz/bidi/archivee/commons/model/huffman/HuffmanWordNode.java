@@ -24,7 +24,7 @@ package biz.bidi.archivee.commons.model.huffman;
  * @email andreymoser@bidi.biz
  * @since Oct 2, 2012
  */
-public class HuffmanWordNode {
+public class HuffmanWordNode implements Comparable<HuffmanWordNode> {
 	
 	private HuffmanWordNode parent;
 	
@@ -146,6 +146,35 @@ public class HuffmanWordNode {
 	@Override
 	public String toString() {
 		return value;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(HuffmanWordNode o) {
+		
+		if(this.getWeight() != o.getWeight()) {
+			return this.getWeight() > o.getWeight() ? -1 : 1;
+		}
+		
+		if(this.getValue() != null || o.getValue() != null) {
+			if(this.getValue() != null && o.getValue() == null) {
+				return 1;
+			}
+			
+			if(this.getValue() == null && o.getValue() != null) {
+				return -1;
+			}
+			
+			if(this.getValue() != null && o.getValue() != null) {
+				return this.getValue().compareTo(o.getValue());
+			}
+		}
+		
+		return this.hashCode() > o.hashCode() ? -1 : 1;
 	}
 	
 }

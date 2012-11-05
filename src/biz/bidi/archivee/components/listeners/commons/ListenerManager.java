@@ -19,7 +19,6 @@
  */
 package biz.bidi.archivee.components.listeners.commons;
 
-
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz

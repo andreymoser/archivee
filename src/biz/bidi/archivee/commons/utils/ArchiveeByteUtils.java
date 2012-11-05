@@ -25,6 +25,7 @@ import java.util.HashMap;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordNode;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordTree;
+import biz.bidi.archivee.commons.model.mongodb.Dictionary;
 import biz.bidi.archivee.commons.model.mongodb.DictionaryEntry;
 
 /**
@@ -35,6 +36,12 @@ import biz.bidi.archivee.commons.model.mongodb.DictionaryEntry;
  */
 public class ArchiveeByteUtils {
 
+	private static ArchiveeByteUtils instance = new ArchiveeByteUtils();
+	
+	public static ArchiveeByteUtils getInstance() {
+		return instance;
+	}
+	
 	public static String convertToBitsString(long value) {
 		return convertToBitsString(value, 8*8);
 	}
@@ -192,19 +199,27 @@ public class ArchiveeByteUtils {
 		return nodes;
 	}
 	
-	public static int append(Object value, ArrayList<Byte> buffer, int offset, HashMap<Object,DictionaryEntry> dictionary) throws ArchiveeException {
-		int index = buffer.size() - 1;
-
+	public int append(Object value, ArrayList<Byte> buffer, int offset, HashMap<Object,DictionaryEntry> dictionary) throws ArchiveeException {
 		DictionaryEntry dictionaryEntry = dictionary.get(value);
 		
 		if(dictionaryEntry == null) {
-			throw new ArchiveeException("Invalid object for dictionary ",ArchiveeByteUtils.class,value,dictionary);
+			throw new ArchiveeException("Invalid object for dictionary ",this,value,dictionary);
+		}
+		
+		return append(buffer, offset, dictionaryEntry.getBytes(), dictionaryEntry.getBitsLength());
+	}
+	
+	public int append(String value, ArrayList<Byte> buffer, int offset, Dictionary dictionary) throws ArchiveeException {
+		DictionaryEntry dictionaryEntry = dictionary.get(value);
+		
+		if(dictionaryEntry == null) {
+			throw new ArchiveeException("Invalid object for dictionary ",this,value,dictionary);
 		}
 		
 		return append(buffer, offset, dictionaryEntry.getBytes(), dictionaryEntry.getBitsLength());
 	}
 
-	public static int append(ArrayList<Byte> buffer, int offset, long code, int length) throws ArchiveeException {
+	public int append(ArrayList<Byte> buffer, int offset, long code, int length) throws ArchiveeException {
 		int index = buffer.size() - 1;
 
 		Byte byteValue = null;

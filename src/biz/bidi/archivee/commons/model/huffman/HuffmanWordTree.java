@@ -57,40 +57,10 @@ public class HuffmanWordTree {
 	}
 	
 	public void buildTree(HashMap<String, Integer> entries) {
-		nodes = new TreeSet<HuffmanWordNode>(new Comparator<HuffmanWordNode>() {
-			@Override
-			public int compare(HuffmanWordNode o1, HuffmanWordNode o2) {
-				return o1.getWeight()==o2.getWeight()?o2.getValue().compareTo(o1.getValue()):(o1.getWeight()>o2.getWeight()?-1:1);
-			}
-		});
+		nodes = new TreeSet<HuffmanWordNode>();
 		
 		// builds priority queue
-		treeSet = new TreeSet<HuffmanWordNode>(new Comparator<HuffmanWordNode>() {
-			@Override
-			public int compare(HuffmanWordNode o1, HuffmanWordNode o2) {
-				if(o1.getWeight()!=o2.getWeight()) {
-					return o1.getWeight()>o2.getWeight()?1:-1;
-				}
-				
-				if(o1.getValue()==null && o2.getValue()==null) {
-					return o1.hashCode() > o2.hashCode() ? 1 : -1;
-				}
-				
-				if(o1.getValue()!=null && o2.getValue()==null) {
-					return 1;
-				}
-				
-				if(o1.getValue()==null && o2.getValue()!=null) {
-					return -1;
-				}
-
-				if(o1.getValue()!=null && o2.getValue()!=null) {
-					return o1.getValue().compareTo(o2.getValue());
-				}
-				
-				return o1.hashCode() > o2.hashCode() ? 1 : -1;
-			}
-		});
+		treeSet = new TreeSet<HuffmanWordNode>();
 		
 		for(String value : entries.keySet()) {
 			int weight = entries.get(value);

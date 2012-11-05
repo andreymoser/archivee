@@ -22,8 +22,6 @@ package biz.bidi.archivee.test.sandbox.mongodb;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bson.types.ObjectId;
-
 import biz.bidi.archivee.commons.model.mongodb.IEntity;
 
 import com.google.code.morphia.annotations.Entity;
@@ -35,9 +33,9 @@ import com.google.code.morphia.annotations.Id;
  * @since Sep 12, 2012
  */
 @Entity("test")
-public class TestEntity implements IEntity {
+public class TestEntity implements IEntity<String> {
 	
-	  @Id ObjectId id;
+	  @Id
 	  public String name;
 	  
 	  public int value;
@@ -49,4 +47,14 @@ public class TestEntity implements IEntity {
 	  public HashMap<String,Integer> mapValues;
 	  
 	  byte[] bytes;
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.model.mongodb.IEntity#getId()
+	 */
+	@Override
+	public String getId() {
+		return this.name;
+	}
 }

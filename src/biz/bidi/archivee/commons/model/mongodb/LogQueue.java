@@ -33,6 +33,7 @@ import com.google.code.morphia.annotations.Indexed;
  * @email andreymoser@bidi.biz
  * @since Sep 16, 2012
  */
+@SuppressWarnings("rawtypes")
 @Entity(value="log_queue", noClassnameStored=true)
 public class LogQueue implements IEntity {
 

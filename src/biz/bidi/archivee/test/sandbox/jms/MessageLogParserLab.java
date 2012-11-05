@@ -71,6 +71,7 @@ public class MessageLogParserLab {
 					
 					if(message.getDate() != null && !message.getDate().isEmpty()) {
 						logSender.sendLogMessage(message);
+						
 //						messageLogParser.parseLog(message);
 						
 						long seconds = ((System.currentTimeMillis() - currentTime)/1000);

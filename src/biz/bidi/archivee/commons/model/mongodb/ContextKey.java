@@ -29,6 +29,9 @@ import org.bson.types.ObjectId;
  */
 public class ContextKey {
 	
+	/**
+	 * @deprecated
+	 */
 	private ObjectId appId;
 	
 	private ObjectId patternId;
@@ -50,6 +53,7 @@ public class ContextKey {
 	}
 
 	/**
+	 * @deprecated
 	 * @return the appId
 	 */
 	public ObjectId getAppId() {
@@ -57,6 +61,7 @@ public class ContextKey {
 	}
 
 	/**
+	 * @deprecated
 	 * @param appId the appId to set
 	 */
 	public void setAppId(ObjectId appId) {

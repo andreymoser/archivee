@@ -99,15 +99,15 @@ public class BitsTest {
 		
 		int offset = 0;
 		try {
-			offset = ArchiveeByteUtils.append((Object) "a", buffer, offset, (HashMap) dictionary);
-			offset = ArchiveeByteUtils.append((Object) "b", buffer, offset, (HashMap) dictionary);
-			offset = ArchiveeByteUtils.append((Object) "c", buffer, offset, (HashMap) dictionary);
-			offset = ArchiveeByteUtils.append((Object) "a", buffer, offset, (HashMap) dictionary);
-			offset = ArchiveeByteUtils.append((Object) "b", buffer, offset, (HashMap) dictionary);
-			offset = ArchiveeByteUtils.append((Object) "a", buffer, offset, (HashMap) dictionary);
-			offset = ArchiveeByteUtils.append((Object) "b", buffer, offset, (HashMap) dictionary);
-			offset = ArchiveeByteUtils.append((Object) "c", buffer, offset, (HashMap) dictionary);
-			offset = ArchiveeByteUtils.append((Object) "c", buffer, offset, (HashMap) dictionary);
+			offset = ArchiveeByteUtils.getInstance().append((Object) "a", buffer, offset, (HashMap) dictionary);
+			offset = ArchiveeByteUtils.getInstance().append((Object) "b", buffer, offset, (HashMap) dictionary);
+			offset = ArchiveeByteUtils.getInstance().append((Object) "c", buffer, offset, (HashMap) dictionary);
+			offset = ArchiveeByteUtils.getInstance().append((Object) "a", buffer, offset, (HashMap) dictionary);
+			offset = ArchiveeByteUtils.getInstance().append((Object) "b", buffer, offset, (HashMap) dictionary);
+			offset = ArchiveeByteUtils.getInstance().append((Object) "a", buffer, offset, (HashMap) dictionary);
+			offset = ArchiveeByteUtils.getInstance().append((Object) "b", buffer, offset, (HashMap) dictionary);
+			offset = ArchiveeByteUtils.getInstance().append((Object) "c", buffer, offset, (HashMap) dictionary);
+			offset = ArchiveeByteUtils.getInstance().append((Object) "c", buffer, offset, (HashMap) dictionary);
 		} catch (ArchiveeException e) {
 			e.printStackTrace();
 		}

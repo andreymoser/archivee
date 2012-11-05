@@ -71,11 +71,9 @@ public class MasterIndexer extends ArchiveeManagedComponent implements IMasterIn
 		try {
 			Pattern pattern = new Pattern();
 			pattern.setId(message.getPatternId());
+			pattern = patternDAO.get(pattern);
 			
-			for(Pattern p : patternDAO.find(pattern)) {
-				pattern = p;
-				break; // by pattern id is only one possible
-			}
+			//TODO validate pattern read
 			
 			for(String word : ArchiveePatternUtils.getPatternValues(message.getMessage())) {
 				MasterIndex masterIndex = new MasterIndex();

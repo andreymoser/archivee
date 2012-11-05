@@ -32,6 +32,7 @@ import com.google.code.morphia.annotations.Indexed;
  * @email andreymoser@bidi.biz
  * @since Sep 13, 2012
  */
+@SuppressWarnings("rawtypes")
 @Entity(value="pattern", noClassnameStored=true)
 public class Pattern implements IEntity, IPattern {
 
@@ -43,6 +44,9 @@ public class Pattern implements IEntity, IPattern {
 	
 	private String value;
 	
+	/**
+	 * @deprecated
+	 */
 	private int offset;
 	
 	private ArrayList<PatternChild> patterns;
@@ -162,12 +166,14 @@ public class Pattern implements IEntity, IPattern {
 
 	/**
 	 * @return the offset
+	 * @deprecated
 	 */
 	public int getOffset() {
 		return offset;
 	}
 
 	/**
+	 * @deprecated
 	 * @param offset the offset to set
 	 */
 	public void setOffset(int offset) {

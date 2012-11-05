@@ -33,6 +33,7 @@ import com.google.code.morphia.annotations.Indexed;
  * @email andreymoser@bidi.biz
  * @since Sep 27, 2012
  */
+@SuppressWarnings("rawtypes")
 @Entity(value="context_index", noClassnameStored=true)
 public class ContextIndex implements IEntity {
 
@@ -56,6 +57,7 @@ public class ContextIndex implements IEntity {
 	public ContextIndex() {
 		super();
 		
+		key = new ContextIndexKey();
 		contextsRef = new ArrayList<ObjectId>();
 	}
 

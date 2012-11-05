@@ -30,6 +30,7 @@ import com.google.code.morphia.annotations.Indexed;
  * @email andreymoser@bidi.biz
  * @since Sep 27, 2012
  */
+@SuppressWarnings("rawtypes")
 @Entity(value="app", noClassnameStored=true)
 public class App implements IEntity {
 
