@@ -17,31 +17,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.file.logreader;
+package biz.bidi.archivee.components.search.commons;
 
-import biz.bidi.archivee.commons.ArchiveeConstants;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.interfaces.IFileLogReader;
-import biz.bidi.archivee.components.listeners.file.FileListenerThread;
+import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
+import biz.bidi.archivee.commons.interfaces.IArchiver;
+import biz.bidi.archivee.commons.interfaces.ISearch;
+import biz.bidi.archivee.components.archiver.Archiver;
+import biz.bidi.archivee.components.search.Search;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 4, 2012
+ * @since Nov 5, 2012
  */
-public class LogReaderFactory implements IArchiveeFactory<IFileLogReader,FileListenerThread> {
+public class SearchFactory extends ArchiveeSingletonFactory<ISearch, Object> {
 
 	/**
-	 * @param fileListener
-	 * @param logFile 
-	 * @return
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.factories.IArchiveeFactory#createInstance(java.lang.Object)
 	 */
-	public IFileLogReader createInstance(FileListenerThread fileListenerThread) {
-			if(ArchiveeConstants.IS_WINDOWS_OS) {
-				return new WindowsLogReader(fileListenerThread);
-			} else {
-				return new LinuxLogReader(fileListenerThread);
-			}
+	@Override
+	public ISearch createInstance(Object object) throws ArchiveeException {
+		if(instance == null) {
+			instance = new Search();
+		}
+		return this.getInstance();
 	}
 
 }

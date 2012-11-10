@@ -21,7 +21,7 @@ package biz.bidi.archivee.components.masteridx.commons;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
-import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
+import biz.bidi.archivee.commons.interfaces.IMasterIndexer;
 import biz.bidi.archivee.components.masteridx.indexer.MasterIndexer;
 
 /**

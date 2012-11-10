@@ -21,10 +21,10 @@ package biz.bidi.archivee.components.compressor.commons;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
+import biz.bidi.archivee.commons.interfaces.IArchiver;
+import biz.bidi.archivee.commons.interfaces.ICompressor;
 import biz.bidi.archivee.components.archiver.Archiver;
-import biz.bidi.archivee.components.archiver.IArchiver;
 import biz.bidi.archivee.components.compressor.Compressor;
-import biz.bidi.archivee.components.compressor.ICompressor;
 
 /**
  * @author Andrey Bidinotto

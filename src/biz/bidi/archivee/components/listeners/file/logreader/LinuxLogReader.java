@@ -50,7 +50,7 @@ public class LinuxLogReader extends GenericLogReader {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader#openLogFile()
+	 * @see biz.bidi.archivee.commons.interfaces.IFileLogReader#openLogFile()
 	 */
 	@Override
 	public void openLogFile() throws ArchiveeException {
@@ -65,7 +65,7 @@ public class LinuxLogReader extends GenericLogReader {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader#readSendLogs()
+	 * @see biz.bidi.archivee.commons.interfaces.IFileLogReader#readSendLogs()
 	 */
 	@Override
 	public void readSendLogs() throws ArchiveeException {
@@ -90,7 +90,7 @@ public class LinuxLogReader extends GenericLogReader {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader#closeLogFile()
+	 * @see biz.bidi.archivee.commons.interfaces.IFileLogReader#closeLogFile()
 	 */
 	@Override
 	public void closeLogFile() throws ArchiveeException {

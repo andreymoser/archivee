@@ -22,8 +22,8 @@ package biz.bidi.archivee.components.listeners.file;
 import java.io.File;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.IFileLogReader;
 import biz.bidi.archivee.components.listeners.commons.ListenerManager;
-import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
 
 /**
  * The file listener thread

@@ -45,7 +45,11 @@ public class ContextIndexDAO extends ArchiveeMongodbDAO<ContextIndex> {
 			return find(entity).
 					field("key.appId").equal(entity.getKey().getAppId()).
 					field("key.word").equal(entity.getKey().getWord());
-//					field("key.sequence").lessThanOrEq(Long.MAX_VALUE);
+		}
+		
+		if(customSearchId.equals(ArchiveeConstants.CONTEXT_INDEX_WORD_QUERY)) {
+			return find(entity).
+					field("key.word").equal(entity.getKey().getWord());
 		}
 		
 		return null;

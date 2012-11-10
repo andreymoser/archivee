@@ -30,6 +30,7 @@
 		<delete dir="${build.dir}" failonerror="false"/>
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${build.src.dir}"/>
+		<mkdir dir="${build.web.dir}"/>
 		<mkdir dir="${build.bin.dir}"/>
 		<mkdir dir="${build.lib.dir}"/>
 		<mkdir dir="${build.config.dir}"/>
@@ -37,6 +38,10 @@
 		<!-- copy resources -->
 		<copy todir="${build.src.dir}">
 			<fileset dir="${src.dir}"/>
+		</copy>
+		
+		<copy todir="${build.web.dir}">
+			<fileset dir="${web.dir}"/>
 		</copy>
 		
 		<copy todir="${build.lib.dir}">
@@ -56,6 +61,8 @@
 	</target>
 	
 	<target name="compile" depends="pre-compile">
+		<delete dir="${build.bin.dir}" failonerror="false"/>
+		<mkdir dir="${build.bin.dir}"/>
 		<!-- compile java -->
 		<javac srcdir="${build.src.dir}" destdir="${build.bin.dir}" source="${build.level}" target="${build.level}" includeantruntime="false" debug="true">
 			<classpath refid="compile.classpath"/>
@@ -75,6 +82,9 @@
 		<condition property="build.ejbs.file" value="${build.basename}-ejbs-${publish.version}" else="${build.basename}">
 			<isset property="publish.version"/>
 		</condition>
+		<condition property="build.web.file" value="${build.basename}-web-${publish.version}" else="${build.basename}">
+			<isset property="publish.version"/>
+		</condition>
 		
 		<tstamp>
 			<format property="build.time" pattern="${build.timeformat}"/>
@@ -87,6 +97,16 @@
 			</manifest>
 			<fileset dir="${build.bin.dir}">
 				<include name="biz/bidi/archivee/commons/**"/>
+			</fileset>
+		</jar>
+		
+		<jar destfile="${build.dir}/${build.web.file}.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Built-On" value="${build.time}"/>
+			</manifest>
+			<fileset dir="${build.bin.dir}">
+				<include name="biz/bidi/archivee/components/search/**"/>
 			</fileset>
 		</jar>
 		
@@ -125,11 +145,44 @@
 			</fileset>
 		</ear>
 		
-		<delete dir="${build.bin.dir}"/>
-		
 		<!-- usage -->
 		<echo message="usage: specify logging configuration by using -Dlogback.configurationFile property"/>
 		<echo message="usage: specify database store by using -Drhinoceros.store property"/>
+	</target>
+	
+	<target name="build-web" depends="build">
+		<delete dir="${build.web.dir}/WEB-INF/classes" failonerror="false"/>
+		<mkdir dir="${build.web.dir}/WEB-INF/classes"/>
+		<delete dir="${build.web.dir}/WEB-INF/lib" failonerror="false"/>
+		<mkdir dir="${build.web.dir}/WEB-INF/lib"/>
+		
+		<!--
+		<copy file="${build.dir}/${build.web.file}.jar" 
+			  todir="${build.web.dir}/WEB-INF/lib"/>
+		-->
+		<copy todir="${build.web.dir}/WEB-INF/lib">
+			<fileset dir="${build.lib.dir}">
+				<exclude name="*weblogic*.jar"/>
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.web.dir}/WEB-INF/classes">
+			<fileset dir="${build.bin.dir}">
+				<include name="biz/bidi/archivee/components/search/**"/>
+			</fileset>
+		</copy>
+		
+		<war basedir="${build.web.dir}" destfile="${build.dir}/archivee.war"
+		     webxml="${build.web.dir}/WEB-INF/web.xml">
+	        <exclude name="WEB-INF/**" />
+	        <webinf dir="${build.web.dir}/WEB-INF">
+	            <include name="**/*.jar" />
+	            <include name="**/*.xml" />
+	            <include name="**/*.css" />
+	            <include name="**/*.class" />
+	        </webinf>
+		</war>
 	</target>
 	
 	<target name="package" depends="build">
@@ -210,6 +263,12 @@
 		      user="system" password="weblogic12"
 			  upload="true"
 		      adminurl="t3://localhost:7001" targets="AdminServer" />
+		<wldeploy
+		      action="deploy" verbose="true" debug="true"
+		      name="archivee-search" source="${basedir}/build/archivee.war"
+		      user="system" password="weblogic12"
+			  upload="true"
+		      adminurl="t3://localhost:7001" targets="AdminServer" />
 	</target>
 	
 	<target name="clean-all" depends="clean">
@@ -217,5 +276,5 @@
 	</target>
 	
 	<target name="build-deploy-weblogic" depends="build, deploy-weblogic" />
-	
+	<target name="build-deploy-all" depends="build-web, deploy-weblogic" />
 </project>

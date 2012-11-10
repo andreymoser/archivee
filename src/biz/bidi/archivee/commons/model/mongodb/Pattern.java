@@ -208,4 +208,35 @@ public class Pattern implements IEntity, IPattern {
 		this.key = key;
 	}
 
+	/**
+	 * @param patternPath
+	 * @return
+	 */
+	public String getMessageFormat(PatternPath patternPath) {
+		
+		String messageFormat = "";
+		
+		ArrayList<PatternChild> patterns = null;
+		
+		for(int i=0; i < patternPath.getValues().size(); i++) {
+			if(i > 0) {
+				PatternPathEntry entry = patternPath.getValues().get(i);
+				
+				if(patterns == null) {
+					break;
+				} 
+				
+				PatternChild pChild = patterns.get(entry.getIndex());
+				messageFormat = messageFormat + pChild.getValue();
+				
+				patterns = pChild.getPatterns();
+			} else {
+				messageFormat = this.getValue();
+				patterns = this.patterns;
+			}
+		}
+		
+		return messageFormat;
+	}
+
 }

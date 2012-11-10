@@ -40,7 +40,7 @@ public class ArchiveeLogger implements ILogger, IArchiveePropertiesLoader {
 
 	private String log4jPropertiesFile;
 	
-	public static ArchiveeLogger instance = new ArchiveeLogger();
+	private static ArchiveeLogger instance = new ArchiveeLogger();
 	
 	private Logger logger;
 	
@@ -219,5 +219,12 @@ public class ArchiveeLogger implements ILogger, IArchiveePropertiesLoader {
 		}
 		
 		return objectMessage;
+	}
+
+	/**
+	 * @return the instance
+	 */
+	public static ArchiveeLogger getInstance() {
+		return instance;
 	}
 }

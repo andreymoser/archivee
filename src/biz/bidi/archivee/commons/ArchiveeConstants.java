@@ -83,9 +83,13 @@ public class ArchiveeConstants {
 	 */
 	
 	/**
-	 * The latest context index query 
+	 * The context index key query 
 	 */
 	public static final String CONTEXT_INDEX_KEY_QUERY = "context.index.latest.query";
+	/**
+	 * The context index word query 
+	 */
+	public static final String CONTEXT_INDEX_WORD_QUERY = "context.index.word.query";
 	/**
 	 * The common log queue entries for a given pattern + app  
 	 */

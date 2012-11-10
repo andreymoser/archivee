@@ -17,31 +17,67 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.file.logreader;
+package biz.bidi.archivee.components.search.model;
 
-import biz.bidi.archivee.commons.ArchiveeConstants;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.interfaces.IFileLogReader;
-import biz.bidi.archivee.components.listeners.file.FileListenerThread;
+import java.util.Date;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 4, 2012
+ * @since Nov 6, 2012
  */
-public class LogReaderFactory implements IArchiveeFactory<IFileLogReader,FileListenerThread> {
+public class Log {
+	
+	private Date date;
+	
+	private String level;
+	
+	private String message;
 
 	/**
-	 * @param fileListener
-	 * @param logFile 
-	 * @return
+	 * @return the date
 	 */
-	public IFileLogReader createInstance(FileListenerThread fileListenerThread) {
-			if(ArchiveeConstants.IS_WINDOWS_OS) {
-				return new WindowsLogReader(fileListenerThread);
-			} else {
-				return new LinuxLogReader(fileListenerThread);
-			}
+	public Date getDate() {
+		return date;
+	}
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public String getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level the level to set
+	 */
+	public void setLevel(String level) {
+		this.level = level;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public String getValue() {
+		return date + " - " + level + " - " + message;
 	}
 
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>Archivee</title>
+	<h:outputStylesheet library="css" name="archivee.css" />
+</h:head>
+<h:body>
+	<h3>Archivee Search</h3>
+
+	<h:form>
+		<h:inputText value="#{search.value}"></h:inputText>
+		<h:commandButton value="Search" action="#{search.searchLog}"></h:commandButton>
+	</h:form>
+
+	<h1>Results</h1>
+
+	<h:dataTable value="#{search.logs}" var="log"
+		styleClass="order-table" headerClass="order-table-header"
+		rowClasses="order-table-odd-row,order-table-even-row">
+
+		<h:column>
+			<!-- column header -->
+			<f:facet name="header">Date</f:facet>
+    				#{log.date}
+    			</h:column>
+
+		<h:column>
+			<f:facet name="header">Level</f:facet>
+    				#{log.level}
+    			</h:column>
+
+		<h:column>
+			<f:facet name="header">Message</f:facet>
+    				#{log.message}
+    			</h:column>
+
+	</h:dataTable>
+
+</h:body>
+</html>

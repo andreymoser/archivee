@@ -17,31 +17,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.listeners.file.logreader;
+package biz.bidi.archivee.components.search.model;
 
-import biz.bidi.archivee.commons.ArchiveeConstants;
-import biz.bidi.archivee.commons.factories.IArchiveeFactory;
-import biz.bidi.archivee.commons.interfaces.IFileLogReader;
-import biz.bidi.archivee.components.listeners.file.FileListenerThread;
+import java.util.ArrayList;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 4, 2012
+ * @since Nov 6, 2012
  */
-public class LogReaderFactory implements IArchiveeFactory<IFileLogReader,FileListenerThread> {
+public class LogQueryResponse {
 
-	/**
-	 * @param fileListener
-	 * @param logFile 
-	 * @return
-	 */
-	public IFileLogReader createInstance(FileListenerThread fileListenerThread) {
-			if(ArchiveeConstants.IS_WINDOWS_OS) {
-				return new WindowsLogReader(fileListenerThread);
-			} else {
-				return new LinuxLogReader(fileListenerThread);
-			}
+	private ArrayList<Log> logs;
+	
+	public LogQueryResponse() {
+		logs = new ArrayList<Log>();
 	}
 
+	/**
+	 * @return the logs
+	 */
+	public ArrayList<Log> getLogs() {
+		return logs;
+	}
+
+	/**
+	 * @param logs the logs to set
+	 */
+	public void setLogs(ArrayList<Log> logs) {
+		this.logs = logs;
+	}
+	
 }

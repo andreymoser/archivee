@@ -29,11 +29,11 @@ import javax.jms.TextMessage;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeError;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.IMasterIndexer;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.utils.ArchiveeLogger;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
 import biz.bidi.archivee.components.masteridx.commons.MasterIndexerManager;
-import biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer;
 
 @MessageDriven( 
 	mappedName = "jms.archivee.connection.patternTopic",

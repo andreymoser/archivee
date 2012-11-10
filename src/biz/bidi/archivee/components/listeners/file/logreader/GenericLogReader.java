@@ -22,6 +22,7 @@ package biz.bidi.archivee.components.listeners.file.logreader;
 import java.io.File;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.IFileLogReader;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
 import biz.bidi.archivee.commons.interfaces.ILogSender;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
@@ -72,7 +73,7 @@ public abstract class GenericLogReader implements IFileLogReader {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader#run()
+	 * @see biz.bidi.archivee.commons.interfaces.IFileLogReader#run()
 	 */
 	@Override
 	public void run() throws ArchiveeException {
@@ -102,7 +103,7 @@ public abstract class GenericLogReader implements IFileLogReader {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader#verifyFileMoved()
+	 * @see biz.bidi.archivee.commons.interfaces.IFileLogReader#verifyFileMoved()
 	 */
 	@Override
 	public void verifyFileMoved() throws ArchiveeException {
@@ -133,7 +134,7 @@ public abstract class GenericLogReader implements IFileLogReader {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader#sendLine(java.lang.String)
+	 * @see biz.bidi.archivee.commons.interfaces.IFileLogReader#sendLine(java.lang.String)
 	 */
 	@Override
 	public void sendLine(String line) throws ArchiveeException {

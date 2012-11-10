@@ -28,6 +28,7 @@ import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
 import biz.bidi.archivee.commons.components.Component;
 import biz.bidi.archivee.commons.exceptions.ArchiveeError;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.IMasterIndexer;
 import biz.bidi.archivee.commons.model.mongodb.MasterIndex;
 import biz.bidi.archivee.commons.model.mongodb.Pattern;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
@@ -55,7 +56,7 @@ public class MasterIndexer extends ArchiveeManagedComponent implements IMasterIn
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.masteridx.indexer.IMasterIndexer#indexMasterData(biz.bidi.archivee.commons.model.xml.PatternMessage)
+	 * @see biz.bidi.archivee.commons.interfaces.IMasterIndexer#indexMasterData(biz.bidi.archivee.commons.model.xml.PatternMessage)
 	 */
 	@Override
 	public void indexMasterData(PatternMessage message) throws ArchiveeException {

@@ -27,9 +27,9 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.ICompressor;
 import biz.bidi.archivee.commons.model.xml.CompressorMessage;
 import biz.bidi.archivee.commons.xml.ArchiveeXmlParser;
-import biz.bidi.archivee.components.compressor.ICompressor;
 import biz.bidi.archivee.components.compressor.commons.CompressorManager;
 
 @MessageDriven( 

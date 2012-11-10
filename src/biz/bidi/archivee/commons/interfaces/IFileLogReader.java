@@ -17,18 +17,48 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.archiver;
+package biz.bidi.archivee.commons.interfaces;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.xml.PatternMessage;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Sep 29, 2012
+ * @since Sep 4, 2012
  */
-public interface IArchiver {
+public interface IFileLogReader {
 	
-	public void archiveData(PatternMessage message) throws ArchiveeException;
-
+	/**
+	 * Run the process
+	 */
+	public void run() throws ArchiveeException;
+	
+	/**
+	 * Reads and send the read lines
+	 */
+	public void readSendLogs() throws ArchiveeException;
+	
+	/**
+	 * Opens the log file
+	 */
+	public void openLogFile() throws ArchiveeException;
+	
+	/**
+	 * Verify if file has been moved
+	 */
+	public void verifyFileMoved() throws ArchiveeException;
+	
+	/**
+	 * Closes the log file
+	 * @throws ArchiveeException
+	 */
+	public void closeLogFile() throws ArchiveeException;
+	
+	/**
+	 * Send the read line to DAO
+	 * @param line
+	 * @throws ArchiveeException
+	 */
+	public void sendLine(String line) throws ArchiveeException;
+	
 }

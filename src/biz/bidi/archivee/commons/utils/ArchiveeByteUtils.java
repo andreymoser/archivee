@@ -266,6 +266,42 @@ public class ArchiveeByteUtils {
 		return offset;
 	}
 	
+	public static int nextDecodeIndex(int index, int offset, int bitsread) {
+		int mod = bitsread/8;
+
+		if(mod > 0) {
+			index = mod + index;
+			if(offset + bitsread >= 8) {
+				index++;
+			}
+		} else {
+			if(offset + bitsread >= 8) {
+				index++;
+			}
+		}
+		
+		return index;
+	}
+	
+	public static int nextDecodeOffset(int index, int offset, int bitsread) {
+		int mod = bitsread/8;
+
+		if(offset + bitsread >= 8) {
+			int remaining = bitsread - mod*8; 
+			
+			if(offset + remaining >= 8) {
+				offset = remaining;
+			} else {
+				offset = offset + remaining;
+			}
+		} else {
+			offset = offset + bitsread;
+		}
+		
+		return offset;
+	}
+
+	//TODO REVIEW
 	public static Object decode(ArrayList<Byte> buffer, int index, int offset, HashMap<Object,DictionaryEntry> dictionary) {
 		Object object = null;
 		
@@ -278,7 +314,6 @@ public class ArchiveeByteUtils {
 			Byte b = buffer.get(index);
 			
 			value = value | (b & 0xFF) << shift;
-//			System.out.println(convertToBitsString(value));
 			
 			while(true) {
 				DictionaryEntry entry = new DictionaryEntry();
@@ -309,6 +344,18 @@ public class ArchiveeByteUtils {
 		}
 		
 		return object;
+	}
+	
+	public static long decode(ArrayList<Byte> buffer, int index, int offset, int length) {
+		long value = 0;
+		int mod = length/8;
+		
+		for(int i=0; i < mod; i++) {
+			Byte b = buffer.get(index + i);
+			value = value | (b & 0xFF) << (8*(i + 1));
+		}
+		
+		return getBitsValue(value, offset, length);
 	}
 	
 	private static Object getUniqueObject(DictionaryEntry entry, HashMap<Object,DictionaryEntry> dictionary) {

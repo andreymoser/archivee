@@ -23,10 +23,10 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.factories.IArchiveeFactoryManager;
+import biz.bidi.archivee.commons.interfaces.IFileLogReader;
 import biz.bidi.archivee.commons.interfaces.ILogParser;
 import biz.bidi.archivee.components.listeners.file.FileListenerThread;
 import biz.bidi.archivee.components.listeners.file.IFileListener;
-import biz.bidi.archivee.components.listeners.file.logreader.IFileLogReader;
 import biz.bidi.archivee.components.listeners.file.logreader.LogReaderFactory;
 import biz.bidi.archivee.components.listeners.parser.LogParserFactory;
 

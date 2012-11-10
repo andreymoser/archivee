@@ -17,18 +17,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.compressor;
+package biz.bidi.archivee.commons.interfaces;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
-import biz.bidi.archivee.commons.model.xml.CompressorMessage;
+import biz.bidi.archivee.components.search.model.LogQueryResponse;
 
 /**
  * @author Andrey Bidinotto
  * @email andreymoser@bidi.biz
- * @since Oct 1, 2012
+ * @since Nov 5, 2012
  */
-public interface ICompressor {
+public interface ISearch {
 
-	public void compressData(CompressorMessage message) throws ArchiveeException;
-
+	public LogQueryResponse searchLog(String searchString) throws ArchiveeException;
+	
 }

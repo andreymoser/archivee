@@ -17,13 +17,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package biz.bidi.archivee.components.archiver.commons;
+package biz.bidi.archivee.components.search.commons;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.factories.IArchiveeFactoryManager;
 import biz.bidi.archivee.commons.interfaces.IArchiver;
+import biz.bidi.archivee.commons.interfaces.ISearch;
 
 /**
  * @author Andrey Bidinotto
@@ -31,15 +32,15 @@ import biz.bidi.archivee.commons.interfaces.IArchiver;
  * @since Sep 29, 2012
  */
 @SuppressWarnings("rawtypes")
-public abstract class ArchiverFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
+public abstract class SearchFactoryManager extends ArchiveeFactoryManager implements IArchiveeFactoryManager {
 
 	protected static IArchiveeFactoryManager factoryManager;
 	
-	protected static IArchiveeFactory archiverFactory;
+	protected static IArchiveeFactory searchFactory;
 	
-	public ArchiverFactoryManager() {
+	public SearchFactoryManager() {
 		super();
-		archiverFactory = new ArchiverFactory();
+		searchFactory = new SearchFactory();
 	}
 	
 	/**
@@ -52,7 +53,7 @@ public abstract class ArchiverFactoryManager extends ArchiveeFactoryManager impl
 		IArchiveeFactory factory = super.getFactoryInstance(interfaceClass, classObject);
 		
 		if(interfaceClass == IArchiver.class) {
-			factory = archiverFactory; 
+			factory = searchFactory; 
 		}
 		
 		validateFactory(factory, interfaceClass);
@@ -65,9 +66,9 @@ public abstract class ArchiverFactoryManager extends ArchiveeFactoryManager impl
 	 * @throws ArchiveeException 
 	 */
 	@SuppressWarnings("unchecked")
-	public IArchiver getArchiver() throws ArchiveeException {
-		IArchiver archiver = null;
-		IArchiveeFactory<IArchiver, Object> factory = factoryManager.getFactoryInstance(IArchiver.class);
+	public ISearch getSearch() throws ArchiveeException {
+		ISearch archiver = null;
+		IArchiveeFactory<ISearch, Object> factory = factoryManager.getFactoryInstance(ISearch.class);
 		archiver = factory.createInstance(null);
 		return archiver;
 	}

@@ -21,8 +21,8 @@ package biz.bidi.archivee.components.archiver.commons;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeSingletonFactory;
+import biz.bidi.archivee.commons.interfaces.IArchiver;
 import biz.bidi.archivee.components.archiver.Archiver;
-import biz.bidi.archivee.components.archiver.IArchiver;
 
 /**
  * @author Andrey Bidinotto

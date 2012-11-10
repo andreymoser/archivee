@@ -20,6 +20,7 @@
 package biz.bidi.archivee.components.compressor;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import java.util.HashMap;
 
@@ -29,6 +30,7 @@ import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
 import biz.bidi.archivee.commons.components.Component;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.ICompressor;
 import biz.bidi.archivee.commons.interfaces.ICompressorSender;
 import biz.bidi.archivee.commons.model.huffman.HuffmanObjectIdNode;
 import biz.bidi.archivee.commons.model.huffman.HuffmanObjectIdTree;
@@ -94,7 +96,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see biz.bidi.archivee.components.compressor.ICompressor#compressData(biz.bidi.archivee.commons.model.xml.CompressorMessage)
+	 * @see biz.bidi.archivee.commons.interfaces.ICompressor#compressData(biz.bidi.archivee.commons.model.xml.CompressorMessage)
 	 */
 	@Override
 	public void compressData(CompressorMessage message) throws ArchiveeException {
@@ -133,7 +135,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 
 						buildDictionary(dictionary, dq);
 						
-						ArchiveeLogger.instance.debug(this, "Saving dictionary.", dictionary, dq);
+						ArchiveeLogger.getInstance().debug(this, "Saving dictionary.", dictionary, dq);
 						
 						dictionaryDAO.save(dictionary);
 						dictionaryQueueDAO.delete(dq,null);
@@ -207,7 +209,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 			
 			Template template = findTemplate(patternPath, pattern);
 			
-			ArchiveeLogger.instance.debug(this,"Compressing message.",patternMessage,pattern,patternPath,template,templateDictionary,context);
+			ArchiveeLogger.getInstance().debug(this,"Compressing message.",patternMessage,pattern,patternPath,template,templateDictionary,context);
 			
 			if(template == null || template.getId() == null) {
 				throw new ArchiveeException("Template not found while compressing bits",this,patternPath,pattern,contextQueue,patternMessage);
@@ -215,8 +217,9 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 			
 			bitOffset = ArchiveeByteUtils.getInstance().append(template.getId(), data, bitOffset, (HashMap) templateDictionary.getTemplateEntries());
 			
-			Long date = ArchiveeDateUtils.convertToDate(patternMessage.getDate()).getTime() - contextQueue.getStartDate().getTime();
-			bitOffset = ArchiveeByteUtils.getInstance().append(data, bitOffset, date, context.getDateBitsLenght());
+			Date date = ArchiveeDateUtils.convertToDate(patternMessage.getDate());
+			Long dateLong = date.getTime() - contextQueue.getStartDate().getTime();
+			bitOffset = ArchiveeByteUtils.getInstance().append(data, bitOffset, dateLong, context.getDateBitsLenght());
 			
 			int levelIndex = levels.indexOf(patternMessage.getLevel());
 			if(levelIndex < 0) {
@@ -261,10 +264,15 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 						contextIndex = ci;
 						break;
 					}
-					//TODO validate context index
-					if(contextIndex != null && contextIndex.getId() != null) {
+					if(contextIndex != null) {
 						if(!contextIndex.getContextSequences().contains(context.getId())) {
 							contextIndex.getContextSequences().add(context.getId());
+						}
+						if(contextIndex.getStartDate() == null || contextIndex.getStartDate().compareTo(date) > 0) {
+							contextIndex.setStartDate(date);
+						}
+						if(contextIndex.getEndDate() == null || contextIndex.getStartDate().compareTo(date) < 0) {
+							contextIndex.setEndDate(date);
 						}
 						contextIndexDAO.save(contextIndex);
 					}

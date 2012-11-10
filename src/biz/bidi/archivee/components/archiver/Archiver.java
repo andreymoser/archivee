@@ -26,6 +26,7 @@ import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.components.ArchiveeManagedComponent;
 import biz.bidi.archivee.commons.components.Component;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
+import biz.bidi.archivee.commons.interfaces.IArchiver;
 import biz.bidi.archivee.commons.interfaces.IArchiverSender;
 import biz.bidi.archivee.commons.interfaces.ICompressorSender;
 import biz.bidi.archivee.commons.model.mongodb.ContextQueue;
@@ -76,7 +77,7 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 	 * {@inheritDoc}
 	 * 
 	 * @see 
-	 * biz.bidi.archivee.components.archiver.IArchiver#archiveData(biz.bidi.archivee.commons.model.xml.PatternMessage)
+	 * biz.bidi.archivee.commons.interfaces.IArchiver#archiveData(biz.bidi.archivee.commons.model.xml.PatternMessage)
 	 */
 	@Override
 	public void archiveData(PatternMessage message) throws ArchiveeException {
@@ -125,7 +126,7 @@ public class Archiver extends ArchiveeManagedComponent implements IArchiver {
 				compressorSender.sendCompressorMessage(compressorMessage);
 			}
 			
-			ArchiveeLogger.instance.debug(this,"Archived message in context queue.",message,template,pattern,patternPath,contextQueue);
+			ArchiveeLogger.getInstance().debug(this,"Archived message in context queue.",message,template,pattern,patternPath,contextQueue);
 		} catch (ArchiveeException e) {
 			release(Component.ARCHIVER.getValue(), message.getThreadId());
 			throw e;

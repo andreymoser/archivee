@@ -103,5 +103,20 @@ public class PatternPath {
 	public String toString() {
 		return PatternPath.getPatternPathString(this);
 	}
+
+	/**
+	 * @param words
+	 * @param pattern
+	 * @return
+	 */
+	public String mountMessage(ArrayList<String> words, Pattern pattern) {
+		String message = pattern.getMessageFormat(this);
+		
+		for(String word : words) {
+			message = message.replaceFirst("W|N|M", word);
+		}
+		
+		return message;
+	}
 	
 }

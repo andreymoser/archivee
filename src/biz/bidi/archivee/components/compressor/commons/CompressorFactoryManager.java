@@ -23,7 +23,7 @@ import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.factories.ArchiveeFactoryManager;
 import biz.bidi.archivee.commons.factories.IArchiveeFactory;
 import biz.bidi.archivee.commons.factories.IArchiveeFactoryManager;
-import biz.bidi.archivee.components.compressor.ICompressor;
+import biz.bidi.archivee.commons.interfaces.ICompressor;
 
 /**
  * @author Andrey Bidinotto

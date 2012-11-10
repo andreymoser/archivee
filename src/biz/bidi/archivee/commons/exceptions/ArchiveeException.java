@@ -93,7 +93,7 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 			}
 		}
 		
-		return ArchiveeLogger.instance.getInstancesAttributesValue(this.objects);
+		return ArchiveeLogger.getInstance().getInstancesAttributesValue(this.objects);
 	}
 
 	/**
@@ -125,10 +125,10 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 				ArchiveeException ae = (ArchiveeException) e; 
 				ae.error(null, null);
 			} else {
-				ArchiveeLogger.instance.error(e, e.getMessage() + " - " + getStackTrace(e));
+				ArchiveeLogger.getInstance().error(e, e.getMessage() + " - " + getStackTrace(e));
 			}
 		}
-		ArchiveeLogger.instance.error(instanceError, this.message + " " + objectsString + " - " + getStackTrace(this));
+		ArchiveeLogger.getInstance().error(instanceError, this.message + " " + objectsString + " - " + getStackTrace(this));
 	}
 	
 	private static String getStackTrace(Exception e) {
