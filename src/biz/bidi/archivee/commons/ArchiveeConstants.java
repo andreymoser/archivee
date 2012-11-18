@@ -67,16 +67,15 @@ public class ArchiveeConstants {
 	 * The context queue data max size 
 	 */
 //	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = MAX_BYTE_ARRAY_SIZE;
-	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = 3000;
-	/**
-	 * The context queue status delay 
-	 */
-	public static final int CONTEXT_QUEUE_STATUS_DELAY = 1000;
-	
+	public static final int CONTEXT_QUEUE_MAX_DATA_SIZE = 10000;
 	/**
 	 * The dot replacement value (☯ - Yin Yang) - used for mongodb fields which aren't allowed dot values - specifically in Map keys
 	 */
 	public static final String DOT_REPLACE_VALUE = "\u262F";	
+	/**
+	 * The temp replacement value (☿ - Mercury)
+	 */
+	public static final String TEMP_REPLACE_VALUE = "\u263F";	
 	
 	/**********************************************************************************
 	 * DAO queries
@@ -90,6 +89,10 @@ public class ArchiveeConstants {
 	 * The context index word query 
 	 */
 	public static final String CONTEXT_INDEX_WORD_QUERY = "context.index.word.query";
+	/**
+	 * The context index word query 
+	 */
+	public static final String CONTEXT_INDEX_CONTAINS_WORD_QUERY = "context.index.contains.word.query";
 	/**
 	 * The common log queue entries for a given pattern + app  
 	 */

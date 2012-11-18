@@ -77,11 +77,12 @@ public class MessageLogParserLab {
 						long seconds = ((System.currentTimeMillis() - currentTime)/1000);
 						messages++;
 						
-						System.out.println("#" + messages + " - " + seconds + "secs - " + "TPS: " + (messages/(seconds<1?1:seconds)) + " - " + line);
-						System.out.println(ArchiveePatternUtils.convertToSimpleRegex(line));
+						System.out.println("#" + messages + " - " + seconds + "secs - " + "TPS: " + (messages/(seconds<1?1:seconds)));
+//						System.out.println("#" + messages + " - " + seconds + "secs - " + "TPS: " + (messages/(seconds<1?1:seconds)) + " - " + line);
+//						System.out.println(ArchiveePatternUtils.convertToSimpleRegex(line));
 						
 						try {
-							Thread.sleep(500);
+							Thread.sleep(100);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}

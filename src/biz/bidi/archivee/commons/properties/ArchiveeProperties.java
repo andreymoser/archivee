@@ -124,6 +124,9 @@ public class ArchiveeProperties {
 			if(type.equals("short") || type.equals("Short")) {
 				param = Short.parseShort(ArchiveeProperties.get(prefixKey + name));
 			}
+			if(type.equals("boolean") || type.equals("Boolean")) {
+				param = Boolean.parseBoolean(ArchiveeProperties.get(prefixKey + name));
+			}
 			
 			if(param != null) {
 				try {

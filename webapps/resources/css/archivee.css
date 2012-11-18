@@ -1,0 +1,52 @@
+@CHARSET "UTF-8";
+
+.highlight { background-color: yellow }
+
+.archivee-header {
+	
+}
+
+.archivee-header img {   
+	display:block;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.archivee-status {
+	text-align:center;
+}
+
+.archivee-forms {   
+	text-align:center;
+}
+
+.archivee-logs {   
+	text-align:center;
+}
+
+.search-form {   
+	text-align:center;
+}
+
+.logs-table{   
+	border-collapse:collapse;
+}
+ 
+.logs-table-header{
+	text-align:center;
+	background:none repeat scroll 0 0 #E5E5E5;
+	border-bottom:1px solid #BBBBBB;
+	padding:16px;
+}
+ 
+.logs-table-odd-row{
+	text-align:left;
+	background:none repeat scroll 0 0 #FFFFFFF;
+	border-top:1px solid #BBBBBB;
+}
+ 
+.logs-table-even-row{
+	text-align:left;
+	background:none repeat scroll 0 0 #F9F9F9;
+	border-top:1px solid #BBBBBB;
+}

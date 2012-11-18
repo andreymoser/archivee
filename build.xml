@@ -179,7 +179,6 @@
 	        <webinf dir="${build.web.dir}/WEB-INF">
 	            <include name="**/*.jar" />
 	            <include name="**/*.xml" />
-	            <include name="**/*.css" />
 	            <include name="**/*.class" />
 	        </webinf>
 		</war>

@@ -52,6 +52,11 @@ public class ContextIndexDAO extends ArchiveeMongodbDAO<ContextIndex> {
 					field("key.word").equal(entity.getKey().getWord());
 		}
 		
+		if(customSearchId.equals(ArchiveeConstants.CONTEXT_INDEX_CONTAINS_WORD_QUERY)) {
+			return find(entity).
+					field("key.word").containsIgnoreCase(entity.getKey().getWord());
+		}
+		
 		return null;
 	}
 

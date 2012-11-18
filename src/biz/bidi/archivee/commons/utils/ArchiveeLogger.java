@@ -40,6 +40,8 @@ public class ArchiveeLogger implements ILogger, IArchiveePropertiesLoader {
 
 	private String log4jPropertiesFile;
 	
+	private boolean traceObjectValues;
+	
 	private static ArchiveeLogger instance = new ArchiveeLogger();
 	
 	private Logger logger;
@@ -162,6 +164,11 @@ public class ArchiveeLogger implements ILogger, IArchiveePropertiesLoader {
 	 */
 	public String getInstancesAttributesValue(Object... objects) {
 		String objectMessage = "";
+		
+		if(!traceObjectValues) {
+			return objectMessage;
+		}
+		
 		for(Object object : objects) {
 			if(object == null) {
 				continue;
@@ -226,5 +233,19 @@ public class ArchiveeLogger implements ILogger, IArchiveePropertiesLoader {
 	 */
 	public static ArchiveeLogger getInstance() {
 		return instance;
+	}
+
+	/**
+	 * @return the traceObjectValues
+	 */
+	public boolean isTraceObjectValues() {
+		return traceObjectValues;
+	}
+
+	/**
+	 * @param traceObjectValues the traceObjectValues to set
+	 */
+	public void setTraceObjectValues(boolean traceObjectValues) {
+		this.traceObjectValues = traceObjectValues;
 	}
 }

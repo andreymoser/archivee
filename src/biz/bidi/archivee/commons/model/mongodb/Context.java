@@ -53,6 +53,13 @@ public class Context implements IEntity {
 	 * The compacted data
 	 */
 	private Byte[] data;
+	/**
+	 * The non inclusive offset (1-8) for the latest byte in buffer (data)
+	 * 1 = 1 bit encoded
+	 * ...
+	 * 8 = 8 bits encoded 
+	 */
+	private int offsetEnd;
 
 	/**
 	 * 
@@ -132,6 +139,20 @@ public class Context implements IEntity {
 	 */
 	public void setDateBitsLenght(int dateBitsLenght) {
 		this.dateBitsLenght = dateBitsLenght;
+	}
+
+	/**
+	 * @return the offsetEnd
+	 */
+	public int getOffsetEnd() {
+		return offsetEnd;
+	}
+
+	/**
+	 * @param offsetEnd the offsetEnd to set
+	 */
+	public void setOffsetEnd(int offsetEnd) {
+		this.offsetEnd = offsetEnd;
 	}
 
 }

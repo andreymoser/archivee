@@ -37,6 +37,7 @@ import biz.bidi.archivee.commons.model.mongodb.PatternChild;
 import biz.bidi.archivee.commons.model.xml.ParserMessage;
 import biz.bidi.archivee.commons.model.xml.PatternMessage;
 import biz.bidi.archivee.commons.utils.ArchiveeDateUtils;
+import biz.bidi.archivee.commons.utils.ArchiveeLogger;
 import biz.bidi.archivee.commons.utils.ArchiveePatternUtils;
 import biz.bidi.archivee.components.logparser.commons.LogParserManager;
 
@@ -204,7 +205,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 			
 			newPattern = findCommonRootPattern(simpleRegexLogLine, message, offset, leafPattern, false);
 			if(newPattern != null && newPattern.getValue().length() > 0) {
-				System.out.println("Added : " + newPattern.getValue() + " - leafPattern: " + leafPattern.getValue());
+				ArchiveeLogger.getInstance().info(this,"Added : " + newPattern.getValue() + " - leafPattern: " + leafPattern.getValue()); 
 				
 				PatternChild newPatternChild = convertToPatternChild(newPattern); 
 				leafPattern.getPatterns().add(newPatternChild);
@@ -217,7 +218,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 			
 			newPattern = findCommonRootPattern(simpleRegexLogLine, message, offset, pattern, false);
 			if(newPattern != null && newPattern.getValue().length() > 0) {
-				System.out.println("Added : " + newPattern.getValue());
+				ArchiveeLogger.getInstance().info(this,"Added : " + newPattern.getValue());
 				
 				PatternChild newPatternChild = convertToPatternChild(newPattern); 
 				pattern.getPatterns().add(newPatternChild);
@@ -368,7 +369,7 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 				Pattern newPatternChild = findCommonRootPattern(simpleRegexLogLine, message, newOffset, newPattern, false);
 				
 				if(newPatternChild != null) {
-					System.out.println("\tAdded : " + newPatternChild.getValue() + " - parent: " + newPattern.getValue());
+					ArchiveeLogger.getInstance().info(this,"\tAdded : " + newPatternChild.getValue() + " - parent: " + newPattern.getValue());
 					
 					PatternChild patternChild = convertToPatternChild(newPatternChild); 
 					newPattern.getPatterns().add(patternChild);
@@ -479,13 +480,4 @@ public class MessageLogParser extends ArchiveeManagedComponent implements ILogPa
 		}
 	}
 	
-	/**
-	 * @throws ArchiveeException 
-	 * 
-	 */
-	public void showPatterns() throws ArchiveeException {
-		for(Pattern p : patternDAO.find(new Pattern())) {
-			System.out.println(p.getTreeStringData());
-		}		
-	}
 }

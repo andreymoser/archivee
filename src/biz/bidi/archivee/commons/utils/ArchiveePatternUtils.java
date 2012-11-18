@@ -21,7 +21,6 @@ package biz.bidi.archivee.commons.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.regex.Matcher;
 
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;

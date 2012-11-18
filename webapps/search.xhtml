@@ -7,38 +7,57 @@
 <h:head>
 	<title>Archivee</title>
 	<h:outputStylesheet library="css" name="archivee.css" />
+	<h:outputScript library="js" name="jquery-1.8.3.min.js" />
+	<h:outputScript library="js" name="jquery.highlight-4.js" />
 </h:head>
 <h:body>
-	<h3>Archivee Search</h3>
+	
+	<div class="archivee-header">
+		<h:graphicImage library="images" name="archivee.png"/>
+	</div>
+	
+	<br/>
+	<br/>
+	
+	<div class="archivee-form">
+		<h:form styleClass="search-form">
+			<h:inputText value="#{search.value}"></h:inputText>
+			<h:commandButton value="Search" action="#{search.searchLog}"></h:commandButton>
+		</h:form>
+	</div>
+	
+	<br/>
+	
+	<div class="archivee-status">
+		<p>#{search.status}</p>
+	</div>
+	
+	<br/>
+	
+	<div class="archivee-logs">
+		<h:dataTable value="#{search.logs}" var="log" rendered="#{search.rendered}" 
+			styleClass="logs-table" headerClass="logs-table-header"
+			rowClasses="logs-table-odd-row,logs-table-even-row">
+	
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">Date</f:facet>
+	    				#{log.date}
+	    			</h:column>
+	
+			<h:column>
+				<f:facet name="header">Level</f:facet>
+	    				#{log.level}
+	    			</h:column>
+	
+			<h:column>
+				<f:facet name="header">Message</f:facet>
+	    				#{log.message}
+	    			</h:column>
+	
+		</h:dataTable>
+	</div>
 
-	<h:form>
-		<h:inputText value="#{search.value}"></h:inputText>
-		<h:commandButton value="Search" action="#{search.searchLog}"></h:commandButton>
-	</h:form>
-
-	<h1>Results</h1>
-
-	<h:dataTable value="#{search.logs}" var="log"
-		styleClass="order-table" headerClass="order-table-header"
-		rowClasses="order-table-odd-row,order-table-even-row">
-
-		<h:column>
-			<!-- column header -->
-			<f:facet name="header">Date</f:facet>
-    				#{log.date}
-    			</h:column>
-
-		<h:column>
-			<f:facet name="header">Level</f:facet>
-    				#{log.level}
-    			</h:column>
-
-		<h:column>
-			<f:facet name="header">Message</f:facet>
-    				#{log.message}
-    			</h:column>
-
-	</h:dataTable>
-
+	<script>$('.archivee-logs').highlight('#{search.value}')</script>
 </h:body>
 </html>

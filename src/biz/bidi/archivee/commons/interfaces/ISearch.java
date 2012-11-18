@@ -31,4 +31,6 @@ public interface ISearch {
 
 	public LogQueryResponse searchLog(String searchString) throws ArchiveeException;
 	
+	public LogQueryResponse searchContext(String contextId) throws ArchiveeException;
+
 }

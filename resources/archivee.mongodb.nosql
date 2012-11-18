@@ -46,6 +46,15 @@ db.context_queue.find({ "_id" : ObjectId("5097014aafd5b0e4c5ed1341") })
 
 db.context_queue.find({ "_id" : ObjectId("5096d956afd5b0e4b7df57d8") })
 
+db.dictionary.find({ "key.templateId" : ObjectId("50a78d0548c6b0e48f4a7c82"), "key.elementIndex" : 0, "key.subElementIndex" : 0 })
+
+db.dictionary.find({ "key.templateId" : ObjectId("50a78d0548c6b0e48f4a7c82") })
+
+db.dictionary.find({ "key.templateId" : ObjectId("50a78d0548c6b0e48f4a7c82"), "key.elementIndex" : 0 })
+
+db.template.find({ "_id" : ObjectId("50a78d0548c6b0e48f4a7c82") })
+
+
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27017 -j ACCEPT
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 28017 -j ACCEPT
 service iptables save
@@ -66,3 +75,8 @@ shutdown -h now
 ssh -p 7022 archivee@localhost
 
 scp -P 7022 archivee@localhost:/home/archivee/archivee.log ./archivee.log
+
+
+db.context_queue.find({ "_id" : ObjectId("50a9559bee83b0e41569fd5a") })
+
+db.dictionary.find({ "_id" : ObjectId("50a9566bee83b0e4c472fd5a") })

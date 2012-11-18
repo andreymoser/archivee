@@ -21,6 +21,7 @@ package biz.bidi.archivee.commons.model.mongodb;
 
 import java.util.ArrayList;
 
+import biz.bidi.archivee.commons.ArchiveeConstants;
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 
 
@@ -58,10 +59,15 @@ public class PatternPath {
 	public static PatternPath getPatternPath(String path) {
 		PatternPath patternPath = new PatternPath();
 		
-		for(String values : path.split("|")) {
+		String[] valuesArray = path.split("\\|");
+		
+		for(String values : valuesArray) {
 			PatternPathEntry entry = new PatternPathEntry();
 			int i = 0;
-			for(String value : values.split(";")) {
+			
+			String[] valuesArray2 = values.split(";");
+			
+			for(String value : valuesArray2) {
 				if(i == 0) {
 					entry.setIndex(Integer.parseInt(value));
 				} else if(i == 1) {
@@ -112,9 +118,14 @@ public class PatternPath {
 	public String mountMessage(ArrayList<String> words, Pattern pattern) {
 		String message = pattern.getMessageFormat(this);
 		
+		message = message.replaceAll("W|N|M", ArchiveeConstants.TEMP_REPLACE_VALUE);
+		
 		for(String word : words) {
-			message = message.replaceFirst("W|N|M", word);
+			message = message.replaceFirst(ArchiveeConstants.TEMP_REPLACE_VALUE, word);
 		}
+		
+		//TODO fix bug - safely remove dot replace values
+		message = message.replaceAll(ArchiveeConstants.DOT_REPLACE_VALUE,".");
 		
 		return message;
 	}

@@ -22,6 +22,8 @@ package biz.bidi.archivee.commons.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.bea.common.security.jdkutils.WeaverUtil.Collections;
+
 import biz.bidi.archivee.commons.exceptions.ArchiveeException;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordNode;
 import biz.bidi.archivee.commons.model.huffman.HuffmanWordTree;
@@ -50,8 +52,14 @@ public class ArchiveeByteUtils {
 		String bitstr = "";
 		
 		long val = 1;
+		int byteCount = 0;
 		
 		for(int i=0; i<lenght; i++) {
+			if(byteCount == 8) {
+				bitstr += "|";
+				byteCount = 0;
+			}
+			
 			if((value & val) > 0) {
 				bitstr += "1";
 			} else {
@@ -59,6 +67,7 @@ public class ArchiveeByteUtils {
 			}
 			
 			val = val * 2;
+			byteCount++;
 		}
 		
 		return bitstr;
@@ -111,41 +120,15 @@ public class ArchiveeByteUtils {
 		return values;
 	}
 
-	public static Byte[] encode(ArrayList<String> values, HuffmanWordTree huffmanWordTree) {
+	public static Byte[] encode(ArrayList<String> values, HuffmanWordTree huffmanWordTree) throws ArchiveeException {
 		ArrayList<Byte> bytes = new ArrayList<Byte>();
 
 		int offset = 0;
-		byte value = 0;
 		
 		for(String str : values) {
 			HuffmanWordNode node = huffmanWordTree.getNode(str);
-			int tail = node.getLevel();
-			int bits = 0;
-			while(true) {
-				if(offset == 0) {
-					value = (byte) (node.getCode() >> bits);
-				} else {
-					value = (byte) (value | (byte) ((node.getCode() >> bits) << offset));
-				}
-				int shift = (tail>8?8:tail);
-				offset += shift;
-				tail = tail - shift;
-				
-				if(offset >= 8) {
-					offset = 0;
-					bytes.add(value);
-					value = 0;
-				}
-				
-				if(tail <= 0) {
-					break;
-				}
-				bits = bits + 8;
-			}
-		}
-		
-		if(value != 0) {
-			bytes.add(value);
+			
+			offset = ArchiveeByteUtils.getInstance().append(bytes, offset, node.getCode(), node.getLevel());
 		}
 		
 		return bytes.toArray(new Byte[bytes.size()]);
@@ -161,39 +144,49 @@ public class ArchiveeByteUtils {
 			mask = mask + val;
 		}
 		
-		bitsValue = (byte)((value >> offset) & 0xFF);
-		bitsValue = (byte)(bitsValue & mask);
+		bitsValue = value >> offset;
+		bitsValue = bitsValue & mask;
 		
 		return bitsValue;
 	}
 	
-	
 	public static ArrayList<HuffmanWordNode> decode(Byte[] bytes, HuffmanWordTree huffmanWordTree) {
 		ArrayList<HuffmanWordNode> nodes = new ArrayList<HuffmanWordNode>();
 		
+		ArrayList<Byte> bytesList = new ArrayList<Byte>();
+		Collections.addAll(bytesList, bytes);
+		
+		int index = 0;
 		int offset = 0;
-		long value = 0;
-		int bits = 0;
-		for(Byte b : bytes) {
+		int index_aux = 0;
+		int offset_aux = 0;
+		
+		Dictionary dictionary = new Dictionary();
+		
+		for(HuffmanWordNode node : huffmanWordTree.getNodes()) {
+			DictionaryEntry dictionaryEntry = new DictionaryEntry();
+			dictionaryEntry.setBitsLength(node.getLevel());
+			dictionaryEntry.setBytes(node.getCode());
+			dictionary.getEntries().put(node.getValue(), dictionaryEntry);
+		}
+		
+		while(index < bytes.length) {
+			Object object = ArchiveeByteUtils.getInstance().decode(bytesList,index,offset, (HashMap) dictionary.getEntries());
+
+			String word = (String) object;
 			
-			value = (getBitsValue(value, offset, bits) << 8) | b; 
-			offset = 0;
-			
-			while(true) {
-				HuffmanWordNode node = huffmanWordTree.getUniqueNode(getBitsValue(value, offset, bits + 1),bits + 1); 
-				if(node != null) {
-					nodes.add(node);
-					offset = offset + bits + 1;
-					bits = 0;
-					value = b;
-				} else {
-					bits++;
-				}
-						
-				if(bits > 8 || offset >= 8) {
-					break;
-				}
+			if(word == null && index == bytes.length - 1) {
+				break;
 			}
+			
+			DictionaryEntry entry = dictionary.getEntries().get(word);
+			
+			index_aux = ArchiveeByteUtils.getInstance().nextDecodeIndex(index, offset, entry.getBitsLength());
+			offset_aux = ArchiveeByteUtils.getInstance().nextDecodeOffset(index, offset, entry.getBitsLength());
+			index = index_aux;
+			offset = offset_aux;
+			
+			nodes.add(huffmanWordTree.getNode(word));
 		}
 		
 		return nodes;
@@ -249,6 +242,7 @@ public class ArchiveeByteUtils {
 			if((offset + bitsAdded) >= 8) {
 				offset = (offset + bitsAdded) - 8;
 				buffer.add(byteValue);
+				byteValue = new Byte((byte) 0);
 				added = true;
 			} else {
 				offset = offset + bitsAdded;
@@ -268,10 +262,11 @@ public class ArchiveeByteUtils {
 	
 	public static int nextDecodeIndex(int index, int offset, int bitsread) {
 		int mod = bitsread/8;
-
+		int remaining = bitsread - mod*8;
+		
 		if(mod > 0) {
 			index = mod + index;
-			if(offset + bitsread >= 8) {
+			if(offset + remaining >= 8) {
 				index++;
 			}
 		} else {
@@ -290,7 +285,11 @@ public class ArchiveeByteUtils {
 			int remaining = bitsread - mod*8; 
 			
 			if(offset + remaining >= 8) {
-				offset = remaining;
+				if(offset + remaining == 8) {
+					offset = 0;
+				} else {
+					offset = (offset + remaining) - 8; 
+				}
 			} else {
 				offset = offset + remaining;
 			}
@@ -349,10 +348,24 @@ public class ArchiveeByteUtils {
 	public static long decode(ArrayList<Byte> buffer, int index, int offset, int length) {
 		long value = 0;
 		int mod = length/8;
+		if(mod == 0) {
+			mod = 1;
+		}
+		
+		int remaining = 0;
+		if(length > 8) {
+			remaining = length - mod*8;
+		} else {
+			remaining = length;
+		}
+		
+		if(offset + remaining >= 8) {
+			mod++;
+		}		
 		
 		for(int i=0; i < mod; i++) {
 			Byte b = buffer.get(index + i);
-			value = value | (b & 0xFF) << (8*(i + 1));
+			value = value | (b & 0xFF) << (8*i);
 		}
 		
 		return getBitsValue(value, offset, length);
@@ -380,6 +393,7 @@ public class ArchiveeByteUtils {
 	
 	public static String convertToBitsString(Byte[] bytes) {
 		String bitstr = "";
+		int count = 0;
 		
 		for(Byte b : bytes) {
 			int val = 1;
@@ -390,6 +404,10 @@ public class ArchiveeByteUtils {
 					bitstr += "0";
 				}
 				val = val * 2;
+			}
+			count++;
+			if(count < bytes.length) {
+				bitstr += "|";
 			}
 		}
 		

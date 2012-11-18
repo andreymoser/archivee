@@ -20,7 +20,6 @@
 package biz.bidi.archivee.commons.model.huffman;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -197,7 +196,7 @@ public class HuffmanWordTree {
 	
 	public void printCodes() {
 		for(HuffmanWordNode node : nodes) {
-			System.out.println(node.getValue() + " weight: " + node.getWeight() + " code: " + node.getCode() + " : "+ ArchiveeByteUtils.convertToBitsString(node.getCode(),node.getLevel()));
+			System.out.println(node.getValue() + " weight: " + node.getWeight() + " code: " + node.getCode() + " : " + ArchiveeByteUtils.convertToBitsString(node.getCode(),node.getLevel()));
 		}
 	}
 	

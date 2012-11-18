@@ -159,24 +159,24 @@ public class HuffmanObjectIdNode implements Comparable<HuffmanObjectIdNode> {
 	public int compareTo(HuffmanObjectIdNode o) {
 		
 		if(this.getWeight() != o.getWeight()) {
-			return this.getWeight() > o.getWeight() ? -1 : 1;
+			return this.getWeight() > o.getWeight() ? 1 : -1;
 		}
 		
 		if(this.getValue() != null || o.getValue() != null) {
 			if(this.getValue() != null && o.getValue() == null) {
-				return 1;
-			}
-			
-			if(this.getValue() == null && o.getValue() != null) {
 				return -1;
 			}
 			
+			if(this.getValue() == null && o.getValue() != null) {
+				return 1;
+			}
+			
 			if(this.getValue() != null && o.getValue() != null) {
-				return this.getValue().compareTo(o.getValue());
+				return o.getValue().compareTo(this.getValue());
 			}
 		}
 		
-		return this.hashCode() > o.hashCode() ? -1 : 1;
+		return this.hashCode() > o.hashCode() ? 1 : -1;
 	}
 	
 }

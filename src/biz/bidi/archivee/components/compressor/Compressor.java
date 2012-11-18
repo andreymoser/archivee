@@ -145,13 +145,12 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 				
 				message.setMessageType(CompressorMessageType.COMPRESS_DATA);
 				compressorSender.sendCompressorMessage(message);
-				return;
-			}
-			
-			if(message.getMessageType().equals(CompressorMessageType.COMPRESS_DATA)) {
+			} else if(message.getMessageType().equals(CompressorMessageType.COMPRESS_DATA)) {
 				compressContextQueueData(message, contextQueue);
-				contextQueueDAO.delete(contextQueue, null);
-				return;
+//	   ********************************************************************
+//TODO **************** remove comment - testing purposes *****************
+//     ********************************************************************
+//				contextQueueDAO.delete(contextQueue, null);
 			}
 		} catch (ArchiveeException e) {
 			release(Component.COMPRESSOR.getValue(), message.getThreadId());
@@ -160,6 +159,8 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 			release(Component.COMPRESSOR.getValue(), message.getThreadId());
 			throw new ArchiveeException(e,this);
 		}
+		
+		release(Component.COMPRESSOR.getValue(), message.getThreadId());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -282,6 +283,7 @@ public class Compressor extends ArchiveeManagedComponent implements ICompressor 
 			
 		}
 		
+		context.setOffsetEnd(bitOffset);
 		context.setData(data.toArray(new Byte[data.size()]));
 		contextDAO.save(context);
 		

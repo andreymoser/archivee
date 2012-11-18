@@ -21,9 +21,9 @@ package biz.bidi.archivee.commons.exceptions;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
+import biz.bidi.archivee.commons.properties.ArchiveeProperties;
+import biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader;
 import biz.bidi.archivee.commons.utils.ArchiveeLogger;
 
 import com.mongodb.MongoException;
@@ -34,7 +34,7 @@ import com.mongodb.MongoException;
  * @since Sep 6, 2012
  */
 @SuppressWarnings("serial")
-public class ArchiveeException extends Exception implements IArchiveeException {
+public class ArchiveeException extends Exception implements IArchiveeException, IArchiveePropertiesLoader {
 
 	protected String message;
 	protected Object instanceError;
@@ -42,7 +42,18 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 	protected Exception e;
 	protected ArchiveeError error;
 	
+	protected final static ArchiveeException instance = new ArchiveeException();
+	protected boolean printStackTrace;
+	private ArchiveeException() {
+		try {
+			loadProperties(null);
+		} catch (ArchiveeException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public ArchiveeException(Exception e, Object... objects) {
+		this.printStackTrace = instance.isPrintStackTrace();
 		this.e = e;
 		if(objects.length > 0 && objects[0] != null) {
 			instanceError = objects[0];
@@ -51,6 +62,7 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 	}
 	
 	public ArchiveeException(String message, Object... objects) {
+		this.printStackTrace = instance.isPrintStackTrace();
 		this.message = message;
 		if(objects.length > 0 && objects[0] != null) {
 			instanceError = objects[0];
@@ -59,6 +71,7 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 	}
 	
 	public ArchiveeException(Exception e, String message, Object... objects) {
+		this.printStackTrace = instance.isPrintStackTrace();
 		this.e = e;
 		this.message = message;
 		this.objects = objects;
@@ -66,7 +79,7 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 			instanceError = objects[0];
 		}
 	}
-	
+
 	public static void logError(String message, Object... objects) {
 		ArchiveeException exception = new ArchiveeException(null,message,objects);
 		exception.error(null,null);
@@ -125,13 +138,13 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 				ArchiveeException ae = (ArchiveeException) e; 
 				ae.error(null, null);
 			} else {
-				ArchiveeLogger.getInstance().error(e, e.getMessage() + " - " + getStackTrace(e));
+				ArchiveeLogger.getInstance().error(e, e.getMessage() + (printStackTrace?" - " + getStackTrace(e):""));
 			}
 		}
 		ArchiveeLogger.getInstance().error(instanceError, this.message + " " + objectsString + " - " + getStackTrace(this));
 	}
 	
-	private static String getStackTrace(Exception e) {
+	public static String getStackTrace(Exception e) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		e.printStackTrace(pw);
@@ -165,6 +178,30 @@ public class ArchiveeException extends Exception implements IArchiveeException {
 	 */
 	public void setError(ArchiveeError error) {
 		this.error = error;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see biz.bidi.archivee.commons.properties.IArchiveePropertiesLoader#loadProperties(java.lang.String)
+	 */
+	@Override
+	public void loadProperties(String prefixKey) throws ArchiveeException {
+		ArchiveeProperties.loadProperties(this);
+	}
+
+	/**
+	 * @return the printStackTrace
+	 */
+	public boolean isPrintStackTrace() {
+		return printStackTrace;
+	}
+
+	/**
+	 * @param printStackTrace the printStackTrace to set
+	 */
+	public void setPrintStackTrace(boolean printStackTrace) {
+		this.printStackTrace = printStackTrace;
 	}
 	
 }
