@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>Archivee - Context debugger</title>
+	<h:outputStylesheet library="css" name="archivee.css" />
+</h:head>
+<h:body>
+	
+	<div class="archivee-header">
+		<h:graphicImage library="images" name="archivee.png"/>
+	</div>
+	
+	<br/>
+	<br/>
+	
+	<div class="archivee-form">
+		<h:form styleClass="search-form">
+			<h:inputText value="#{search.value}"></h:inputText>
+			<h:commandButton value="Search" action="#{search.searchContext}"></h:commandButton>
+		</h:form>
+	</div>
+	
+	<br/>
+	
+	<div class="archivee-status">
+		<p>#{search.status}</p>
+	</div>
+	
+	<br/>
+	
+	<div class="archivee-logs">
+		<h:dataTable value="#{search.logs}" var="log" rendered="#{search.rendered}" 
+			styleClass="logs-table" headerClass="logs-table-header"
+			rowClasses="logs-table-odd-row,logs-table-even-row">
+	
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">Date</f:facet>
+	    				#{log.date}
+	    			</h:column>
+	
+			<h:column>
+				<f:facet name="header">Level</f:facet>
+	    				#{log.level}
+	    			</h:column>
+	
+			<h:column>
+				<f:facet name="header">Message</f:facet>
+	    				#{log.message}
+	    			</h:column>
+	
+		</h:dataTable>
+	</div>
+
+</h:body>
+</html>
